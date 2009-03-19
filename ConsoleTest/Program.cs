@@ -26,7 +26,7 @@ namespace Arana.Test.ConsoleApplication
 
       private static void TestArana()
       {
-         AranaEngine engine = new AranaEngine("http://localhost/Ruter.MinRuter/trunk/");
+         AranaEngine engine = new AranaEngine("http://example.com/");
          engine.Select("div.login a").Follow();
          Console.WriteLine(engine.Select("title").InnerText);
       }
