@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Reflection;
+
+using Arana.Core.Extensions;
 
 using Fizzler.Parser;
 
 using HtmlAgilityPack;
-
-using Arana.Core.Extensions;
 
 namespace Arana.Core
 {
@@ -16,6 +18,11 @@ namespace Arana.Core
    /// </summary>
    public class AranaEngine
    {
+      /// <summary>
+      /// Contains the Araña Engine's User Agent string as used when performing HTTP web requests.
+      /// </summary>
+      private static readonly string UserAgentString = GetUserAgentString();
+
       private Uri baseUri;
       private SelectorEngine engine;
 
@@ -26,7 +33,7 @@ namespace Arana.Core
       /// <param name="uri">The application URI.</param>
       public AranaEngine(string uri)
       {
-         GoTo(uri);
+         NavigateTo(uri);
       }
 
 
@@ -48,41 +55,93 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Goes to the URI.
+      /// Navigates to the specified <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
-      internal void GoTo(string uri)
+      internal void NavigateTo(string uri)
       {
-         this.engine = GetSelectorEngine(uri);
+         this.engine = GetSelectorEngine(uri, null, null);
       }
-
-      // internal void GoTo(string uri)
 
 
       /// <summary>
-      /// Gets the document.
+      /// Navigates to the specified <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
-      /// <returns></returns>
-      private SelectorEngine GetSelectorEngine(string uri)
+      /// <param name="httpMethod">The HTTP method.</param>
+      internal void NavigateTo(string uri, string httpMethod)
+      {
+         this.engine = GetSelectorEngine(uri, httpMethod, null);
+      }
+
+
+      /// <summary>
+      /// Navigates to the specified <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="httpMethod">The HTTP method.</param>
+      /// <param name="requestValues">The request values.</param>
+      internal void NavigateTo(string uri, string httpMethod, NameValueCollection requestValues)
+      {
+         this.engine = GetSelectorEngine(uri, httpMethod, requestValues);
+      }
+
+
+      /// <summary>
+      /// Gets the user agent string.
+      /// </summary>
+      /// <returns>The user agent string.</returns>
+      private static string GetUserAgentString()
+      {
+         Assembly assembly = Assembly.GetAssembly(typeof(AranaEngine));
+
+         return String.Format("Arana/{0} ({1} {2}; N; CLR {3}; {4})",
+                              assembly.GetName().Version,
+                              Environment.OSVersion.Platform,
+                              Environment.OSVersion.VersionString,
+                              Environment.Version,
+                              assembly.GetName().ProcessorArchitecture);
+      }
+
+
+      /// <summary>
+      /// Gets a new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="httpMethod">The HTTP method.</param>
+      /// <param name="requestValues">The request values.</param>
+      /// <returns>
+      /// A new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
+      /// </returns>
+      private SelectorEngine GetSelectorEngine(string uri, string httpMethod, NameValueCollection requestValues)
       {
          Uri u = uri.ToUri(this.baseUri);
-         baseUri = new Uri(u.GetLeftPart(UriPartial.Authority));
+         this.baseUri = new Uri(u.GetLeftPart(UriPartial.Authority));
 
          HttpWebRequest request = HttpWebRequest.Create(u) as HttpWebRequest;
 
          if (request == null)
             throw new ArgumentException("The URI did not make much sense, sorry.", "uri");
 
-         HttpWebResponse response = request.GetHttpWebResponse();
+         request.UserAgent = UserAgentString;
+         request.Method = httpMethod ?? "GET";
 
-         if (response == null)
-            throw new ArgumentException("The URI did not make much sense, sorry.", "uri");
-
-         using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
+         if ((requestValues != null) && (requestValues.Count > 0))
          {
-            string html = streamReader.ReadToEnd();
-            return new SelectorEngine(html);
+            // request.
+         }
+
+         using (HttpWebResponse response = request.GetHttpWebResponse())
+         {
+            if (response == null)
+               throw new ArgumentException(
+                  String.Format("The URI '{0}' did not make much sense, sorry.", uri), "uri");
+
+            using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
+            {
+               string html = streamReader.ReadToEnd();
+               return new SelectorEngine(html);
+            }
          }
       }
    }
