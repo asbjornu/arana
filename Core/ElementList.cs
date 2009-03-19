@@ -97,7 +97,7 @@ namespace Arana.Core
          if ((hrefAttribute == null) || String.IsNullOrEmpty(hrefAttribute.Value))
             throw new InvalidOperationException("The HTML anchor has an empty 'href' attribute.");
 
-         this.exerciser.GoTo(hrefAttribute.Value);
+         this.exerciser.NavigateTo(hrefAttribute.Value);
          return this.exerciser;
       }
 
