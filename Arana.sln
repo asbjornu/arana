@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication", "ConsoleTest\ConsoleApplication.csproj", "{ADB12B26-9016-4E61-9CE1-DBBE583E34BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AA1D39E3-2073-400A-9A74-0C59E0A8B1C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB12B26-9016-4E61-9CE1-DBBE583E34BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB12B26-9016-4E61-9CE1-DBBE583E34BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB12B26-9016-4E61-9CE1-DBBE583E34BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB12B26-9016-4E61-9CE1-DBBE583E34BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
