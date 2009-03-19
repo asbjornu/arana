@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 
 namespace Arana.Core.Extensions
 {
@@ -55,6 +56,17 @@ namespace Arana.Core.Extensions
             throw new InvalidOperationException(
                String.Format("Can't create an URI from '{0}'.", s), ex);
          }
+      }
+
+
+      /// <summary>
+      /// URI encodes the given <see cref="T:System.String" />.
+      /// </summary>
+      /// <param name="s">The <see cref="T:System.String" /> to URI encode.</param>
+      /// <returns>The URI encoded <see cref="T:System.String" />.</returns>
+      public static string UriEncode(this string @s)
+      {
+         return String.IsNullOrEmpty(s) ? s : HttpUtility.UrlEncode(s);
       }
    }
 }
