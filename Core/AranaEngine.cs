@@ -66,7 +66,7 @@ namespace Arana.Core
       /// <returns></returns>
       private SelectorEngine GetSelectorEngine(string uri)
       {
-         Uri u = GetUri(uri);
+         Uri u = uri.ToUri(this.baseUri);
          baseUri = new Uri(u.GetLeftPart(UriPartial.Authority));
 
          HttpWebRequest request = HttpWebRequest.Create(u) as HttpWebRequest;
@@ -83,28 +83,6 @@ namespace Arana.Core
          {
             string html = streamReader.ReadToEnd();
             return new SelectorEngine(html);
-         }
-      }
-
-
-      /// <summary>
-      /// Gets the URI.
-      /// </summary>
-      /// <param name="uri">The URI.</param>
-      /// <returns></returns>
-      private Uri GetUri(string uri)
-      {
-         try
-         {
-            if (uri.StartsWith("http://") || uri.StartsWith("https://"))
-               return new Uri(uri);
-
-            return new Uri(this.baseUri, uri);
-         }
-         catch (UriFormatException ex)
-         {
-            throw new InvalidOperationException(
-               String.Format("Can't create an URI from '{0}'.", uri), ex);
          }
       }
    }

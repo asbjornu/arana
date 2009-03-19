@@ -4,7 +4,7 @@ using System.Net;
 namespace Arana.Core.Extensions
 {
    /// <summary>
-   /// A class that contains static extensions methods for the
+   /// A static class that contains extensions methods for the
    /// <see cref="HttpWebRequest" /> and <see cref="HttpWebResponse" />
    /// objects.
    /// </summary>
@@ -26,6 +26,7 @@ namespace Arana.Core.Extensions
             return ex.Response as HttpWebResponse;
          }
       }
+
 
       /// <summary>
       /// Gets the response string.
