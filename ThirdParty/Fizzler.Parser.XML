@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Fizzler.Parser</name>
+    </assembly>
+    <members>
+        <member name="M:Fizzler.Parser.Extensions.HtmlNodeListExtensions.Flatten(System.Collections.Generic.List{HtmlAgilityPack.HtmlNode})">
+            <summary>
+            Flattens the specified nodes.
+            </summary>
+            <param name="nodes">The nodes.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Fizzler.Parser.DescendantSelectionType.Descendant">
+            <summary>
+            Any descendant, i.e. the " " selector.
+            </summary>
+        </member>
+        <member name="F:Fizzler.Parser.DescendantSelectionType.Children">
+            <summary>
+            Direct children, i.e. the ">" selector.
+            </summary>
+        </member>
+        <member name="F:Fizzler.Parser.DescendantSelectionType.Adjacent">
+            <summary>
+            Only elements immediately next to this one, i.e. the + selector.
+            </summary>
+        </member>
+        <member name="F:Fizzler.Parser.DescendantSelectionType.LastSelector">
+            <summary>
+            Tip means the last selector in the sequence, therefore no descendant type is applicable.
+            </summary>
+        </member>
+        <member name="M:Fizzler.Parser.SelectorEngine.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Fizzler.Parser.SelectorEngine"/> class.
+            </summary>
+            <param name="html">The HTML.</param>
+        </member>
+        <member name="M:Fizzler.Parser.SelectorEngine.Parse(System.String)">
+            <summary>
+            Parses the specified selector chain.
+            </summary>
+            <param name="selectorChain">The selector chain.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fizzler.Parser.SelectorEngine.GetDocumentNode">
+            <summary>
+            Gets the document node.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fizzler.Parser.Extensions.HtmlNodeCollectionExtensions.ToList(HtmlAgilityPack.HtmlNodeCollection)">
+            <summary>
+            Converts the <see cref="T:HtmlAgilityPack.HtmlNodeCollection"/> to a
+            <see cref="T:System.Collections.Generic.List`1"/>
+            </summary>
+            <param name="t">The <see cref="T:HtmlAgilityPack.HtmlNodeCollection"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Fizzler.Parser.Extensions.StringListExtensions.ContainsAll(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Determines whether the specified items contains all.
+            </summary>
+            <param name="items">The items.</param>
+            <param name="others">The others.</param>
+            <returns>
+            	<c>true</c> if the specified items contains all; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Fizzler.Parser.ChunkHandling.ChunkParser">
+            <summary>
+            Pulls out information about a selector chunk.
+            </summary>
+        </member>
+    </members>
+</doc>
