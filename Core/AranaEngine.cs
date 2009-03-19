@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Text;
 
 using Arana.Core.Extensions;
 
@@ -23,7 +24,10 @@ namespace Arana.Core
       /// </summary>
       private static readonly string UserAgentString = GetUserAgentString();
 
+      private const string HttpGet = "GET";
+
       private Uri baseUri;
+      private CookieCollection cookies;
       private SelectorEngine engine;
 
 
@@ -95,7 +99,7 @@ namespace Arana.Core
       {
          Assembly assembly = Assembly.GetAssembly(typeof(AranaEngine));
 
-         return String.Format("Arana/{0} ({1} {2}; N; CLR {3}; {4})",
+         return String.Format("Arana/{0} ({1} {2}; N; .NET CLR {3}; {4})",
                               assembly.GetName().Version,
                               Environment.OSVersion.Platform,
                               Environment.OSVersion.VersionString,
@@ -115,6 +119,49 @@ namespace Arana.Core
       /// </returns>
       private SelectorEngine GetSelectorEngine(string uri, string httpMethod, NameValueCollection requestValues)
       {
+         HttpWebRequest request = CreateRequest(uri, httpMethod);
+         
+         if ((this.cookies != null) && (cookies.Count > 0))
+         {
+            request.CookieContainer = new CookieContainer(cookies.Count);
+            request.CookieContainer.Add(cookies);
+         }
+
+         if ((requestValues != null) && (requestValues.Count > 0))
+         {
+            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream(), Encoding.UTF8))
+            {
+               streamWriter.Write(requestValues.GetRequestString((request.Method == HttpGet)));
+            }
+         }
+
+         using (HttpWebResponse response = request.GetHttpWebResponse())
+         {
+            if (response == null)
+               throw new ArgumentException(
+                  String.Format("The URI '{0}' did not make much sense, sorry.", uri), "uri");
+
+            this.cookies = response.Cookies;
+
+            using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
+            {
+               string html = streamReader.ReadToEnd();
+               return new SelectorEngine(html);
+            }
+         }
+      }
+
+
+      /// <summary>
+      /// Creates a new <see cref="HttpWebRequest"/> for the given <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="httpMethod">The HTTP method.</param>
+      /// <returns>
+      /// A new <see cref="HttpWebRequest"/> for the given <paramref name="uri"/>.
+      /// </returns>
+      private HttpWebRequest CreateRequest(string uri, string httpMethod)
+      {
          Uri u = uri.ToUri(this.baseUri);
          this.baseUri = new Uri(u.GetLeftPart(UriPartial.Authority));
 
@@ -124,25 +171,18 @@ namespace Arana.Core
             throw new ArgumentException("The URI did not make much sense, sorry.", "uri");
 
          request.UserAgent = UserAgentString;
-         request.Method = httpMethod ?? "GET";
+         request.Method = (httpMethod ?? HttpGet).ToUpperInvariant();
+         request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
 
-         if ((requestValues != null) && (requestValues.Count > 0))
-         {
-            // request.
-         }
+         // TODO: Set more accepted charsets and handle decoding of them
+         request.Headers.Add("Accept-Charset", "utf-8");
 
-         using (HttpWebResponse response = request.GetHttpWebResponse())
-         {
-            if (response == null)
-               throw new ArgumentException(
-                  String.Format("The URI '{0}' did not make much sense, sorry.", uri), "uri");
+         // TODO: Set Accept-Encoding and handle decoding
 
-            using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
-            {
-               string html = streamReader.ReadToEnd();
-               return new SelectorEngine(html);
-            }
-         }
+         if (request.Method != HttpGet)
+            request.ContentType = "application/x-www-form-urlencoded";
+
+         return request;
       }
    }
 }

@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\HttpWebExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="AranaEngine.cs" />
