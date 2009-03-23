@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+using Arana.Core.Extensions;
+
 using Fizzler.Parser;
 
 using HtmlAgilityPack;
@@ -43,9 +45,9 @@ namespace Arana.Core
       public bool FollowRedirect { get; set; }
 
       /// <summary>
-      /// Gets or sets the response data.
+      /// Gets the data for the last response.
       /// </summary>
-      /// <value>The response data.</value>
+      /// <value>The data for the last response.</value>
       public ResponseData Response { get; private set; }
 
 
@@ -134,13 +136,27 @@ namespace Arana.Core
       {
          this.request = new AranaRequest(this.request, uri, httpMethod, requestValues);
 
-         using (AranaResponse response = this.request.GetResponse(followRedirect))
+         using (AranaResponse response = this.request.GetResponse())
          {
             if (response == null)
                throw new ArgumentException(
                   String.Format("The URI '{0}' did not make much sense, sorry.", uri), "uri");
 
             Response = response.Data;
+
+            // Set the cookie from the response
+            request.SetCookie(Response);
+
+            // If we're to follow redirects and the status indicates a redirect;
+            if (followRedirect && (response.Data.Status.GetBase() == 300))
+            {
+               // Get a new selector engine for the location we're being redirected to
+               return GetSelectorEngine(response.Data.Location,
+                                        true,
+                                        AranaRequest.HttpGet,
+                                        null);
+            }
+
 
             return !String.IsNullOrEmpty(Response.Body)
                       ? new SelectorEngine(Response.Body)

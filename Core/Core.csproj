@@ -56,6 +56,7 @@
     <Compile Include="AranaRequest.cs" />
     <Compile Include="AranaResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Extensions\HttpStatusCodeExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="AranaEngine.cs" />
     <Compile Include="ElementList.cs" />
