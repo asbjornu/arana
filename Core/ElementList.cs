@@ -186,7 +186,10 @@ namespace Arana.Core
       /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
-      /// <param name="followRedirect">if set to <c>true</c> [follow redirect].</param>
+      /// <param name="followRedirect">
+      /// <c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.
+      /// </param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
