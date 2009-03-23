@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Net;
 
 using Fizzler.Parser;
 
@@ -44,10 +43,10 @@ namespace Arana.Core
       public bool FollowRedirect { get; set; }
 
       /// <summary>
-      /// Gets the status of the response.
+      /// Gets or sets the response data.
       /// </summary>
-      /// <value>One of the <see cref="T:System.Net.HttpStatusCode"/> values.</value>
-      public HttpStatusCode ResponseStatus { get; private set; }
+      /// <value>The response data.</value>
+      public ResponseData Response { get; private set; }
 
 
       /// <summary>
@@ -141,15 +140,11 @@ namespace Arana.Core
                throw new ArgumentException(
                   String.Format("The URI '{0}' did not make much sense, sorry.", uri), "uri");
 
-            ResponseStatus = response.StatusCode;
+            Response = response.Data;
 
-            string responseString = response.ResponseString;
-
-            if (String.IsNullOrEmpty(responseString))
-               throw new InvalidOperationException(
-                  String.Format("The URI '{0}' returned nothing.", uri));
-
-            return new SelectorEngine(responseString);
+            return !String.IsNullOrEmpty(Response.Body)
+                      ? new SelectorEngine(Response.Body)
+                      : null;
          }
       }
    }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 
 namespace Arana.Core
@@ -29,36 +28,16 @@ namespace Arana.Core
                String.Format("The URI '{0}' did not make much sense, sorry.",
                              request.RequestUri));
 
+         Data = new ResponseData(this.response);
          request.Cookies = this.response.Cookies;
       }
 
 
       /// <summary>
-      /// Gets the status of the response.
+      /// Gets or sets the response data.
       /// </summary>
-      /// <value>One of the <see cref="T:System.Net.HttpStatusCode"/> values.</value>
-      public HttpStatusCode StatusCode
-      {
-         get { return this.response.StatusCode; }
-      }
-
-      /// <summary>
-      /// Gets the response string.
-      /// </summary>
-      /// <returns></returns>
-      internal string ResponseString
-      {
-         get
-         {
-            using (Stream stream = this.response.GetResponseStream())
-            {
-               using (StreamReader streamReader = new StreamReader(stream))
-               {
-                  return streamReader.ReadToEnd();
-               }
-            }
-         }
-      }
+      /// <value>The response data.</value>
+      public ResponseData Data { get; private set; }
 
 
       /// <summary>
