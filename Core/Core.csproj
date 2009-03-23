@@ -53,11 +53,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AranaRequest.cs" />
+    <Compile Include="AranaResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Extensions\HttpWebExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="AranaEngine.cs" />
     <Compile Include="ElementList.cs" />
+    <Compile Include="InvalidUriException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
