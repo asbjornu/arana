@@ -29,7 +29,9 @@ namespace Arana.Core
       /// <summary>
       /// Initializes a new instance of the <see cref="AranaRequest"/> class.
       /// </summary>
-      /// <param name="previousRequest">The previous request.</param>
+      /// <param name="previousRequest">The previous request, used to preserve the base
+      /// URI from different requests to the same domain, to be able to resolve relative
+      /// URI's.</param>
       /// <param name="uri">The URI.</param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
