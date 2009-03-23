@@ -6,8 +6,46 @@ namespace Arana.Core.Extensions
    /// <summary>
    /// A static class that contains extension methods for the <see cref="T:System.String" /> object.
    /// </summary>
-   public static class StringExtensions
+   internal static class StringExtensions
    {
+      /// <summary>
+      /// Determines whether the given <see cref="T:System.String"/> is equal
+      /// to any of the values in the specified <paramref name="values"/> array.
+      /// </summary>
+      /// <param name="s">The <see cref="T:System.String"/> to compare.</param>
+      /// <param name="ignoreCase">if set to <c>true</c>, a case insensitive comparison is performed.</param>
+      /// <param name="values">The values to compare with.</param>
+      /// <returns>
+      /// 	<c>true</c> if any of the specified <paramref name="values"/> are
+      /// equal to the given <see cref="T:System.String"/>; otherwise, <c>false</c>.
+      /// </returns>
+      public static bool IsEqualTo(this string @s, bool ignoreCase, params string[] values)
+      {
+         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
+            return false;
+
+         foreach (string value in values)
+            if (String.Compare(s, value, ignoreCase) == 0)
+               return true;
+
+         return false;
+      }
+
+
+      /// <summary>
+      /// Trims the <see cref="T:System.String"/>. If it is null or empty,
+      /// just returns it.
+      /// </summary>
+      /// <param name="s">The <see cref="T:System.String"/> to trim.</param>
+      /// <returns>
+      /// The trimmed <see cref="T:System.String"/>.
+      /// </returns>
+      public static string SafeTrim(this string @s)
+      {
+         return String.IsNullOrEmpty(s) ? s : s.Trim();
+      }
+
+
       /// <summary>
       /// Determines whether the beginning of <paramref name="s"/>
       /// matches any of the specified <see cref="T:System.String"/>s
@@ -27,19 +65,6 @@ namespace Arana.Core.Extensions
 
          foreach (string value in values)
             if (s.StartsWith(value))
-               return true;
-
-         return false;
-      }
-
-
-      public static bool IsEqualTo(this string @s, bool ignoreCase, params string[] values)
-      {
-         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
-            return false;
-
-         foreach (string value in values)
-            if (String.Compare(s, value, ignoreCase) == 0)
                return true;
 
          return false;
@@ -68,6 +93,8 @@ namespace Arana.Core.Extensions
             if (uri.StartsWith("ftp://", "file://", "news://", "mailto:", "javascript:"))
                throw new InvalidUriException(uri, "Unsupported protocol");
 
+            // If we've got here it means the URI must be relative, so throw an exception
+            // if there's no base URI to resolve the relative URI to.
             if (baseUri == null)
                throw new InvalidUriException(uri, "The base URI can't be null when the URI is relative.");
 

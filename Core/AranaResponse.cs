@@ -14,22 +14,14 @@ namespace Arana.Core
       /// <summary>
       /// Initializes a new instance of the <see cref="AranaResponse"/> class.
       /// </summary>
-      /// <param name="request">The request.</param>
-      /// <param name="getHttpWebResponse">The get HTTP web response.</param>
+      /// <param name="getHttpWebResponse">A function reference used to get the <see cref="HttpWebResponse"/>.</param>
       internal AranaResponse(AranaRequest request, Func<HttpWebResponse> getHttpWebResponse)
       {
          if (getHttpWebResponse == null)
             throw new ArgumentNullException("getHttpWebResponse");
 
          this.response = getHttpWebResponse();
-
-         if (this.response == null)
-            throw new InvalidOperationException(
-               String.Format("The URI '{0}' did not make much sense, sorry.",
-                             request.RequestUri));
-
-         Data = new ResponseData(this.response);
-         request.Cookies = this.response.Cookies;
+         Data = new ResponseData(this.response, request.Uri);
       }
 
 

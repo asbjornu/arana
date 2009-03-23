@@ -197,7 +197,7 @@ namespace Arana.Core
          NameValueCollection requestCollection = null;
          string method = (methodAttribute != null) && !String.IsNullOrEmpty(methodAttribute.Value)
                             ? methodAttribute.Value.ToUpperInvariant()
-                            : "GET";
+                            : AranaRequest.HttpGet;
 
          if (form == null)
             throw new InvalidOperationException("The selected elements does not contain an HTML 'form' element.");
