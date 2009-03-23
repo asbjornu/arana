@@ -47,9 +47,9 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets the inner HTML.
+      /// Gets the inner HTML of the currently selected list of elements.
       /// </summary>
-      /// <value>The inner HTML.</value>
+      /// <value>The inner HTML of the currently selected list of elements.</value>
       public string InnerHtml
       {
          get
@@ -64,9 +64,9 @@ namespace Arana.Core
       }
 
       /// <summary>
-      /// Gets the inner text.
+      /// Gets the inner text of the currently selected list of elements.
       /// </summary>
-      /// <value>The inner text.</value>
+      /// <value>The inner text of the currently selected list of elements.</value>
       public string InnerText
       {
          get
@@ -85,6 +85,11 @@ namespace Arana.Core
       /// Follows the 'href' attribute on the selected HTML elements.
       /// </summary>
       /// <returns>An updated <see cref="AranaEngine" />.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain an 'a' element.
+      /// 2. If a currently selected 'a' element doesn't have any attributes.
+      /// 3. If a currently selected 'a' element has an empty or non-existent 'href' attribute.
+      /// </exception>
       public AranaEngine Follow()
       {
          return Follow(true);
@@ -94,11 +99,14 @@ namespace Arana.Core
       /// <summary>
       /// Follows the 'href' attribute on the selected HTML elements.
       /// </summary>
-      /// <param name="followRedirect">
-      /// <c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.
-      /// </param>
-      /// <returns>An updated <see cref="AranaEngine" />.</returns>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
+      /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain an 'a' element.
+      /// 2. If a currently selected 'a' element doesn't have any attributes.
+      /// 3. If a currently selected 'a' element has an empty or non-existent 'href' attribute.
+      /// </exception>
       public AranaEngine Follow(bool followRedirect)
       {
          HtmlNode anchor = this["a"];
@@ -166,6 +174,11 @@ namespace Arana.Core
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain a 'form' element.
+      /// 2. If a currently selected 'form' element doesn't have any attributes.
+      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
+      /// </exception>
       public AranaEngine Submit()
       {
          return Submit(true, null);
@@ -177,6 +190,11 @@ namespace Arana.Core
       /// </summary>
       /// <param name="requestValues">The request values.</param>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain a 'form' element.
+      /// 2. If a currently selected 'form' element doesn't have any attributes.
+      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
+      /// </exception>
       public AranaEngine Submit(NameValueCollection requestValues)
       {
          return Submit(true, requestValues);
@@ -186,12 +204,15 @@ namespace Arana.Core
       /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
-      /// <param name="followRedirect">
-      /// <c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.
-      /// </param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain a 'form' element.
+      /// 2. If a currently selected 'form' element doesn't have any attributes.
+      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
+      /// </exception>
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
          HtmlNode form = this["form"];
