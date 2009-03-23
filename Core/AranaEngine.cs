@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Net;
-using System.Reflection;
-using System.Text;
-
-using Arana.Core.Extensions;
 
 using Fizzler.Parser;
 
@@ -19,16 +14,14 @@ namespace Arana.Core
    /// </summary>
    public class AranaEngine
    {
-      /// <summary>
-      /// Contains the Araña Engine's User Agent string as used when performing HTTP web requests.
-      /// </summary>
-      private static readonly string UserAgentString = GetUserAgentString();
-
-      private const string HttpGet = "GET";
-
-      private Uri baseUri;
-      private CookieCollection cookies;
       private SelectorEngine engine;
+
+      /// <summary>
+      /// A local field used to preserve the last request made for reference
+      /// to future requests (to preserve the base URI as a way to resolve
+      /// relative URI's, etc).
+      /// </summary>
+      private AranaRequest request;
 
 
       /// <summary>
@@ -37,8 +30,24 @@ namespace Arana.Core
       /// <param name="uri">The application URI.</param>
       public AranaEngine(string uri)
       {
-         NavigateTo(uri);
+         NavigateTo(uri, FollowRedirect = true);
       }
+
+
+      /// <summary>
+      /// Gets or sets a value that indicates whether the request should follow redirection responses.
+      /// </summary>
+      /// <value>
+      /// <c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.
+      /// </value>
+      public bool FollowRedirect { get; set; }
+
+      /// <summary>
+      /// Gets the status of the response.
+      /// </summary>
+      /// <value>One of the <see cref="T:System.Net.HttpStatusCode"/> values.</value>
+      public HttpStatusCode ResponseStatus { get; private set; }
 
 
       /// <summary>
@@ -62,9 +71,13 @@ namespace Arana.Core
       /// Navigates to the specified <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
-      internal void NavigateTo(string uri)
+      /// <param name="followRedirect">
+      /// <c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.
+      /// </param>
+      internal void NavigateTo(string uri, bool followRedirect)
       {
-         this.engine = GetSelectorEngine(uri, null, null);
+         this.engine = GetSelectorEngine(uri, followRedirect, null, null);
       }
 
 
@@ -72,10 +85,14 @@ namespace Arana.Core
       /// Navigates to the specified <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
+      /// <param name="followRedirect">
+      /// <c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.
+      /// </param>
       /// <param name="httpMethod">The HTTP method.</param>
-      internal void NavigateTo(string uri, string httpMethod)
+      internal void NavigateTo(string uri, bool followRedirect, string httpMethod)
       {
-         this.engine = GetSelectorEngine(uri, httpMethod, null);
+         this.engine = GetSelectorEngine(uri, followRedirect, httpMethod, null);
       }
 
 
@@ -83,28 +100,18 @@ namespace Arana.Core
       /// Navigates to the specified <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
+      /// <param name="followRedirect">
+      /// <c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.
+      /// </param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
-      internal void NavigateTo(string uri, string httpMethod, NameValueCollection requestValues)
+      internal void NavigateTo(string uri,
+                               bool followRedirect,
+                               string httpMethod,
+                               NameValueCollection requestValues)
       {
-         this.engine = GetSelectorEngine(uri, httpMethod, requestValues);
-      }
-
-
-      /// <summary>
-      /// Gets the user agent string.
-      /// </summary>
-      /// <returns>The user agent string.</returns>
-      private static string GetUserAgentString()
-      {
-         Assembly assembly = Assembly.GetAssembly(typeof(AranaEngine));
-
-         return String.Format("Arana/{0} ({1} {2}; N; .NET CLR {3}; {4})",
-                              assembly.GetName().Version,
-                              Environment.OSVersion.Platform,
-                              Environment.OSVersion.VersionString,
-                              Environment.Version,
-                              assembly.GetName().ProcessorArchitecture);
+         this.engine = GetSelectorEngine(uri, followRedirect, httpMethod, requestValues);
       }
 
 
@@ -112,77 +119,38 @@ namespace Arana.Core
       /// Gets a new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
+      /// <param name="followRedirect">
+      /// <c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.
+      /// </param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>
       /// A new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
       /// </returns>
-      private SelectorEngine GetSelectorEngine(string uri, string httpMethod, NameValueCollection requestValues)
+      private SelectorEngine GetSelectorEngine(string uri,
+                                               bool followRedirect,
+                                               string httpMethod,
+                                               NameValueCollection requestValues)
       {
-         HttpWebRequest request = CreateRequest(uri, httpMethod);
-         
-         if ((this.cookies != null) && (cookies.Count > 0))
-         {
-            request.CookieContainer = new CookieContainer(cookies.Count);
-            request.CookieContainer.Add(cookies);
-         }
+         this.request = new AranaRequest(this.request, uri, httpMethod, requestValues);
 
-         if ((requestValues != null) && (requestValues.Count > 0))
-         {
-            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream(), Encoding.UTF8))
-            {
-               streamWriter.Write(requestValues.GetRequestString((request.Method == HttpGet)));
-            }
-         }
-
-         using (HttpWebResponse response = request.GetHttpWebResponse())
+         using (AranaResponse response = this.request.GetResponse(followRedirect))
          {
             if (response == null)
                throw new ArgumentException(
                   String.Format("The URI '{0}' did not make much sense, sorry.", uri), "uri");
 
-            this.cookies = response.Cookies;
+            ResponseStatus = response.StatusCode;
 
-            using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
-            {
-               string html = streamReader.ReadToEnd();
-               return new SelectorEngine(html);
-            }
+            string responseString = response.ResponseString;
+
+            if (String.IsNullOrEmpty(responseString))
+               throw new InvalidOperationException(
+                  String.Format("The URI '{0}' returned nothing.", uri));
+
+            return new SelectorEngine(responseString);
          }
-      }
-
-
-      /// <summary>
-      /// Creates a new <see cref="HttpWebRequest"/> for the given <paramref name="uri"/>.
-      /// </summary>
-      /// <param name="uri">The URI.</param>
-      /// <param name="httpMethod">The HTTP method.</param>
-      /// <returns>
-      /// A new <see cref="HttpWebRequest"/> for the given <paramref name="uri"/>.
-      /// </returns>
-      private HttpWebRequest CreateRequest(string uri, string httpMethod)
-      {
-         Uri u = uri.ToUri(this.baseUri);
-         this.baseUri = new Uri(u.GetLeftPart(UriPartial.Authority));
-
-         HttpWebRequest request = HttpWebRequest.Create(u) as HttpWebRequest;
-
-         if (request == null)
-            throw new ArgumentException("The URI did not make much sense, sorry.", "uri");
-
-         request.UserAgent = UserAgentString;
-         request.Method = (httpMethod ?? HttpGet).ToUpperInvariant();
-         request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-
-         // TODO: Set more accepted charsets and handle decoding of them
-         request.Headers.Add("Accept-Charset", "utf-8");
-
-         // TODO: Set Accept-Encoding and handle decoding
-
-         if (request.Method != HttpGet)
-            request.ContentType = "application/x-www-form-urlencoded";
-
-         return request;
       }
    }
 }

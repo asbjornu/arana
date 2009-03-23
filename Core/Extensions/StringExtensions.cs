@@ -22,7 +22,7 @@ namespace Arana.Core.Extensions
       /// </returns>
       public static bool StartsWith(this string @s, params string[] values)
       {
-         if (String.IsNullOrEmpty(s) || values == null || values.Length == 0)
+         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
             return false;
 
          foreach (string value in values)
@@ -33,28 +33,49 @@ namespace Arana.Core.Extensions
       }
 
 
+      public static bool IsEqualTo(this string @s, bool ignoreCase, params string[] values)
+      {
+         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
+            return false;
+
+         foreach (string value in values)
+            if (String.Compare(s, value, ignoreCase) == 0)
+               return true;
+
+         return false;
+      }
+
+
       /// <summary>
       /// Converst the <see cref="T:System.String"/> to a <see cref="T:System.Uri"/>.
       /// If the URI string is relative, makes it relative to the specified <paramref name="baseUri"/>.
       /// </summary>
-      /// <param name="s">The <see cref="T:System.String"/> to convert.</param>
+      /// <param name="uri">The <see cref="T:System.String"/> to convert.</param>
       /// <param name="baseUri">The base URI.</param>
       /// <returns>
       /// The converted <see cref="T:System.Uri"/>.
       /// </returns>
-      public static Uri ToUri(this string s, Uri baseUri)
+      public static Uri ToUri(this string uri, Uri baseUri)
       {
          try
          {
-            if (s.StartsWith("http://") || s.StartsWith("https://"))
-               return new Uri(s);
+            // If the URI is absolute and for the HTTP(S) protocol, return it
+            if (uri.StartsWith("http://", "https://"))
+               return new Uri(uri);
 
-            return new Uri(baseUri, s);
+            // If the URI is absolute and for any of the following protocols,
+            // throw an exception
+            if (uri.StartsWith("ftp://", "file://", "news://", "mailto:", "javascript:"))
+               throw new InvalidUriException(uri, "Unsupported protocol");
+
+            if (baseUri == null)
+               throw new InvalidUriException(uri, "The base URI can't be null when the URI is relative.");
+
+            return new Uri(baseUri, uri);
          }
          catch (UriFormatException ex)
          {
-            throw new InvalidOperationException(
-               String.Format("Can't create an URI from '{0}'.", s), ex);
+            throw new InvalidUriException(uri, ex);
          }
       }
 
