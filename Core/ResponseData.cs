@@ -4,7 +4,7 @@ using System.Net;
 namespace Arana.Core
 {
    /// <summary>
-   /// 
+   /// Contains data from a given <see cref="AranaResponse" />.
    /// </summary>
    public class ResponseData
    {
@@ -14,9 +14,10 @@ namespace Arana.Core
       /// <param name="response">The response.</param>
       public ResponseData(HttpWebResponse response)
       {
-         Location = response.GetResponseHeader("Location");
          Status = response.StatusCode;
          Body = GetResponseBody(response);
+         Location = response.GetResponseHeader("Location")
+                    ?? response.GetResponseHeader("Content-Location");
       }
 
 
