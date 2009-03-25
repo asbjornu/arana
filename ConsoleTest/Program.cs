@@ -22,17 +22,27 @@ namespace Arana.Test.ConsoleApplication
       }
 
 
+      private static void PressAnyKey(string message)
+      {
+         Console.WriteLine();
+         Console.WriteLine();
+         Console.WriteLine(message);
+         Console.WriteLine();
+         Console.ReadKey(true);
+      }
+
+
       private static void TestArana()
       {
          AranaEngine engine = new AranaEngine(Settings.WebSiteUri);
-         
+
          engine.Select("div.login a").Follow();
          Console.WriteLine(engine.Select("title").InnerText);
 
          engine.Select("form#aspnetForm").Submit(false, new NameValueCollection
          {
-            {"email", Settings.Email},
-            {"password", Settings.Password},
+            { "email", Settings.Email },
+            { "password", Settings.Password },
          });
 
          Console.WriteLine(engine.Response.Location);
@@ -42,15 +52,6 @@ namespace Arana.Test.ConsoleApplication
          engine.Select(".card-overview .section.settings a").Follow();
 
          Console.WriteLine(engine.Select("title").InnerText);*/
-      }
-
-      private static void PressAnyKey(string message)
-      {
-         Console.WriteLine();
-         Console.WriteLine();
-         Console.WriteLine(message);
-         Console.WriteLine();
-         Console.ReadKey(true);
       }
    }
 }
