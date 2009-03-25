@@ -11,16 +11,6 @@ namespace Arana.Core
       /// Initializes a new instance of the <see cref="InvalidUriException"/> class.
       /// </summary>
       /// <param name="uri">The URI.</param>
-      public InvalidUriException(string uri)
-         : base(CreateMessage(uri, null))
-      {
-      }
-
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="InvalidUriException"/> class.
-      /// </summary>
-      /// <param name="uri">The URI.</param>
       /// <param name="message">The message.</param>
       public InvalidUriException(string uri, string message)
          : base(CreateMessage(uri, message))
@@ -35,18 +25,6 @@ namespace Arana.Core
       /// <param name="innerException">The inner exception.</param>
       public InvalidUriException(string uri, Exception innerException)
          : base(CreateMessage(uri, null), innerException)
-      {
-      }
-
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="InvalidUriException"/> class.
-      /// </summary>
-      /// <param name="uri">The URI.</param>
-      /// <param name="message">The message.</param>
-      /// <param name="innerException">The inner exception.</param>
-      public InvalidUriException(string uri, string message, Exception innerException)
-         : base(CreateMessage(uri, message), innerException)
       {
       }
 

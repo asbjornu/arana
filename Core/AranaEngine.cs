@@ -31,18 +31,9 @@ namespace Arana.Core
       /// <param name="uri">The application URI.</param>
       public AranaEngine(string uri)
       {
-         NavigateTo(uri, FollowRedirect = true);
+         NavigateTo(uri, true);
       }
 
-
-      /// <summary>
-      /// Gets or sets a value that indicates whether the request should follow redirection responses.
-      /// </summary>
-      /// <value>
-      /// <c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.
-      /// </value>
-      public bool FollowRedirect { get; set; }
 
       /// <summary>
       /// Gets the data for the last response.
@@ -79,21 +70,6 @@ namespace Arana.Core
       internal void NavigateTo(string uri, bool followRedirect)
       {
          this.engine = GetSelectorEngine(uri, followRedirect, null, null);
-      }
-
-
-      /// <summary>
-      /// Navigates to the specified <paramref name="uri"/>.
-      /// </summary>
-      /// <param name="uri">The URI.</param>
-      /// <param name="followRedirect">
-      /// <c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.
-      /// </param>
-      /// <param name="httpMethod">The HTTP method.</param>
-      internal void NavigateTo(string uri, bool followRedirect, string httpMethod)
-      {
-         this.engine = GetSelectorEngine(uri, followRedirect, httpMethod, null);
       }
 
 
@@ -145,7 +121,7 @@ namespace Arana.Core
             Response = response.Data;
 
             // Set the cookie from the response
-            request.SetCookie(Response);
+            this.request.SetCookie(Response);
 
             // If we're to follow redirects and the status indicates a redirect;
             if (followRedirect && (response.Data.Status.GetBase() == 300))
@@ -156,7 +132,6 @@ namespace Arana.Core
                                         AranaRequest.HttpGet,
                                         null);
             }
-
 
             return !String.IsNullOrEmpty(Response.Body)
                       ? new SelectorEngine(Response.Body)

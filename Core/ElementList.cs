@@ -10,7 +10,7 @@ using HtmlAgilityPack;
 namespace Arana.Core
 {
    /// <summary>
-   /// Provides an encapsulation of <see cref="HtmlNode" />.
+   /// Provides an encapsulation of <see cref="List&lt;HtmlNode&gt;" />.
    /// </summary>
    public class ElementList : List<HtmlNode>
    {

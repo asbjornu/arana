@@ -24,9 +24,31 @@ namespace Arana.Core
       /// </summary>
       private static readonly string UserAgentString = GetUserAgentString();
 
+      /// <summary>
+      /// The underlying <see cref="HttpWebRequest" /> object used to perform the HTTP requests.
+      /// </summary>
       private readonly HttpWebRequest baseRequest;
+
+      /// <summary>
+      /// Gets the HTTP method for the request.
+      /// </summary>
+      /// <value>The HTTP method for the request.</value>
+      private readonly string method;
+
+      /// <summary>
+      /// Contains a reference to the previous request made. Null if this is the first request.
+      /// </summary>
       private readonly AranaRequest previousRequest;
+
+      /// <summary>
+      /// The base URI of the web application we're testing.
+      /// </summary>
       private Uri baseUri;
+
+      /// <summary>
+      /// Gets or sets the cookies that are associated with this request.
+      /// </summary>
+      private CookieCollection cookies;
 
 
       /// <summary>
@@ -43,17 +65,17 @@ namespace Arana.Core
                             string method,
                             NameValueCollection requestValues)
       {
-         Method = (method ?? HttpGet).ToUpperInvariant();
+         this.method = (method ?? HttpGet).ToUpperInvariant();
 
          // Throw an exception if the HTTP method used is invalid.
-         if (!Method.IsEqualTo(false, HttpGet, "PUT", "POST", "DELETE", "HEAD"))
+         if (!this.method.IsEqualTo(false, HttpGet, "PUT", "POST", "DELETE", "HEAD"))
             throw new InvalidOperationException(
-               String.Format("The method '{0}' is invalid.", Method));
+               String.Format("The method '{0}' is invalid.", this.method));
 
-         if ((previousRequest != null) && (previousRequest.Cookies != null) && (previousRequest.Cookies.Count > 0))
+         if ((previousRequest != null) && (previousRequest.cookies != null) && (previousRequest.cookies.Count > 0))
          {
-            Cookies = Cookies ?? new CookieCollection();
-            Cookies.Add(previousRequest.Cookies);
+            this.cookies = this.cookies ?? new CookieCollection();
+            this.cookies.Add(previousRequest.cookies);
          }
 
          this.previousRequest = previousRequest;
@@ -62,24 +84,9 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets the HTTP method for the request.
-      /// </summary>
-      /// <value>The HTTP method for the request.</value>
-      public string Method { get; private set; }
-
-      /// <summary>
-      /// Gets or sets the cookies that are associated with this request.
-      /// </summary>
-      /// <value>
-      /// A <see cref="CookieCollection"/> that contains the cookies that
-      /// are associated with this request.
-      /// </value>
-      internal CookieCollection Cookies { get; private set; }
-
-      /// <summary>
       /// Gets the Uniform Resource Identifier (<see cref="T:System.Uri" />) of the request.
       /// </summary>
-      /// <value>The Uniform Resource Identifier (<see cref="T:System.Uri" />) of the request..</value>
+      /// <value>The Uniform Resource Identifier (<see cref="T:System.Uri" />) of the request.</value>
       internal Uri Uri
       {
          get { return this.baseRequest.RequestUri; }
@@ -95,8 +102,8 @@ namespace Arana.Core
          if (responseData.Cookie == null)
             return;
 
-         Cookies = Cookies ?? new CookieCollection();
-         Cookies.Add(responseData.Cookie);
+         this.cookies = this.cookies ?? new CookieCollection();
+         this.cookies.Add(responseData.Cookie);
       }
 
 
@@ -168,15 +175,15 @@ namespace Arana.Core
             throw new InvalidUriException(uri, "Couldn't create an HTTP request for the given URI.");
 
          // Set and default the HTTP method
-         request.Method = Method;
+         request.Method = this.method;
 
          // Add the given values to the request if they are 
          if ((requestValues != null) && (requestValues.Count > 0))
          {
-            string requestString = requestValues.GetRequestString((Method == HttpGet));
+            string requestString = requestValues.GetRequestString((this.method == HttpGet));
 
             // If the HTTP method is GET, create a new request with the values in the query string
-            if (Method == HttpGet)
+            if (this.method == HttpGet)
             {
                uri = String.Concat(uri + requestString);
                return CreateRequest(uri, null);
@@ -212,11 +219,11 @@ namespace Arana.Core
             request.ContentType = "application/x-www-form-urlencoded";
 
          // If there's any cookies to add to the request, do it
-         if ((Cookies == null) || (Cookies.Count <= 0))
+         if ((this.cookies == null) || (this.cookies.Count <= 0))
             return;
 
-         request.CookieContainer = new CookieContainer(Cookies.Count);
-         request.CookieContainer.Add(Cookies);
+         request.CookieContainer = new CookieContainer(this.cookies.Count);
+         request.CookieContainer.Add(this.cookies);
       }
    }
 }

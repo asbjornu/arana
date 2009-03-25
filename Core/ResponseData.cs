@@ -77,8 +77,11 @@ namespace Arana.Core
       /// Parses the cookie.
       /// </summary>
       /// <param name="cookieString">The cookie string.</param>
-      /// <param name="uri">The URI.</param>
-      /// <returns></returns>
+      /// <param name="uri">The URI to use for the domain part of the cookie
+      /// if the cookie itself doesn't include the information.</param>
+      /// <returns>
+      /// The parsed and constructed <see cref="Cookie"/>.
+      /// </returns>
       private static Cookie ParseCookie(string cookieString, Uri uri)
       {
          if (String.IsNullOrEmpty(cookieString))
@@ -87,62 +90,18 @@ namespace Arana.Core
          Cookie cookie = new Cookie();
 
          // Split the cookie into parts:
-         string[] parts = cookieString.Split(';');
+         string[] cookieParts = cookieString.Split(';');
 
-         if (parts.Length == 0)
-         {
-            if (cookieString.Contains("="))
-            {
-               string[] keyValue = cookieString.Split('=');
-               cookie.Name = keyValue[0];
-               cookie.Value = keyValue[0];
-            }
-         }
+         if (cookieParts.Length == 0)
+            SplitAndSet(cookie, cookieString);
          else
-         {
-            foreach (string part in parts)
-            {
-               string[] keyValue = part.Split('=');
-
-               if (keyValue.Length < 2)
-                  continue;
-
-               string key = keyValue[0].SafeTrim();
-               string value = keyValue[1].SafeTrim();
-
-               switch (key.ToLowerInvariant())
-               {
-                  case "expires":
-                     // TODO: This is most probably going to fail in epic exceptions, so make it more sturdy
-                     cookie.Expires = DateTime.ParseExact(value, "ddd, dd-MMM-yy HH:mm:ss zzz", null);
-                     break;
-
-                  case "domain":
-                     cookie.Domain = value;
-                     break;
-
-                  case "path":
-                     cookie.Path = value;
-                     break;
-
-                  case "secure":
-                     cookie.Secure = true;
-                     break;
-
-                  case "httponly":
-                     cookie.HttpOnly = true;
-                     break;
-
-                  default:
-                     cookie.Name = key;
-                     cookie.Value = value;
-                     break;
-               }
-            }
-         }
+            foreach (string cookiePart in cookieParts)
+               SplitAndSet(cookie, cookiePart);
 
          if (String.IsNullOrEmpty(cookie.Domain))
          {
+            // If both the domain part on the cookie and the 'uri' argument is null, throw an
+            // exception as the Domain property of the cookie is required.
             if (uri == null)
                throw new ArgumentNullException(
                   "uri", "The URI can't be null when the cookie has no 'domain' parameter available.");
@@ -151,6 +110,28 @@ namespace Arana.Core
          }
 
          return cookie;
+      }
+
+
+      /// <summary>
+      /// Splits the and sets the values on the <paramref name="cookie"/>.
+      /// </summary>
+      /// <param name="cookie">The cookie.</param>
+      /// <param name="cookiePart">The cookie part.</param>
+      private static void SplitAndSet(Cookie cookie, string cookiePart)
+      {
+         // Do nothing if the part doesn't contain an equals sign.
+         if (!cookiePart.Contains("="))
+            return;
+
+         string[] keyValue = cookiePart.Split('=');
+
+         // Do nothing the key/value if its length is less than 2.
+         if (keyValue.Length < 2)
+            return;
+
+         // Set the key and value on the cookie
+         cookie.Set(keyValue[0], keyValue[1]);
       }
    }
 }
