@@ -47,31 +47,6 @@ namespace Arana.Core.Extensions
 
 
       /// <summary>
-      /// Determines whether the beginning of <paramref name="s"/>
-      /// matches any of the specified <see cref="T:System.String"/>s
-      /// in <paramref name="values"/>.
-      /// </summary>
-      /// <param name="s">The <see cref="T:System.String"/> to match.</param>
-      /// <param name="values">The values to match against.</param>
-      /// <returns>
-      /// 	<c>true</c> if the beginning of <paramref name="s"/>
-      /// matches any of the specified <see cref="T:System.String"/>s
-      /// in <paramref name="values"/>; otherwise <c>false</c>.
-      /// </returns>
-      public static bool StartsWith(this string @s, params string[] values)
-      {
-         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
-            return false;
-
-         foreach (string value in values)
-            if (s.StartsWith(value))
-               return true;
-
-         return false;
-      }
-
-
-      /// <summary>
       /// Converst the <see cref="T:System.String"/> to a <see cref="T:System.Uri"/>.
       /// If the URI string is relative, makes it relative to the specified <paramref name="baseUri"/>.
       /// </summary>
@@ -115,6 +90,31 @@ namespace Arana.Core.Extensions
       public static string UriEncode(this string @s)
       {
          return String.IsNullOrEmpty(s) ? s : HttpUtility.UrlEncode(s);
+      }
+
+
+      /// <summary>
+      /// Determines whether the beginning of <paramref name="s"/>
+      /// matches any of the specified <see cref="T:System.String"/>s
+      /// in <paramref name="values"/>.
+      /// </summary>
+      /// <param name="s">The <see cref="T:System.String"/> to match.</param>
+      /// <param name="values">The values to match against.</param>
+      /// <returns>
+      /// 	<c>true</c> if the beginning of <paramref name="s"/>
+      /// matches any of the specified <see cref="T:System.String"/>s
+      /// in <paramref name="values"/>; otherwise <c>false</c>.
+      /// </returns>
+      private static bool StartsWith(this string @s, params string[] values)
+      {
+         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
+            return false;
+
+         foreach (string value in values)
+            if (s.StartsWith(value))
+               return true;
+
+         return false;
       }
    }
 }
