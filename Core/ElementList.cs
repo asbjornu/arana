@@ -80,6 +80,42 @@ namespace Arana.Core
          }
       }
 
+      /// <summary>
+      /// Gets the value of the 'value' attribute of the currently selected list of elements.
+      /// </summary>
+      /// <value>The value of the 'value' attribute of the currently selected list of elements.</value>
+      public string Value
+      {
+         get { return Attribute("value"); }
+      }
+
+
+      /// <summary>
+      /// Gets the value of the attribute with the given <paramref name="name"/>
+      /// of the currently selected list of elements.
+      /// </summary>
+      /// <param name="name">The name of the attribute whose value to retrieve.</param>
+      /// <returns>
+      /// The value of the attribute with the given <paramref name="name"/> of
+      /// the currently selected list of elements.
+      /// </returns>
+      public string Attribute(string name)
+      {
+         StringBuilder sb = new StringBuilder();
+
+         foreach (HtmlNode htmlNode in this)
+         {
+            HtmlAttribute attribute = htmlNode.Attributes[name];
+
+            if (attribute == null)
+               continue;
+
+            sb.AppendLine(attribute.Value);
+         }
+
+         return sb.ToString().Trim();
+      }
+
 
       /// <summary>
       /// Follows the 'href' attribute on the selected HTML elements.
@@ -216,15 +252,17 @@ namespace Arana.Core
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
          HtmlNode form = this["form"];
-         HtmlAttribute actionAttribute = form.Attributes["action"];
-         HtmlAttribute methodAttribute = form.Attributes["method"];
-         NameValueCollection requestCollection = null;
-         string method = (methodAttribute != null) && !String.IsNullOrEmpty(methodAttribute.Value)
-                            ? methodAttribute.Value.ToUpperInvariant()
-                            : AranaRequest.HttpGet;
 
          if (form == null)
             throw new InvalidOperationException("The selected elements does not contain an HTML 'form' element.");
+         
+         HtmlAttribute actionAttribute = form.Attributes["action"];
+         HtmlAttribute methodAttribute = form.Attributes["method"];
+         NameValueCollection requestCollection = null;
+         
+         string method = (methodAttribute != null) && !String.IsNullOrEmpty(methodAttribute.Value)
+                            ? methodAttribute.Value.ToUpperInvariant()
+                            : AranaRequest.HttpGet;
 
          if ((form.Attributes == null) || (form.Attributes.Count == 0))
             throw new InvalidOperationException("The HTML form has no attributes.");
