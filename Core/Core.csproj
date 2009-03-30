@@ -73,4 +73,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>if "$(ConfigurationName)"=="Release" if exist "$(ProjectDir)Build\PostBuild.cmd" "$(ProjectDir)Build\PostBuild.cmd" $(SolutionName) "$(ProjectDir)\$(TargetName).snk" "$(TargetPath)" "$(TargetDir)Fizzler.Parser.dll" "$(TargetDir)HtmlAgilityPack.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
