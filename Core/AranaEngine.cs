@@ -43,10 +43,10 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Selects the specified xpath expression.
+      /// Selects a list of elements matching the given CSS selector.
       /// </summary>
       /// <param name="cssSelector">The CSS selector.</param>
-      /// <returns></returns>
+      /// <returns>A list of elements matching the given CSS selector</returns>
       public ElementList Select(string cssSelector)
       {
          IList<HtmlNode> nodes = this.engine.Parse(cssSelector);
