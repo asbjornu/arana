@@ -23,6 +23,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Arana.Core.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Fizzler.Parser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -74,6 +77,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>if "$(ConfigurationName)"=="Release" if exist "$(ProjectDir)Build\PostBuild.cmd" "$(ProjectDir)Build\PostBuild.cmd" $(SolutionName) "$(ProjectDir)\$(TargetName).snk" "$(TargetPath)" "$(TargetDir)Fizzler.Parser.dll" "$(TargetDir)HtmlAgilityPack.dll"</PostBuildEvent>
+    <PostBuildEvent>if "$(ConfigurationName)"=="Release" if exist "$(ProjectDir)Build\PostBuild.cmd" "$(ProjectDir)Build\PostBuild.cmd" $(SolutionName) "$(ProjectDir)\$(TargetName).snk" "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
