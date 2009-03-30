@@ -13,4 +13,8 @@ set AranaAssembly=%3
 set FizzlerAssembly=%4
 set HtmlAgilityPackAssembly=%5
 
-%ILMerge% /log /target:library /xmldocs /copyattrs /keyfile:%KeyFile% /out:%SolutionName%.dll %AranaAssembly%
+echo.
+echo Merging output assembly.
+echo.
+%ILMerge% /log /target:library /xmldocs /attr:%AranaAssembly% /keyfile:%KeyFile% /out:%SolutionName%.dll %AranaAssembly% %FizzlerAssembly% %HtmlAgilityPackAssembly%
+echo.
