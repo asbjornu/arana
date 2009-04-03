@@ -14,6 +14,21 @@ namespace Arana.Core
    /// </summary>
    public class ElementList : List<HtmlNode>
    {
+      /// <summary>
+      /// Contains the tag names of all HTML form elements that should be posted to
+      /// the server when the form is submitted.
+      /// </summary>
+      private static readonly string[] FormElements = new[]
+      {
+         "input", "textarea", "button"
+      };
+
+      /// <summary>
+      /// Contains a comma separated list of the tag names of all HTML form elements
+      /// that should be posted to the server when the form is submitted.
+      /// </summary>
+      private static readonly string FormElementsSelector = String.Join(",", FormElements);
+
       private readonly AranaEngine engine;
 
 
@@ -33,7 +48,9 @@ namespace Arana.Core
       /// Gets the <see cref="HtmlAgilityPack.HtmlNode"/> with the specified tag name.
       /// </summary>
       /// <value></value>
+      // ReSharper disable MemberCanBePrivate.Global
       public HtmlNode this[string tagName]
+         // ReSharper restore MemberCanBePrivate.Global
       {
          get
          {
@@ -50,7 +67,9 @@ namespace Arana.Core
       /// Gets the inner HTML of the currently selected list of elements.
       /// </summary>
       /// <value>The inner HTML of the currently selected list of elements.</value>
+      // ReSharper disable UnusedMember.Global
       public string InnerHtml
+         // ReSharper restore UnusedMember.Global
       {
          get
          {
@@ -99,7 +118,9 @@ namespace Arana.Core
       /// The value of the attribute with the given <paramref name="name"/> of
       /// the currently selected list of elements.
       /// </returns>
+      // ReSharper disable MemberCanBePrivate.Global
       public string Attribute(string name)
+         // ReSharper restore MemberCanBePrivate.Global
       {
          StringBuilder sb = new StringBuilder();
 
@@ -143,7 +164,9 @@ namespace Arana.Core
       /// 2. If a currently selected 'a' element doesn't have any attributes.
       /// 3. If a currently selected 'a' element has an empty or non-existent 'href' attribute.
       /// </exception>
+      // ReSharper disable MemberCanBePrivate.Global
       public AranaEngine Follow(bool followRedirect)
+         // ReSharper restore MemberCanBePrivate.Global
       {
          HtmlNode anchor = this["a"];
 
@@ -164,49 +187,6 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets a <see cref="NameValueCollection"/> containing the names of all
-      /// the form elements within the collection, with either the current values
-      /// of the elements or with the value provided in the specified
-      /// <paramref name="requestValues"/>, matched by the key.
-      /// </summary>
-      /// <param name="requestValues">The request values.
-      /// A <see cref="NameValueCollection"/> containing the names of all the
-      /// elements that should have the corresponding value set.</param>
-      /// <returns>
-      /// The merged <see cref="NameValueCollection"/> with the values from
-      /// <paramref name="requestValues"/> applied.
-      /// </returns>
-      public NameValueCollection GetRequestCollection(NameValueCollection requestValues)
-      {
-         NameValueCollection requestCollection = new NameValueCollection(Count);
-
-         foreach (HtmlNode node in this)
-         {
-            // Skip nodes that aren't form elements
-            if (!node.Name.IsEqualTo(true, "input", "textarea", "button"))
-               continue;
-
-            HtmlAttribute nameAttribute = node.Attributes["name"];
-            HtmlAttribute valueAttribute = node.Attributes["value"];
-
-            // Skip elements that donesn't have a valid 'name' attribute
-            if ((nameAttribute == null) || String.IsNullOrEmpty(nameAttribute.Value))
-               continue;
-
-            // Retrieve the value for the given form element from the request values collection.
-            string value = requestValues[nameAttribute.Value];
-            value = String.IsNullOrEmpty(value) && (valueAttribute != null)
-                       ? valueAttribute.Value
-                       : value;
-
-            requestCollection.Add(nameAttribute.Value, value);
-         }
-
-         return requestCollection;
-      }
-
-
-      /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
@@ -215,7 +195,9 @@ namespace Arana.Core
       /// 2. If a currently selected 'form' element doesn't have any attributes.
       /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
       /// </exception>
+      // ReSharper disable UnusedMember.Global
       public AranaEngine Submit()
+         // ReSharper restore UnusedMember.Global
       {
          return Submit(true, null);
       }
@@ -231,7 +213,9 @@ namespace Arana.Core
       /// 2. If a currently selected 'form' element doesn't have any attributes.
       /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
       /// </exception>
+      // ReSharper disable UnusedMethodReturnValue.Global
       public AranaEngine Submit(NameValueCollection requestValues)
+         // ReSharper restore UnusedMethodReturnValue.Global
       {
          return Submit(true, requestValues);
       }
@@ -255,11 +239,11 @@ namespace Arana.Core
 
          if (form == null)
             throw new InvalidOperationException("The selected elements does not contain an HTML 'form' element.");
-         
+
          HtmlAttribute actionAttribute = form.Attributes["action"];
          HtmlAttribute methodAttribute = form.Attributes["method"];
-         NameValueCollection requestCollection = null;
-         
+         RequestDictionary requestDictionary = null;
+
          string method = (methodAttribute != null) && !String.IsNullOrEmpty(methodAttribute.Value)
                             ? methodAttribute.Value.ToUpperInvariant()
                             : AranaRequest.HttpGet;
@@ -271,14 +255,59 @@ namespace Arana.Core
             throw new InvalidOperationException("The HTML form has an empty 'action' attribute.");
 
          // TODO: Make the CSS selector more precise, so it only select child nodes of the current form element.
-         ElementList formElements = this.engine.Select("input, textarea, button");
+         ElementList formElements = this.engine.Select(FormElementsSelector);
 
          if ((formElements != null) && (formElements.Count > 0))
-            requestCollection = formElements.GetRequestCollection(requestValues);
+            requestDictionary = formElements.GetRequestCollection(requestValues);
 
-         this.engine.NavigateTo(actionAttribute.Value, followRedirect, method, requestCollection);
+         this.engine.NavigateTo(actionAttribute.Value, followRedirect, method, requestDictionary);
 
          return this.engine;
+      }
+
+
+      /// <summary>
+      /// Gets a <see cref="NameValueCollection"/> containing the names of all
+      /// the form elements within the collection, with either the current values
+      /// of the elements or with the value provided in the specified
+      /// <paramref name="requestValues"/>, matched by the key.
+      /// </summary>
+      /// <param name="requestValues">The request values.
+      /// A <see cref="NameValueCollection"/> containing the names of all the
+      /// elements that should have the corresponding value set.</param>
+      /// <returns>
+      /// The merged <see cref="NameValueCollection"/> with the values from
+      /// <paramref name="requestValues"/> applied.
+      /// </returns>
+      private RequestDictionary GetRequestCollection(NameValueCollection requestValues)
+      {
+         RequestDictionary requestDictionary = new RequestDictionary(Count);
+
+         foreach (HtmlNode node in this)
+         {
+            // Skip nodes that aren't form elements
+            if (!node.Name.IsEqualTo(true, FormElements))
+               continue;
+
+            HtmlAttribute nameAttribute = node.Attributes["name"];
+            HtmlAttribute valueAttribute = node.Attributes["value"];
+
+            // Skip elements that donesn't have a valid 'name' attribute
+            if ((nameAttribute == null) || String.IsNullOrEmpty(nameAttribute.Value))
+               continue;
+
+            string name = nameAttribute.Value;
+
+            // Retrieve the value for the given form element from the request values collection.
+            string value = requestValues[name];
+            value = String.IsNullOrEmpty(value) && (valueAttribute != null)
+                       ? valueAttribute.Value
+                       : value;
+
+            requestDictionary.Set(name, value);
+         }
+
+         return requestDictionary;
       }
    }
 }

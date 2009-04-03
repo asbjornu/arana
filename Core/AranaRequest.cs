@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -15,9 +14,34 @@ namespace Arana.Core
    internal class AranaRequest
    {
       /// <summary>
+      /// Contains the value for the HTTP "DELETE" method.
+      /// </summary>
+      private const string HttpDelete = "DELETE";
+
+      /// <summary>
       /// Contains the value for the HTTP "GET" method.
       /// </summary>
       internal const string HttpGet = "GET";
+
+      /// <summary>
+      /// Contains the value for the HTTP "HEAD" method.
+      /// </summary>
+      private const string HttpHead = "HEAD";
+
+      /// <summary>
+      /// Contains the value for the HTTP "POST" method.
+      /// </summary>
+      private const string HttpPost = "POST";
+
+      /// <summary>
+      /// Contains the value for the HTTP "PUT" method.
+      /// </summary>
+      private const string HttpPut = "PUT";
+
+      /// <summary>
+      /// Contains an array of the HTTP methods supported by Araña.
+      /// </summary>
+      private static readonly string[] HttpMethods = new[] { HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead };
 
       /// <summary>
       /// Contains the Araña Engine's User Agent string as used when performing HTTP web requests.
@@ -63,12 +87,12 @@ namespace Arana.Core
       internal AranaRequest(AranaRequest previousRequest,
                             string uri,
                             string method,
-                            NameValueCollection requestValues)
+                            RequestDictionary requestValues)
       {
          this.method = (method ?? HttpGet).ToUpperInvariant();
 
          // Throw an exception if the HTTP method used is invalid.
-         if (!this.method.IsEqualTo(false, HttpGet, "PUT", "POST", "DELETE", "HEAD"))
+         if (!this.method.IsEqualTo(false, HttpMethods))
             throw new InvalidOperationException(
                String.Format("The method '{0}' is invalid.", this.method));
 
@@ -90,20 +114,6 @@ namespace Arana.Core
       internal Uri Uri
       {
          get { return this.baseRequest.RequestUri; }
-      }
-
-
-      /// <summary>
-      /// Sets the cookie.
-      /// </summary>
-      /// <param name="responseData">The response data.</param>
-      public void SetCookie(ResponseData responseData)
-      {
-         if (responseData.Cookie == null)
-            return;
-
-         this.cookies = this.cookies ?? new CookieCollection();
-         this.cookies.Add(responseData.Cookie);
       }
 
 
@@ -140,6 +150,20 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Sets the cookie.
+      /// </summary>
+      /// <param name="responseData">The response data.</param>
+      internal void SetCookie(ResponseData responseData)
+      {
+         if (responseData.Cookie == null)
+            return;
+
+         this.cookies = this.cookies ?? new CookieCollection();
+         this.cookies.Add(responseData.Cookie);
+      }
+
+
+      /// <summary>
       /// Gets the user agent string.
       /// </summary>
       /// <returns>The user agent string.</returns>
@@ -165,7 +189,7 @@ namespace Arana.Core
       /// The created <see cref="HttpWebRequest"/>.
       /// </returns>
       private HttpWebRequest CreateRequest(string uri,
-                                           NameValueCollection requestValues)
+                                           RequestDictionary requestValues)
       {
          Uri createdUri = uri.ToUri((this.previousRequest == null) ? null : this.previousRequest.baseUri);
          this.baseUri = new Uri(createdUri.GetLeftPart(UriPartial.Authority));

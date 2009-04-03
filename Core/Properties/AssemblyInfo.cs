@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly : AssemblyTitle("Arana.Core")]
-[assembly : AssemblyDescription("")]
+[assembly : AssemblyTitle("Arana")]
+[assembly : AssemblyDescription("Araña is a simple web testing library")]
 [assembly : AssemblyConfiguration("")]
 [assembly : AssemblyCompany("OKB AS")]
-[assembly : AssemblyProduct("Arana.Core")]
+[assembly : AssemblyProduct("Arana")]
 [assembly : AssemblyCopyright("Copyright © OKB 2009")]
 [assembly : AssemblyTrademark("")]
 [assembly : AssemblyCulture("")]
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly : AssemblyVersion("0.1.0.0")]
-[assembly : AssemblyFileVersion("0.1.0.0")]
+[assembly : AssemblyVersion("0.2.0.0")]
+[assembly : AssemblyFileVersion("0.2.0.0")]
