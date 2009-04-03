@@ -14,36 +14,6 @@ namespace Arana.Core
    internal class AranaRequest
    {
       /// <summary>
-      /// Contains the value for the HTTP "DELETE" method.
-      /// </summary>
-      private const string HttpDelete = "DELETE";
-
-      /// <summary>
-      /// Contains the value for the HTTP "GET" method.
-      /// </summary>
-      internal const string HttpGet = "GET";
-
-      /// <summary>
-      /// Contains the value for the HTTP "HEAD" method.
-      /// </summary>
-      private const string HttpHead = "HEAD";
-
-      /// <summary>
-      /// Contains the value for the HTTP "POST" method.
-      /// </summary>
-      private const string HttpPost = "POST";
-
-      /// <summary>
-      /// Contains the value for the HTTP "PUT" method.
-      /// </summary>
-      private const string HttpPut = "PUT";
-
-      /// <summary>
-      /// Contains an array of the HTTP methods supported by Araña.
-      /// </summary>
-      private static readonly string[] HttpMethods = new[] { HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead };
-
-      /// <summary>
       /// Contains the Araña Engine's User Agent string as used when performing HTTP web requests.
       /// </summary>
       private static readonly string UserAgentString = GetUserAgentString();
@@ -89,10 +59,10 @@ namespace Arana.Core
                             string method,
                             RequestDictionary requestValues)
       {
-         this.method = (method ?? HttpGet).ToUpperInvariant();
+         this.method = (method ?? HttpMethod.Get).ToUpperInvariant();
 
          // Throw an exception if the HTTP method used is invalid.
-         if (!this.method.IsEqualTo(false, HttpMethods))
+         if (!this.method.IsEqualTo(false, HttpMethod.All))
             throw new InvalidOperationException(
                String.Format("The method '{0}' is invalid.", this.method));
 
@@ -123,6 +93,9 @@ namespace Arana.Core
       /// <returns>
       /// The <see cref="AranaResponse"/> for the current <see cref="AranaRequest"/>.
       /// </returns>
+      /// <exception cref="InvalidUriException">
+      /// 
+      /// </exception>
       internal AranaResponse GetResponse()
       {
          return new AranaResponse(this, () =>
@@ -137,12 +110,13 @@ namespace Arana.Core
             catch (WebException ex)
             {
                response = ex.Response as HttpWebResponse;
+
+               if (response == null)
+                  throw new InvalidUriException(Uri, ex);
             }
 
             if (response == null)
-               throw new InvalidOperationException(
-                  String.Format("The URI '{0}' did not make much sense, sorry.",
-                                Uri));
+               throw new InvalidUriException(Uri);
 
             return response;
          });
@@ -204,10 +178,10 @@ namespace Arana.Core
          // Add the given values to the request if they are 
          if ((requestValues != null) && (requestValues.Count > 0))
          {
-            string requestString = requestValues.GetRequestString((this.method == HttpGet));
+            string requestString = requestValues.GetRequestString((this.method == HttpMethod.Get));
 
             // If the HTTP method is GET, create a new request with the values in the query string
-            if (this.method == HttpGet)
+            if (this.method == HttpMethod.Get)
             {
                uri = String.Concat(uri + requestString);
                return CreateRequest(uri, null);
@@ -239,7 +213,7 @@ namespace Arana.Core
 
          // TODO: Set Accept-Encoding and handle decoding
 
-         if (request.Method != HttpGet)
+         if (request.Method != HttpMethod.Get)
             request.ContentType = "application/x-www-form-urlencoded";
 
          // If there's any cookies to add to the request, do it
