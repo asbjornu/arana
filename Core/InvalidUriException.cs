@@ -12,7 +12,17 @@ namespace Arana.Core
       /// </summary>
       /// <param name="uri">The invalid URI.</param>
       public InvalidUriException(Uri uri)
-         : base(CreateMessage(uri.ToString(), null))
+         : this(uri.ToString())
+      {
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="InvalidUriException"/> class.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      public InvalidUriException(string uri)
+         : this(uri, String.Empty)
       {
       }
 
@@ -23,7 +33,7 @@ namespace Arana.Core
       /// <param name="uri">The invalid URI.</param>
       /// <param name="innerException">The inner exception.</param>
       public InvalidUriException(Uri uri, Exception innerException)
-         : base(CreateMessage(uri.ToString(), null), innerException)
+         : this(uri.ToString(), innerException)
       {
       }
 

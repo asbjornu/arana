@@ -14,6 +14,9 @@ namespace Arana.Core
    /// </summary>
    public class AranaEngine
    {
+      /// <summary>
+      /// The <see cref="SelectorEngine" /> used to parse and execute CSS selectors.
+      /// </summary>
       private SelectorEngine engine;
 
       /// <summary>
@@ -45,7 +48,9 @@ namespace Arana.Core
       /// Selects a list of elements matching the given CSS selector.
       /// </summary>
       /// <param name="cssSelector">The CSS selector.</param>
-      /// <returns>A list of elements matching the given CSS selector.</returns>
+      /// <returns>
+      /// A list of elements matching the given CSS selector.
+      /// </returns>
       /// <exception cref="ArgumentException">
       /// If the <paramref name="cssSelector"/> returns an empty node set.
       /// </exception>
@@ -67,10 +72,8 @@ namespace Arana.Core
       /// Navigates to the specified <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
-      /// <param name="followRedirect">
-      /// <c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.
-      /// </param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       internal void NavigateTo(string uri, bool followRedirect)
       {
          this.engine = GetSelectorEngine(uri, followRedirect, null, null);
@@ -81,10 +84,8 @@ namespace Arana.Core
       /// Navigates to the specified <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
-      /// <param name="followRedirect">
-      /// <c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.
-      /// </param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
       internal void NavigateTo(string uri,
@@ -100,15 +101,16 @@ namespace Arana.Core
       /// Gets a new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
-      /// <param name="followRedirect">
-      /// <c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.
-      /// </param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>
       /// A new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
       /// </returns>
+      /// <exception cref="InvalidUriException">
+      /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
+      /// </exception>
       private SelectorEngine GetSelectorEngine(string uri,
                                                bool followRedirect,
                                                string httpMethod,
@@ -119,8 +121,7 @@ namespace Arana.Core
          using (AranaResponse response = this.request.GetResponse())
          {
             if (response == null)
-               throw new ArgumentException(
-                  String.Format("The URI '{0}' did not make much sense, sorry.", uri), "uri");
+               throw new InvalidUriException(uri);
 
             Response = response.Data;
 
