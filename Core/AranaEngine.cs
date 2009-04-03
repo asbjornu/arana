@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 
 using Arana.Core.Extensions;
 
@@ -86,7 +85,7 @@ namespace Arana.Core
       internal void NavigateTo(string uri,
                                bool followRedirect,
                                string httpMethod,
-                               NameValueCollection requestValues)
+                               RequestDictionary requestValues)
       {
          this.engine = GetSelectorEngine(uri, followRedirect, httpMethod, requestValues);
       }
@@ -108,7 +107,7 @@ namespace Arana.Core
       private SelectorEngine GetSelectorEngine(string uri,
                                                bool followRedirect,
                                                string httpMethod,
-                                               NameValueCollection requestValues)
+                                               RequestDictionary requestValues)
       {
          this.request = new AranaRequest(this.request, uri, httpMethod, requestValues);
 

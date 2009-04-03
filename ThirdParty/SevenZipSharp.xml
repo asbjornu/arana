@@ -1,0 +1,3320 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SevenZipSharp</name>
+    </assembly>
+    <members>
+        <member name="T:SevenZip.Sdk.ICoder">
+            <summary>
+            Stream coder interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.Sdk.ICoder.Code(System.IO.Stream,System.IO.Stream,System.Int64,System.Int64,SevenZip.Sdk.ICodeProgress)">
+            <summary>
+            Codes streams.
+            </summary>
+            <param name="inStream">
+            input Stream.
+            </param>
+            <param name="outStream">
+            output Stream.
+            </param>
+            <param name="inSize">
+            input Size. -1 if unknown.
+            </param>
+            <param name="outSize">
+            output Size. -1 if unknown.
+            </param>
+            <param name="progress">
+            callback progress reference.
+            </param>
+            <exception cref="T:SevenZip.Sdk.DataErrorException">
+            if input stream is not valid
+            </exception>
+        </member>
+        <member name="T:SevenZip.Sdk.ISetDecoderProperties">
+            <summary>
+            The ISetDecoderPropertiesinterface
+            </summary>
+        </member>
+        <member name="M:SevenZip.Sdk.ISetDecoderProperties.SetDecoderProperties(System.Byte[])">
+            <summary>
+            Sets decoder properties
+            </summary>
+            <param name="properties">Array of byte properties</param>
+        </member>
+        <member name="M:SevenZip.Sdk.Compression.Lzma.Decoder.#ctor">
+            <summary>
+            Lzma decoder
+            </summary>
+        </member>
+        <member name="M:SevenZip.Sdk.Compression.Lzma.Decoder.Code(System.IO.Stream,System.IO.Stream,System.Int64,System.Int64,SevenZip.Sdk.ICodeProgress)">
+            <summary>
+            Codes a stream with LZMA algorithm to an output stream
+            </summary>
+            <param name="inStream">The input stream</param>
+            <param name="outStream">The output stream</param>
+            <param name="inSize">The input data stream size</param>
+            <param name="outSize">The output data size</param>
+            <param name="progress">Progress interface</param>
+        </member>
+        <member name="M:SevenZip.Sdk.Compression.Lzma.Decoder.SetDecoderProperties(System.Byte[])">
+            <summary>
+            Sets decoder properties
+            </summary>
+            <param name="properties">Array of byte properties</param>
+        </member>
+        <member name="M:SevenZip.Sdk.Compression.Lzma.Decoder.Train(System.IO.Stream)">
+            <summary>
+            Trains a stream
+            </summary>
+            <param name="stream">The stream to train.</param>
+            <returns>true if Ok; otherwise, false.</returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.PropVariant">
+            <summary>
+            COM VARIANT structure with special interface routines
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.PropVariant._Value">
+            <summary>
+            IntPtr variant value
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.PropVariant._ByteValue">
+            <summary>
+            Byte variant value
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.PropVariant._UInt32Value">
+            <summary>
+            Unsigned int variant value
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.PropVariant._Int64Value">
+            <summary>
+            Long variant value
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.PropVariant._UInt64Value">
+            <summary>
+            Unsigned long variant value
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.PropVariant._FileTime">
+            <summary>
+            FILETIME variant value
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.PropVariant.Clear">
+            <summary>
+            Clears variant
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.PropVariant.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object is equal to the current PropVariant.
+            </summary>
+            <param name="obj">The System.Object to compare with the current PropVariant.</param>
+            <returns>true if the specified System.Object is equal to the current PropVariant; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.PropVariant.Equals(SevenZip.ComRoutines.PropVariant)">
+            <summary>
+            Determines whether the specified PropVariant is equal to the current PropVariant.
+            </summary>
+            <param name="afi">The PropVariant to compare with the current PropVariant.</param>
+            <returns>true if the specified PropVariant is equal to the current PropVariant; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.PropVariant.GetHashCode">
+            <summary>
+             Serves as a hash function for a particular type.
+            </summary>
+            <returns> A hash code for the current PropVariant.</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.PropVariant.ToString">
+            <summary>
+            Returns a System.String that represents the current PropVariant.
+            </summary>
+            <returns>A System.String that represents the current PropVariant.</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.PropVariant.op_Equality(SevenZip.ComRoutines.PropVariant,SevenZip.ComRoutines.PropVariant)">
+            <summary>
+            Determines whether the specified PropVariant instances are considered equal.
+            </summary>
+            <param name="afi1">The first PropVariant to compare.</param>
+            <param name="afi2">The second PropVariant to compare.</param>
+            <returns>true if the specified PropVariant instances are considered equal; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.PropVariant.op_Inequality(SevenZip.ComRoutines.PropVariant,SevenZip.ComRoutines.PropVariant)">
+            <summary>
+            Determines whether the specified PropVariant instances are not considered equal.
+            </summary>
+            <param name="afi1">The first PropVariant to compare.</param>
+            <param name="afi2">The second PropVariant to compare.</param>
+            <returns>true if the specified PropVariant instances are not considered equal; otherwise, false.</returns>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.VarType">
+            <summary>
+            Gets or sets variant type
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.Value">
+            <summary>
+            Gets or sets the pointer value of the COM variant
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.ByteValue">
+            <summary>
+            Gets or sets the byte value of the COM variant
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.UInt32Value">
+            <summary>
+            Gets or sets the UInt32 value of the COM variant
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.Int64Value">
+            <summary>
+            Gets or sets the Int64 value of the COM variant
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.UInt64Value">
+            <summary>
+            Gets or sets the UInt64 value of the COM variant
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.FileTime">
+            <summary>
+            Gets or sets the FILETIME value of the COM variant
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.VarTypeNative">
+            <summary>
+            Gets or sets variant type (ushort)
+            </summary>
+        </member>
+        <member name="P:SevenZip.ComRoutines.PropVariant.Object">
+            <summary>
+            Gets the variant object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.AskMode">
+            <summary>
+            Stores file extraction modes
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.AskMode.Extract">
+            <summary>
+            Extraction mode
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.AskMode.Test">
+            <summary>
+            Test mode
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.AskMode.Skip">
+            <summary>
+            Skip mode
+            </summary>
+        </member>
+        <member name="T:SevenZip.ComRoutines.OperationResult">
+            <summary>
+            Stores operation result values
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.OperationResult.Ok">
+            <summary>
+            Success
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.OperationResult.UnsupportedMethod">
+            <summary>
+            Method is unsupported
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.OperationResult.DataError">
+            <summary>
+            Data error has occured
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.OperationResult.CrcError">
+            <summary>
+            CrcError has occured
+            </summary>
+        </member>
+        <member name="T:SevenZip.ComRoutines.ItemPropId">
+            <summary>
+            Codes of item properities
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.NoProperty">
+            <summary>
+            No property
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.HandlerItemIndex">
+            <summary>
+            Handler item index
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Path">
+            <summary>
+            Item path
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Name">
+            <summary>
+            Item name
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Extension">
+            <summary>
+            Item extension
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.IsFolder">
+            <summary>
+            true if the item is a folder; otherwise, false
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Size">
+            <summary>
+            Item size
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.PackedSize">
+            <summary>
+            Item packed sise; usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Attributes">
+            <summary>
+            Item attributes; usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.CreationTime">
+            <summary>
+            Item creation time; usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.LastAccessTime">
+            <summary>
+            Item last access time; usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.LastWriteTime">
+            <summary>
+            Item last write time
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Solid">
+            <summary>
+            true if the item is solid; otherwise, false
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Commented">
+            <summary>
+            true if the item is commented; otherwise, false
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Encrypted">
+            <summary>
+            true if the item is encrypted; otherwise, false
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.SplitBefore">
+            <summary>
+            (?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.SplitAfter">
+            <summary>
+            (?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.DictionarySize">
+            <summary>
+            Dictionary size(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Crc">
+            <summary>
+            Item CRC checksum
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Type">
+            <summary>
+            Item type(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.IsAnti">
+            <summary>
+            (?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Method">
+            <summary>
+            Compression method(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.HostOS">
+            <summary>
+            (?); usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.FileSystem">
+            <summary>
+            Item file system; usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.User">
+            <summary>
+            Item user(?); usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Group">
+            <summary>
+            Item group(?); usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Block">
+            <summary>
+            Bloack size(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Comment">
+            <summary>
+            Item comment; usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Position">
+            <summary>
+            Item position
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Prefix">
+            <summary>
+            Item prefix(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.NumSubDirs">
+            <summary>
+            Number of subdirectories
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.NumSubFiles">
+            <summary>
+            Numbers of subfiles
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.UnpackVersion">
+            <summary>
+            The archive legacy unpacker version
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Volume">
+            <summary>
+            Volume(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.IsVolume">
+            <summary>
+            Is a volume
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Offset">
+            <summary>
+            Offset value(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Links">
+            <summary>
+            Links(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.NumBlocks">
+            <summary>
+            Number of blocks
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.NumVolumes">
+            <summary>
+            Number of volumes(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.TimeType">
+            <summary>
+            Time type(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Bit64">
+            <summary>
+            64-bit(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.BigEndian">
+            <summary>
+            BigEndian
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Cpu">
+            <summary>
+            Cpu(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.PhysicalSize">
+            <summary>
+            Physical archive size
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.HeadersSize">
+            <summary>
+            Headers size
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Checksum">
+            <summary>
+            Archive checksum
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.TotalSize">
+            <summary>
+            (?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.FreeSpace">
+            <summary>
+            (?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.ClusterSize">
+            <summary>
+            Cluster size(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.VolumeName">
+            <summary>
+            Volume name(?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.LocalName">
+            <summary>
+            Local item name(?); usually absent
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.Provider">
+            <summary>
+            (?)
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.ItemPropId.UserDefined">
+            <summary>
+            User defined property; usually absent
+            </summary>
+        </member>
+        <member name="T:SevenZip.ComRoutines.ArchivePropId">
+            <summary>
+            Codes of archive properties or modes
+            </summary>
+        </member>
+        <member name="T:SevenZip.ComRoutines.PropIdToName">
+            <summary>
+            PropId string names dictionary wrapper
+            </summary>
+        </member>
+        <member name="F:SevenZip.ComRoutines.PropIdToName.PropIdNames">
+            <summary>
+            PropId string names
+            </summary>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IProgress">
+            <summary>
+            7-zip IProgress imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IProgress.SetTotal(System.UInt64)">
+            <summary>
+            Gives the size of the unpacked archive files
+            </summary>
+            <param name="total">Size of the unpacked archive files (in bytes)</param>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IArchiveOpenCallback">
+            <summary>
+            7-zip IArchiveOpenCallback imported interface for handling the opening of an archive
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveOpenCallback.SetTotal(System.IntPtr,System.IntPtr)">
+            <summary>
+            Sets total data size
+            </summary>
+            <param name="files">Files pointer</param>
+            <param name="bytes">Total size in bytes</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveOpenCallback.SetCompleted(System.IntPtr,System.IntPtr)">
+            <summary>
+            Sets completed size
+            </summary>
+            <param name="files">Files pointer</param>
+            <param name="bytes">Completed size in bytes</param>
+        </member>
+        <member name="T:SevenZip.ComRoutines.ICryptoGetTextPassword">
+            <summary>
+            7-zip ICryptoGetTextPassword imported interface for getting the archive password
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.ICryptoGetTextPassword.CryptoGetTextPassword(System.String@)">
+            <summary>
+            Gets password for the archive
+            </summary>
+            <param name="password">Password for the archive</param>
+            <returns>Zero if everything is OK</returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.ICryptoGetTextPassword2">
+            <summary>
+            7-zip ICryptoGetTextPassword2 imported interface for setting the archive password
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.ICryptoGetTextPassword2.CryptoGetTextPassword2(System.Int32@,System.String@)">
+            <summary>
+            Sets password for the archive
+            </summary>
+            <param name="passwordIsDefined">Specifies whether archive has a password or not (0 if not)</param>
+            <param name="password">Password for the archive</param>
+            <returns>Zero if everything is OK</returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IArchiveExtractCallback">
+            <summary>
+            7-zip IArchiveExtractCallback imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveExtractCallback.SetTotal(System.UInt64)">
+            <summary>
+            Gives the size of the unpacked archive files
+            </summary>
+            <param name="total">Size of the unpacked archive files (in bytes)</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveExtractCallback.SetCompleted(System.UInt64@)">
+            <summary>
+            SetCompleted 7-zip function
+            </summary>
+            <param name="completeValue"></param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveExtractCallback.GetStream(System.UInt32,SevenZip.ComRoutines.ISequentialOutStream@,SevenZip.ComRoutines.AskMode)">
+            <summary>
+            Gets the stream for file extraction
+            </summary>
+            <param name="index">File index in the archive file table</param>
+            <param name="outStream">Pointer to the stream</param>
+            <param name="askExtractMode">Extraction mode</param>
+            <returns>S_OK - OK, S_FALSE - skip this file</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveExtractCallback.PrepareOperation(SevenZip.ComRoutines.AskMode)">
+            <summary>
+            PrepareOperation 7-zip function
+            </summary>
+            <param name="askExtractMode">Ask mode</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveExtractCallback.SetOperationResult(SevenZip.ComRoutines.OperationResult)">
+            <summary>
+            Sets the operaton result
+            </summary>
+            <param name="operationResult">The operation result</param>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IArchiveUpdateCallback">
+            <summary>
+            7-zip IArchiveUpdateCallback imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveUpdateCallback.SetTotal(System.UInt64)">
+            <summary>
+            Gives the size of the unpacked archive files
+            </summary>
+            <param name="total">Size of the unpacked archive files (in bytes)</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveUpdateCallback.SetCompleted(System.UInt64@)">
+            <summary>
+            SetCompleted 7-zip internal function
+            </summary>
+            <param name="completeValue"></param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveUpdateCallback.GetUpdateItemInfo(System.UInt32,System.Int32@,System.Int32@,System.UInt32@)">
+            <summary>
+            Gets archive update mode
+            </summary>
+            <param name="index">File index</param>
+            <param name="newData">1 if new, 0 if not</param>
+            <param name="newProperties">1 if new, 0 if not</param>
+            <param name="indexInArchive">-1 if doesn't matter</param>
+            <returns></returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveUpdateCallback.GetProperty(System.UInt32,SevenZip.ComRoutines.ItemPropId,SevenZip.ComRoutines.PropVariant@)">
+            <summary>
+            Gets the archive item property data
+            </summary>
+            <param name="index">Item index</param>
+            <param name="propId">Property identificator</param>
+            <param name="value">Property value</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveUpdateCallback.GetStream(System.UInt32,SevenZip.ComRoutines.ISequentialInStream@)">
+            <summary>
+            Gets the stream for reading
+            </summary>
+            <param name="index">Item index</param>
+            <param name="inStream">The ISequentialInStream pointer for reading</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveUpdateCallback.SetOperationResult(SevenZip.ComRoutines.OperationResult)">
+            <summary>
+            Sets the result for currently performed operation
+            </summary>
+            <param name="operationResult">Result value</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveUpdateCallback.EnumProperties(System.IntPtr)">
+            <summary>
+            EnumProperties 7-zip internal function
+            </summary>
+            <param name="enumerator">Enumerator pointer</param>
+            <returns></returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IArchiveOpenVolumeCallback">
+            <summary>
+            7-zip IArchiveOpenVolumeCallback imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveOpenVolumeCallback.GetProperty(SevenZip.ComRoutines.ItemPropId,System.IntPtr)">
+            <summary>
+            Gets the property data
+            </summary>
+            <param name="propId">Property identificator</param>
+            <param name="value">Property value</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IArchiveOpenVolumeCallback.GetStream(System.String,SevenZip.ComRoutines.IInStream@)">
+            <summary>
+            Gets the stream for reading
+            </summary>
+            <param name="name">Name</param>
+            <param name="inStream">The IInStream pointer for reading</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IInArchiveGetStream">
+            <summary>
+            7-zip IInArchiveGetStream imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchiveGetStream.GetStream(System.UInt32)">
+            <summary>
+            Gets the stream for reading
+            </summary>
+            <param name="index">Item index</param>
+            <returns>The ISequentialInStream pointer</returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.ISequentialInStream">
+            <summary>
+            7-zip ISequentialInStream imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.ISequentialInStream.Read(System.Byte[],System.UInt32)">
+            <summary>
+            Writes data to 7-zip packer
+            </summary>
+            <param name="data">Array of bytes available for writing</param>
+            <param name="size">Array size</param>
+            <returns>S_OK if success</returns>
+            <remarks>If (size > 0) and there are bytes in stream, 
+            this function must read at least 1 byte.
+            This function is allowed to read less than "size" bytes.
+            You must call Read function in loop, if you need exact amount of data.
+            </remarks>
+        </member>
+        <member name="T:SevenZip.ComRoutines.ISequentialOutStream">
+            <summary>
+            7-zip ISequentialOutStream imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.ISequentialOutStream.Write(System.Byte[],System.UInt32,System.IntPtr)">
+            <summary>
+            Writes data to unpacked file stream
+            </summary>
+            <param name="data">Array of bytes available for reading</param>
+            <param name="size">Array size</param>
+            <param name="processedSize">Processed data size</param>
+            <returns>S_OK if success</returns>
+            <remarks>If size != 0, return value is S_OK and (*processedSize == 0),
+             then there are no more bytes in stream.
+            If (size > 0) and there are bytes in stream, 
+            this function must read at least 1 byte.
+            This function is allowed to rwrite less than "size" bytes.
+            You must call Write function in loop, if you need exact amount of data.
+            </remarks>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IInStream">
+            <summary>
+            7-zip IInStream imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInStream.Read(System.Byte[],System.UInt32)">
+            <summary>
+            Read routine
+            </summary>
+            <param name="data">Array of bytes to set</param>
+            <param name="size">Array size</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInStream.Seek(System.Int64,System.IO.SeekOrigin,System.IntPtr)">
+            <summary>
+            Seek routine
+            </summary>
+            <param name="offset">Offset value</param>
+            <param name="seekOrigin">Seek origin value</param>
+            <param name="newPosition">New position pointer</param>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IOutStream">
+            <summary>
+            7-zip IOutStream imported interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IOutStream.Write(System.Byte[],System.UInt32,System.IntPtr)">
+            <summary>
+            Write routine
+            </summary>
+            <param name="data">Array of bytes to get</param>
+            <param name="size">Array size</param>
+            <param name="processedSize">Processed size</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IOutStream.Seek(System.Int64,System.IO.SeekOrigin,System.IntPtr)">
+            <summary>
+            Seek routine
+            </summary>
+            <param name="offset">Offset value</param>
+            <param name="seekOrigin">Seek origin value</param>
+            <param name="newPosition">New position pointer</param>       
+        </member>
+        <member name="M:SevenZip.ComRoutines.IOutStream.SetSize(System.Int64)">
+            <summary>
+            Set size routine
+            </summary>
+            <param name="newSize">New size value</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IInArchive">
+            <summary>
+            7-zip essential in archive interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.Open(SevenZip.ComRoutines.IInStream,System.UInt64@,SevenZip.ComRoutines.IArchiveOpenCallback)">
+            <summary>
+            Opens archive for reading
+            </summary>
+            <param name="stream">Archive file stream</param>
+            <param name="maxCheckStartPosition">Maximum start position for checking</param>
+            <param name="openArchiveCallback">Callback for opening archive</param>
+            <returns></returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.Close">
+            <summary>
+            Closes archive
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.GetNumberOfItems">
+            <summary>
+            Gets the number of files in the archive file table            
+            </summary>
+            <returns>The number of files in the archive</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.GetProperty(System.UInt32,SevenZip.ComRoutines.ItemPropId,SevenZip.ComRoutines.PropVariant@)">
+            <summary>
+            Retrieves specific property data
+            </summary>
+            <param name="index">File index in the archive file table</param>
+            <param name="propId">Property code</param>
+            <param name="value">Property variant value</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.Extract(System.UInt32[],System.UInt32,System.Int32,SevenZip.ComRoutines.IArchiveExtractCallback)">
+            <summary>
+            Extract files from the opened archive
+            </summary>
+            <param name="indexes">indexes of files to be extracted (must be sorted)</param>
+            <param name="numItems">0xFFFFFFFF means all files</param>
+            <param name="testMode">testMode != 0 means "test files operation"</param>
+            <param name="extractCallback">IArchiveExtractCallback for operations handling</param>
+            <returns>0 if success</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.GetArchiveProperty(SevenZip.ComRoutines.ItemPropId,SevenZip.ComRoutines.PropVariant@)">
+            <summary>
+            Gets archive property data
+            </summary>
+            <param name="propId">Archive property identificator</param>
+            <param name="value">Archive property value</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.GetNumberOfProperties">
+            <summary>
+            Gets the number of properties
+            </summary>
+            <returns>The number of properties</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.GetPropertyInfo(System.UInt32,System.String@,SevenZip.ComRoutines.ItemPropId@,System.UInt16@)">
+            <summary>
+            Gets property information
+            </summary>
+            <param name="index">Item index</param>
+            <param name="name">Name</param>
+            <param name="propId">Property identificator</param>
+            <param name="varType">Variant type</param>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.GetNumberOfArchiveProperties">
+            <summary>
+            Gets the number of archive properties
+            </summary>
+            <returns>The number of archive properties</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IInArchive.GetArchivePropertyInfo(System.UInt32,System.String@,SevenZip.ComRoutines.ItemPropId@,System.UInt16@)">
+            <summary>
+            Gets the archive property information
+            </summary>
+            <param name="index">Item index</param>
+            <param name="name">Name</param>
+            <param name="propId">Property identificator</param>
+            <param name="varType">Variant type</param>
+        </member>
+        <member name="T:SevenZip.ComRoutines.IOutArchive">
+            <summary>
+            7-zip essential out archive interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IOutArchive.UpdateItems(SevenZip.ComRoutines.ISequentialOutStream,System.UInt32,SevenZip.ComRoutines.IArchiveUpdateCallback)">
+            <summary>
+            Updates archive items
+            </summary>
+            <param name="outStream">The ISequentialOutStream pointer for writing the archive data</param>
+            <param name="numItems">Number of archive items</param>
+            <param name="updateCallback">The IArchiveUpdateCallback pointer</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="M:SevenZip.ComRoutines.IOutArchive.GetFileTimeType(System.IntPtr)">
+            <summary>
+            Gets file time type(?)
+            </summary>
+            <param name="type">Type pointer</param>
+        </member>
+        <member name="T:SevenZip.SevenZipBase">
+            <summary>
+            SevenZip Extractor/Compressor base class. Implements Password string, ReportErrors flag.
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipBase.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipBase class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipBase.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipBase class
+            </summary>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipBase.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the SevenZipBase class
+            </summary>
+            <param name="reportErrors">Throw exceptions on archive errors flag</param>
+        </member>
+        <member name="M:SevenZip.SevenZipBase.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the SevenZipBase class
+            </summary>
+            <param name="password">The archive password</param>
+            <param name="reportErrors">Throw exceptions on archive errors flag</param>
+        </member>
+        <member name="M:SevenZip.SevenZipBase.CheckedExecute(System.Int32,System.String)">
+            <summary>
+            Throws exception if HRESULT != 0
+            </summary>
+            <param name="hresult">Result code to check</param>
+            <param name="message">Exception message</param>
+        </member>
+        <member name="P:SevenZip.SevenZipBase.Password">
+            <summary>
+            Gets or sets the archive password
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipBase.ReportErrors">
+            <summary>
+            Gets or sets throw exceptions on archive errors flag
+            </summary>
+        </member>
+        <member name="T:SevenZip.ArchiveFileInfo">
+            <summary>
+            Struct for storing information about files in the 7-zip archive
+            </summary>
+        </member>
+        <member name="M:SevenZip.ArchiveFileInfo.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object is equal to the current ArchiveFileInfo.
+            </summary>
+            <param name="obj">The System.Object to compare with the current ArchiveFileInfo.</param>
+            <returns>true if the specified System.Object is equal to the current ArchiveFileInfo; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveFileInfo.Equals(SevenZip.ArchiveFileInfo)">
+            <summary>
+            Determines whether the specified ArchiveFileInfo is equal to the current ArchiveFileInfo.
+            </summary>
+            <param name="afi">The ArchiveFileInfo to compare with the current ArchiveFileInfo.</param>
+            <returns>true if the specified ArchiveFileInfo is equal to the current ArchiveFileInfo; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveFileInfo.GetHashCode">
+            <summary>
+             Serves as a hash function for a particular type.
+            </summary>
+            <returns> A hash code for the current ArchiveFileInfo.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveFileInfo.ToString">
+            <summary>
+            Returns a System.String that represents the current ArchiveFileInfo.
+            </summary>
+            <returns>A System.String that represents the current ArchiveFileInfo.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveFileInfo.op_Equality(SevenZip.ArchiveFileInfo,SevenZip.ArchiveFileInfo)">
+            <summary>
+            Determines whether the specified ArchiveFileInfo instances are considered equal.
+            </summary>
+            <param name="afi1">The first ArchiveFileInfo to compare.</param>
+            <param name="afi2">The second ArchiveFileInfo to compare.</param>
+            <returns>true if the specified ArchiveFileInfo instances are considered equal; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveFileInfo.op_Inequality(SevenZip.ArchiveFileInfo,SevenZip.ArchiveFileInfo)">
+            <summary>
+            Determines whether the specified ArchiveFileInfo instances are not considered equal.
+            </summary>
+            <param name="afi1">The first ArchiveFileInfo to compare.</param>
+            <param name="afi2">The second ArchiveFileInfo to compare.</param>
+            <returns>true if the specified ArchiveFileInfo instances are not considered equal; otherwise, false.</returns>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.Index">
+            <summary>
+            Gets or sets index of the file in the archive file table
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.FileName">
+            <summary>
+            Gets or sets file name
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.LastWriteTime">
+            <summary>
+            Gets or sets file write time
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.Size">
+            <summary>
+            Gets or sets size of the file (unpacked)
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.Crc">
+            <summary>
+            Gets or sets CRC checksum of the file
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.Attributes">
+            <summary>
+            Gets or sets file attributes
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.IsDirectory">
+            <summary>
+            Gets or sets being a directory
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.Encrypted">
+            <summary>
+            Gets or sets being encrypted
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveFileInfo.Comment">
+            <summary>
+            Gets or sets comment for the file
+            </summary>
+        </member>
+        <member name="T:SevenZip.ArchiveProperty">
+            <summary>
+            Archive property struct
+            </summary>
+        </member>
+        <member name="M:SevenZip.ArchiveProperty.#ctor(System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the ArchiveProperty struct
+            </summary>
+            <param name="name">Property name</param>
+            <param name="value">Property value</param>
+        </member>
+        <member name="M:SevenZip.ArchiveProperty.Equals(System.Object)">
+            <summary>
+            Determines whether the specified System.Object is equal to the current ArchiveProperty.
+            </summary>
+            <param name="obj">The System.Object to compare with the current ArchiveProperty.</param>
+            <returns>true if the specified System.Object is equal to the current ArchiveProperty; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveProperty.Equals(SevenZip.ArchiveProperty)">
+            <summary>
+            Determines whether the specified ArchiveProperty is equal to the current ArchiveProperty.
+            </summary>
+            <param name="afi">The ArchiveProperty to compare with the current ArchiveProperty.</param>
+            <returns>true if the specified ArchiveProperty is equal to the current ArchiveProperty; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveProperty.GetHashCode">
+            <summary>
+             Serves as a hash function for a particular type.
+            </summary>
+            <returns> A hash code for the current ArchiveProperty.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveProperty.ToString">
+            <summary>
+            Returns a System.String that represents the current ArchiveProperty.
+            </summary>
+            <returns>A System.String that represents the current ArchiveProperty.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveProperty.op_Equality(SevenZip.ArchiveProperty,SevenZip.ArchiveProperty)">
+            <summary>
+            Determines whether the specified ArchiveProperty instances are considered equal.
+            </summary>
+            <param name="afi1">The first ArchiveProperty to compare.</param>
+            <param name="afi2">The second ArchiveProperty to compare.</param>
+            <returns>true if the specified ArchiveProperty instances are considered equal; otherwise, false.</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveProperty.op_Inequality(SevenZip.ArchiveProperty,SevenZip.ArchiveProperty)">
+            <summary>
+            Determines whether the specified ArchiveProperty instances are not considered equal.
+            </summary>
+            <param name="afi1">The first ArchiveProperty to compare.</param>
+            <param name="afi2">The second ArchiveProperty to compare.</param>
+            <returns>true if the specified ArchiveProperty instances are not considered equal; otherwise, false.</returns>
+        </member>
+        <member name="P:SevenZip.ArchiveProperty.Name">
+            <summary>
+            Gets the name of the archive property
+            </summary>
+        </member>
+        <member name="P:SevenZip.ArchiveProperty.Value">
+            <summary>
+            Gets the value of the archive property
+            </summary>
+        </member>
+        <member name="T:SevenZip.ISevenZipExtractor">
+            <summary>
+            Interface for extracting and getting info from 7-zip archives
+            </summary>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractArchive(System.String,System.Boolean)">
+            <summary>
+            Unpacks the whole archive to the specified directory
+            </summary>
+            <param name="directory">Directory where the files are to be unpacked</param>
+            <param name="reportErrors">Throw exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractArchive(System.String)">
+            <summary>
+            Unpacks the whole archive to the specified directory
+            </summary>
+            <param name="directory">Directory where the files are to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.String,System.IO.Stream)">
+            <summary>
+            Unpacks the file by its name to the specified stream
+            </summary>
+            <param name="fileName">The file full name in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.String,System.IO.Stream,System.Boolean)">
+            <summary>
+            Unpacks the file by its name to the specified stream
+            </summary>
+            <param name="fileName">The file full name in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.UInt32,System.IO.Stream)">
+            <summary>
+            Unpacks the file by its index to the specified stream
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.UInt32,System.IO.Stream,System.Boolean)">
+            <summary>
+            Unpacks the file by its index to the specified stream
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.UInt32,System.String)">
+            <summary>
+            Unpacks the file by its index to the specified directory
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.String,System.String)">
+            <summary>
+            Unpacks the file by its full name to the specified directory
+            </summary>
+            <param name="fileName">File full name in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFiles(System.UInt32[],System.String)">
+            <summary>
+            Unpacks files by their indexes to the specified directory
+            </summary>
+            <param name="indexes">indexes of the files in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFiles(System.String[],System.String)">
+            <summary>
+            Unpacks files by their full names to the specified directory
+            </summary>
+            <param name="fileNames">Full file names in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.UInt32,System.String,System.Boolean)">
+            <summary>
+            Unpacks the file by its index to the specified directory
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+            <param name="reportErrors">Throw exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFile(System.String,System.String,System.Boolean)">
+            <summary>
+            Unpacks the file by its full name to the specified directory
+            </summary>
+            <param name="fileName">File full name in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+            <param name="reportErrors">Throw exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFiles(System.UInt32[],System.String,System.Boolean)">
+            <summary>
+            Unpacks files by their indexes to the specified directory
+            </summary>
+            <param name="indexes">indexes of the files in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+            <param name="reportErrors">Throw exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.ExtractFiles(System.String[],System.String,System.Boolean)">
+            <summary>
+            Unpacks files by their full names to the specified directory
+            </summary>
+            <param name="fileNames">Full file names in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+            <param name="reportErrors">Throw exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipExtractor.Check">
+            <summary>
+            Performs basic archive consistence test
+            </summary>
+        </member>
+        <member name="P:SevenZip.ISevenZipExtractor.PackedSize">
+            <summary>
+            Gets size of the archive file
+            </summary>
+        </member>
+        <member name="P:SevenZip.ISevenZipExtractor.UnpackedSize">
+            <summary>
+            Gets size of unpacked archive data
+            </summary>
+        </member>
+        <member name="P:SevenZip.ISevenZipExtractor.IsSolid">
+            <summary>
+            Gets a value indicating whether the archive is solid
+            </summary>
+        </member>
+        <member name="P:SevenZip.ISevenZipExtractor.ArchiveFileNames">
+            <summary>
+            Gets the collection of all file names contained in the archive.
+            </summary>
+            <remarks>
+            Each get recreates the collection
+            </remarks>
+        </member>
+        <member name="P:SevenZip.ISevenZipExtractor.ArchiveProperties">
+            <summary>
+            Gets the properties for the current archive
+            </summary>
+        </member>
+        <member name="P:SevenZip.ISevenZipExtractor.ArchiveFileData">
+            <summary>
+            Gets the collection of ArchiveFileInfo with all information about files in the archive
+            </summary>
+        </member>
+        <member name="E:SevenZip.ISevenZipExtractor.FileExtractionStarted">
+            <summary>
+            Occurs when a new file is going to be unpacked
+            </summary>
+            <remarks>Occurs when 7-zip engine requests for an output stream for a new file to unpack in</remarks>
+        </member>
+        <member name="E:SevenZip.ISevenZipExtractor.FileExtractionFinished">
+            <summary>
+            Occurs when a file has been successfully unpacked
+            </summary>
+        </member>
+        <member name="E:SevenZip.ISevenZipExtractor.ExtractionFinished">
+            <summary>
+            Occurs when the archive has been unpacked
+            </summary>
+        </member>
+        <member name="E:SevenZip.ISevenZipExtractor.Extracting">
+            <summary>
+            Occurs when data are being extracted
+            </summary>
+            <remarks>Use this event for accurate progress handling and various ProgressBar.StepBy(e.PercentDelta) routines</remarks>
+        </member>
+        <member name="E:SevenZip.ISevenZipExtractor.FileExists">
+            <summary>
+            Occurs during the extraction when a file already exists
+            </summary>
+        </member>
+        <member name="T:SevenZip.ISevenZipCompressor">
+            <summary>
+            Interface for packing files in 7-zip format.
+            </summary>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.String,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.String,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>        
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.String,System.String,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.String,System.String,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.Boolean,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>        
+            <param name="recursion">Search for files recursively</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.String,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.IO.Stream,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>        
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.String,System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressFiles(System.String[],System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.Boolean,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>        
+            <param name="recursion">Search for files recursively</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.ISevenZipCompressor.CompressStream(System.IO.Stream,System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Compresses the specified stream
+            </summary>
+            <param name="inStream">The source uncompressed stream</param>
+            <param name="outStream">The destination compressed stream</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="E:SevenZip.ISevenZipCompressor.FileCompressionStarted">
+            <summary>
+            Occurs when the next file is going to be packed.
+            </summary>
+            <remarks>Occurs when 7-zip engine requests for an input stream for the next file to pack it.</remarks>
+        </member>
+        <member name="E:SevenZip.ISevenZipCompressor.Compressing">
+            <summary>
+            Occurs when data are being compressed
+            </summary>
+            <remarks>Use this event for accurate progress handling and various ProgressBar.StepBy(e.PercentDelta) routines.</remarks>
+        </member>
+        <member name="E:SevenZip.ISevenZipCompressor.FilesFound">
+            <summary>
+            Occurs when all files information was determined and SevenZipCompressor is about to start to compress them.
+            </summary>
+        </member>
+        <member name="T:SevenZip.StreamWrapper">
+            <summary>
+            Stream wrapper used in InStreamWrapper
+            </summary>
+        </member>
+        <member name="F:SevenZip.StreamWrapper.BaseStream">
+            <summary>
+            Worker stream for reading, writing and seeking
+            </summary>
+        </member>
+        <member name="F:SevenZip.StreamWrapper.FileName">
+            <summary>
+            File name associated with the stream (for date fix)
+            </summary>
+        </member>
+        <member name="M:SevenZip.StreamWrapper.#ctor(System.IO.Stream,System.String,System.DateTime,System.Boolean)">
+            <summary>
+            Initializes a new instance of the StreamWrapper class
+            </summary>
+            <param name="baseStream">Worker stream for reading, writing and seeking</param>
+            <param name="fileName">File name associated with the stream (for attributes fix)</param>
+            <param name="time">File last write time (for attributes fix)</param>
+            <param name="disposeStream">Indicates whether to dispose the baseStream</param>
+        </member>
+        <member name="M:SevenZip.StreamWrapper.#ctor(System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the StreamWrapper class
+            </summary>
+            <param name="baseStream">Worker stream for reading, writing and seeking</param>
+            <param name="disposeStream">Indicates whether to dispose the baseStream</param>
+        </member>
+        <member name="M:SevenZip.StreamWrapper.#ctor(System.Uri)">
+            <summary>
+            Initializes a new instance of the StreamWrapper class
+            </summary>
+            <param name="requestUri">A System.Uri containing the URI of the requested resource.</param>
+        </member>
+        <member name="M:SevenZip.StreamWrapper.Dispose">
+            <summary>
+            Cleans up any resources used and fixes file attributes
+            </summary>
+        </member>
+        <member name="T:SevenZip.InStreamWrapper">
+            <summary>
+            IInStream wrapper used in stream read operations
+            </summary>
+        </member>
+        <member name="M:SevenZip.InStreamWrapper.#ctor(System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the InStreamWrapper class
+            </summary>
+            <param name="baseStream">Stream for writing data</param>
+            <param name="disposeStream">Indicates whether to dispose the baseStream</param>
+        </member>
+        <member name="M:SevenZip.InStreamWrapper.#ctor(System.Uri)">
+            <summary>
+            Initializes a new instance of the InStreamWrapper class
+            </summary>
+            <param name="requestUri">A System.Uri containing the URI of the requested resource.</param>
+        </member>
+        <member name="M:SevenZip.InStreamWrapper.Read(System.Byte[],System.UInt32)">
+            <summary>
+            Reads data from the stream
+            </summary>
+            <param name="data">Data array</param>
+            <param name="size">Array size</param>
+            <returns>Read bytes count</returns>
+        </member>
+        <member name="E:SevenZip.InStreamWrapper.BytesRead">
+            <summary>
+            Occurs when IntEventArgs.Value bytes were read from the source
+            </summary>
+        </member>
+        <member name="T:SevenZip.OutStreamWrapper">
+            <summary>
+            IOutStream wrapper used in stream write operations
+            </summary>
+        </member>
+        <member name="M:SevenZip.OutStreamWrapper.#ctor(System.IO.Stream,System.String,System.DateTime,System.Boolean)">
+            <summary>
+            Initializes a new instance of the OutStreamWrapper class
+            </summary>
+            <param name="baseStream">Stream for writing data</param>
+            <param name="fileName">File name (for attributes fix)</param>
+            <param name="time">Time of the file creation (for attributes fix)</param>
+            <param name="disposeStream">Indicates whether to dispose the baseStream</param>
+        </member>
+        <member name="M:SevenZip.OutStreamWrapper.#ctor(System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the OutStreamWrapper class
+            </summary>
+            <param name="baseStream">Stream for writing data</param>
+            <param name="disposeStream">Indicates whether to dispose the baseStream</param>
+        </member>
+        <member name="M:SevenZip.OutStreamWrapper.Write(System.Byte[],System.UInt32,System.IntPtr)">
+            <summary>
+            Writes data to the stream
+            </summary>
+            <param name="data">Data array</param>
+            <param name="size">Array size</param>
+            <param name="processedSize">Count of written bytes</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="E:SevenZip.OutStreamWrapper.BytesWritten">
+            <summary>
+            Occurs when IntEventArgs.Value bytes were written
+            </summary>
+        </member>
+        <member name="M:SevenZip.FakeOutStreamWrapper.Write(System.Byte[],System.UInt32,System.IntPtr)">
+            <summary>
+            Does nothing except calling the BytesWritten event
+            </summary>
+            <param name="data">Data array</param>
+            <param name="size">Array size</param>
+            <param name="processedSize">Count of written bytes</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="E:SevenZip.FakeOutStreamWrapper.BytesWritten">
+            <summary>
+            Occurs when IntEventArgs.Value bytes were written
+            </summary>
+        </member>
+        <member name="T:SevenZip.SevenZipCompressor">
+            <summary>
+            Class for packing files into 7-zip archives
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.SetLibraryPath(System.String)">
+            <summary>
+            Changes the path to the 7-zip native library
+            </summary>
+            <param name="libraryPath">The path to the 7-zip native library</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipCompressor class 
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the SevenZipCompressor class 
+            </summary>
+            <param name="reportErrors">Throw exceptions on compression errors</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CommonRoot(System.String[])">
+            <summary>
+            Finds the common root of file names
+            </summary>
+            <param name="files">Array of file names</param>
+            <returns>Common root</returns>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CheckCommonRoot(System.String[],System.String@)">
+            <summary>
+            Validates the common root
+            </summary>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="files">Array of file names</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.RecursiveDirectoryEmptyCheck(System.String)">
+            <summary>
+            Ensures that directory directory is not empty
+            </summary>
+            <param name="directory">Directory name</param>
+            <returns>False if is not empty</returns>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.ProduceFileInfoArray(System.String[],System.String,System.Int32@)">
+            <summary>
+            Makes special FileInfo array for the archive file table
+            </summary>
+            <param name="files">Array of files to pack</param>
+            <param name="commonRoot">Common rooot of the file names</param>
+            <param name="rootLength">Length of the common root of file names</param>
+            <returns>Special FileInfo array for the archive file table</returns>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.AddFilesFromDirectory(System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Recursive function for adding files in directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="files">List of files</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.GetArchiveUpdateCallback(System.IO.FileInfo[],System.Int32,System.String)">
+            <summary>
+            Produces  a new instance of ArchiveUpdateCallback class
+            </summary>
+            <param name="files">Array of FileInfo - files to pack</param>
+            <param name="rootLength">Length of the common root of file names</param>
+            <param name="password">The archive password</param>
+            <returns></returns>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.GetArchiveUpdateCallback(System.IO.Stream,System.String)">
+            <summary>
+            Produces  a new instance of ArchiveUpdateCallback class
+            </summary>
+            <param name="inStream">The input stream</param>
+            <param name="password">The archive password</param>
+            <returns></returns>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.String,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive.
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveStream">The archive output stream. 
+            Use CompressFiles( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>       
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.String,System.String,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.String,System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressFiles( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.String,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.IO.Stream,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressFiles( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.String,System.String,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressFiles(System.String[],System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files into the archive
+            </summary>
+            <param name="fileFullNames">Array of file names to pack</param>
+            <param name="commonRoot">Common root of the file names</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressFiles( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressDirectory( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressDirectory( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressDirectory( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressDirectory( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.Boolean,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>        
+            <param name="recursion">Search for files recursively</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.Boolean,System.String)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressDirectory( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>        
+            <param name="recursion">Search for files recursively</param>
+            <param name="password">The archive password</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.String,SevenZip.OutArchiveFormat,System.String,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveName">The archive file name</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressDirectory(System.String,System.IO.Stream,SevenZip.OutArchiveFormat,System.String,System.String,System.Boolean)">
+            <summary>
+            Packs files in the directory
+            </summary>
+            <param name="directory">Directory directory</param>
+            <param name="archiveStream">The archive output stream.
+            Use CompressDirectory( ... string archiveName ... ) overloads for archiving to disk.</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+            <param name="searchPattern">Search string, such as "*.txt"</param>
+            <param name="recursion">Search for files recursively</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressStream(System.IO.Stream,System.IO.Stream,SevenZip.OutArchiveFormat)">
+            <summary>
+            Compresses the specified stream
+            </summary>
+            <param name="inStream">The source uncompressed stream</param>
+            <param name="outStream">The destination compressed stream</param>
+            <param name="format">The archive format</param>
+            <exception cref="T:System.ArgumentException">ArgumentException : specified streams are invalid.</exception>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressStream(System.IO.Stream,System.IO.Stream,SevenZip.OutArchiveFormat,System.String)">
+            <summary>
+            Compresses the specified stream
+            </summary>
+            <param name="inStream">The source uncompressed stream</param>
+            <param name="outStream">The destination compressed stream</param>
+            <param name="format">The archive format</param>
+            <param name="password">The archive password</param>
+            <exception cref="T:System.ArgumentException">ArgumentException : specified streams are invalid.</exception>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressStream(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int32},System.EventHandler{SevenZip.ProgressEventArgs})">
+            <summary>
+            Compresses the specified stream with LZMA algorithm (C# inside)
+            </summary>
+            <param name="inStream">The source uncompressed stream</param>
+            <param name="outStream">The destination compressed stream</param>
+            <param name="inLength">The length of uncompressed data (null for inStream.Length)</param>
+            <param name="codeProgressEvent">The event for handling the code progress</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressor.CompressBytes(System.Byte[])">
+            <summary>
+            Compresses byte array with LZMA algorithm (C# inside)
+            </summary>
+            <param name="data">Byte array to compress</param>
+            <returns>Compressed byte array</returns>
+        </member>
+        <member name="E:SevenZip.SevenZipCompressor.FileCompressionStarted">
+            <summary>
+            Occurs when the next file is going to be packed
+            </summary>
+            <remarks>Occurs when 7-zip engine requests for an input stream for the next file to pack it</remarks>
+        </member>
+        <member name="E:SevenZip.SevenZipCompressor.Compressing">
+            <summary>
+            Occurs when data are being compressed
+            </summary>
+            <remarks>Use this event for accurate progress handling and various ProgressBar.StepBy(e.PercentDelta) routines</remarks>
+        </member>
+        <member name="E:SevenZip.SevenZipCompressor.FilesFound">
+            <summary>
+            Occurs when all files information was determined and SevenZipCompressor is about to start to compress them.
+            </summary>
+            <remarks>The incoming int value indicates the number of scanned files.</remarks>
+        </member>
+        <member name="T:SevenZip.Sdk.DataErrorException">
+            <summary>
+            The exception that is thrown when an error in input stream occurs during decoding.
+            </summary>
+        </member>
+        <member name="T:SevenZip.Sdk.InvalidParamException">
+            <summary>
+            The exception that is thrown when the value of an argument is outside the allowable range.
+            </summary>
+        </member>
+        <member name="T:SevenZip.Sdk.ICodeProgress">
+            <summary>
+            Callback progress interface.
+            </summary>
+        </member>
+        <member name="M:SevenZip.Sdk.ICodeProgress.SetProgress(System.Int64,System.Int64)">
+            <summary>
+            Callback progress.
+            </summary>
+            <param name="inSize">
+            Processed input size. -1 if unknown.
+            </param>
+            <param name="outSize">
+            Processed output size. -1 if unknown.
+            </param>
+        </member>
+        <member name="T:SevenZip.Sdk.CoderPropID">
+            <summary>
+            Provides the fields that represent properties idenitifiers for compressing.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.DictionarySize">
+            <summary>
+            Specifies size of dictionary.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.UsedMemorySize">
+            <summary>
+            Specifies size of memory for PPM*.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.Order">
+            <summary>
+            Specifies order for PPM methods.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.PosStateBits">
+            <summary>
+            Specifies number of postion state bits for LZMA (0 &lt;= x &lt;= 4).
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.LitContextBits">
+            <summary>
+            Specifies number of literal context bits for LZMA (0 &lt;= x &lt;= 8).
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.LitPosBits">
+            <summary>
+            Specifies number of literal position bits for LZMA (0 &lt;= x &lt;= 4).
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.NumFastBytes">
+            <summary>
+            Specifies number of fast bytes for LZ*.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.MatchFinder">
+            <summary>
+            Specifies match finder. LZMA: "BT2", "BT4" or "BT4B".
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.NumPasses">
+            <summary>
+            Specifies number of passes.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.Algorithm">
+            <summary>
+            Specifies number of algorithm.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.MultiThread">
+            <summary>
+            Specifies multithread mode.
+            </summary>
+        </member>
+        <member name="F:SevenZip.Sdk.CoderPropID.EndMarker">
+            <summary>
+            Specifies mode with end marker.
+            </summary>
+        </member>
+        <member name="T:SevenZip.Sdk.ISetCoderProperties">
+            <summary>
+            The ISetCoderProperties interface
+            </summary>
+        </member>
+        <member name="T:SevenZip.Sdk.IWriteCoderProperties">
+            <summary>
+            The IWriteCoderProperties interface
+            </summary>
+        </member>
+        <member name="T:SevenZip.PercentDoneEventArgs">
+            <summary>
+            EventArgs for storing PercentDone property
+            </summary>
+        </member>
+        <member name="M:SevenZip.PercentDoneEventArgs.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the PercentDoneEventArgs class
+            </summary>
+            <param name="percentDone">The percent of finished work</param>
+        </member>
+        <member name="M:SevenZip.PercentDoneEventArgs.ProducePercentDone(System.Single)">
+            <summary>
+            Converts a [0, 1] rate to its percent equivalent
+            </summary>
+            <param name="doneRate">The rate of the done work</param>
+            <returns>Percent integer equivalent</returns>
+        </member>
+        <member name="P:SevenZip.PercentDoneEventArgs.PercentDone">
+            <summary>
+            Gets the percent of finished work
+            </summary>
+        </member>
+        <member name="P:SevenZip.PercentDoneEventArgs.Cancel">
+            <summary>
+            Gets or sets whether to stop the current archive operation
+            </summary>
+        </member>
+        <member name="T:SevenZip.ProgressEventArgs">
+            <summary>
+            The EventArgs class for accurate progress handling
+            </summary>
+        </member>
+        <member name="M:SevenZip.ProgressEventArgs.#ctor(System.Byte,System.Byte)">
+            <summary>
+            Initializes a new instance of the ProgressEventArgs class
+            </summary>
+            <param name="percentDone">The percent of finished work</param>
+            <param name="percentDelta">The percent of work done after the previous event</param>
+        </member>
+        <member name="P:SevenZip.ProgressEventArgs.PercentDelta">
+            <summary>
+            Gets the change in done work percentage
+            </summary>
+        </member>
+        <member name="T:SevenZip.IndexEventArgs">
+            <summary>
+            EventArgs used to report the index of file which is going to be unpacked
+            </summary>
+        </member>
+        <member name="M:SevenZip.IndexEventArgs.#ctor(System.UInt32,System.Byte)">
+            <summary>
+            Initializes a new instance of the IndexEventArgs class
+            </summary>
+            <param name="fileIndex">File index in the archive file table</param>
+            <param name="percentDone">The percent of finished work</param>
+        </member>
+        <member name="P:SevenZip.IndexEventArgs.FileIndex">
+            <summary>
+            Gets file index in the archive file table
+            </summary>
+        </member>
+        <member name="T:SevenZip.FileInfoEventArgs">
+            <summary>
+            EventArgs used to report the file information which is going to be packed
+            </summary>
+        </member>
+        <member name="M:SevenZip.FileInfoEventArgs.#ctor(System.IO.FileInfo,System.Byte)">
+            <summary>
+            Initializes a new instance of the FileInfoEventArgs class
+            </summary>
+            <param name="fileInfo">File info of the current file</param>
+            <param name="percentDone">The percent of finished work</param>
+        </member>
+        <member name="P:SevenZip.FileInfoEventArgs.FileInfo">
+            <summary>
+            Gets file info of the current file
+            </summary>
+        </member>
+        <member name="T:SevenZip.OpenEventArgs">
+            <summary>
+            EventArgs used to report the size of unpacked archive data
+            </summary>
+        </member>
+        <member name="M:SevenZip.OpenEventArgs.#ctor(System.UInt64)">
+            <summary>
+            Initializes a new instance of the OpenEventArgs class
+            </summary>
+            <param name="totalSize">Size of unpacked archive data</param>
+        </member>
+        <member name="P:SevenZip.OpenEventArgs.TotalSize">
+            <summary>
+            Gets the size of unpacked archive data
+            </summary>
+        </member>
+        <member name="T:SevenZip.IntEventArgs">
+            <summary>
+            Stores an int number
+            </summary>
+        </member>
+        <member name="M:SevenZip.IntEventArgs.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the IntEventArgs class
+            </summary>
+            <param name="value">Useful data carried by the IntEventArgs class</param>
+        </member>
+        <member name="P:SevenZip.IntEventArgs.Value">
+            <summary>
+            Gets the value of the IntEventArgs class
+            </summary>
+        </member>
+        <member name="T:SevenZip.FileNameEventArgs">
+            <summary>
+            EventArgs for FileExists event, stores the file name
+            </summary>
+        </member>
+        <member name="M:SevenZip.FileNameEventArgs.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the FileNameEventArgs class
+            </summary>
+            <param name="fileName">The file name</param>
+        </member>
+        <member name="P:SevenZip.FileNameEventArgs.FileName">
+            <summary>
+            Gets the file name
+            </summary>
+        </member>
+        <member name="P:SevenZip.FileNameEventArgs.Overwrite">
+            <summary>
+            Gets or sets the value indicating whether to overwrite the existing file or not
+            </summary>
+        </member>
+        <member name="T:SevenZip.InArchiveFormat">
+            <summary>
+            Readable archive format enumeration
+            </summary>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.SevenZip">
+            <summary>
+            Open 7-zip archive format
+            </summary>  
+            <remarks><a href="http://en.wikipedia.org/wiki/7-zip">Wikipedia information</a></remarks> 
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Arj">
+            <summary>
+            Proprietary Arj archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/ARJ">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.BZip2">
+            <summary>
+            Open Bzip2 archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Bzip2">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Cab">
+            <summary>
+            Microsoft cabinet archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Cabinet_(file_format)">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Chm">
+            <summary>
+            Microsoft Compiled HTML Help file format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Microsoft_Compiled_HTML_Help">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Compound">
+            <summary>
+            Microsoft Compound file format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Compound_File_Binary_Format">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Cpio">
+            <summary>
+            Open Cpio archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Cpio">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Deb">
+            <summary>
+            Open Debian software package format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Deb_(file_format)">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.GZip">
+            <summary>
+            Open Gzip archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Gzip">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Iso">
+            <summary>
+            Open ISO disk image format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/ISO_image">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Lzh">
+            <summary>
+            Open Lzh archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Lzh">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Lzma">
+            <summary>
+            Open core 7-zip Lzma raw archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Lzma">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Nsis">
+            <summary>
+            Nullsoft installation package format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/NSIS">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Rar">
+            <summary>
+            RarLab Rar archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Rar">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Rpm">
+            <summary>
+            Open Rpm software package format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/RPM_Package_Manager">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Split">
+            <summary>
+            Open split file format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/RPM_Package_Manager">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Tar">
+            <summary>
+            Open Tar archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Tar_(file_format)">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Wim">
+            <summary>
+            Microsoft Windows Imaging disk image format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Windows_Imaging_Format">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Lzw">
+            <summary>
+            Open LZW archive format; implemented in "compress" program
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Compress">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.InArchiveFormat.Zip">
+            <summary>
+            Open Zip archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/ZIP_(file_format)">Wikipedia information</a></remarks>
+        </member>
+        <member name="T:SevenZip.OutArchiveFormat">
+            <summary>
+            Writable archive format enumeration
+            </summary>    
+        </member>
+        <member name="F:SevenZip.OutArchiveFormat.SevenZip">
+            <summary>
+            Open 7-zip archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/7-zip">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.OutArchiveFormat.Zip">
+            <summary>
+            Open Zip archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/ZIP_(file_format)">Wikipedia information</a></remarks>
+        </member>
+        <member name="F:SevenZip.OutArchiveFormat.BZip2">
+            <summary>       
+            Open Bzip2 archive format
+            </summary>
+            <remarks><a href="http://en.wikipedia.org/wiki/Bzip2">Wikipedia information</a></remarks>
+        </member>
+        <member name="T:SevenZip.Formats">
+            <summary>
+            Archive format routines
+            </summary>
+        </member>
+        <member name="M:SevenZip.Formats.GetMaxValue(System.Type)">
+            <summary>
+            Gets max value in the enum of type e
+            </summary>
+            <param name="type">Type of the enum</param>
+            <returns>Max value</returns>
+        </member>
+        <member name="F:SevenZip.Formats.InFormatGuids">
+            <summary>
+            List of readable archive format interface guids for 7-zip COM interop
+            </summary>
+        </member>
+        <member name="F:SevenZip.Formats.OutFormatGuids">
+            <summary>
+            List of writable archive format interface guids for 7-zip COM interop
+            </summary>
+        </member>
+        <member name="F:SevenZip.Formats.InExtensionFormats">
+            <summary>
+            List of archive formats corresponding to specific extensions
+            </summary>
+        </member>
+        <member name="M:SevenZip.Formats.FormatByFileName(System.String,System.Boolean)">
+            <summary>
+            Gets InArchiveFormat for specified archive file name
+            </summary>
+            <param name="fileName">Archive file name</param>
+            <param name="reportErrors">Indicates whether to throw exceptions</param>
+            <returns>InArchiveFormat recognized by the file name extension</returns>
+        </member>
+        <member name="T:SevenZip.SevenZipExtractor">
+            <summary>
+            Class for extracting and getting information about 7-zip archives
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.SetLibraryPath(System.String)">
+            <summary>
+            Changes the path to the 7-zip native library
+            </summary>
+            <param name="libraryPath">The path to the 7-zip native library</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.Init(System.String)">
+            <summary>
+            General initialization function
+            </summary>
+            <param name="archiveFullName">The archive file name</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.Init(System.IO.Stream,SevenZip.InArchiveFormat)">
+            <summary>
+            General initialization function
+            </summary>
+            <param name="format">The archive format</param>
+            <param name="stream">The stream to read the archive from</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.Init(System.Uri)">
+            <summary>
+            General initialization function
+            </summary>
+            <param name="uri">The web stream uri</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="archiveFullName">The archive full file name</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.IO.Stream,SevenZip.InArchiveFormat)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="archiveStream">The stream to read the archive from</param>
+            <param name="format">The archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="archiveFullName">The archive full file name</param>
+            <param name="password">Password for an encrypted archive</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.IO.Stream,SevenZip.InArchiveFormat,System.String)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="archiveStream">The stream to read the archive from</param>
+            <param name="format">The archive format</param>
+            <param name="password">Password for an encrypted archive</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="archiveFullName">The archive full file name</param>
+            <param name="password">Password for an encrypted archive</param>
+            <param name="reportErrors">Indicates whether to throw exceptions on archive errors</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.IO.Stream,SevenZip.InArchiveFormat,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="archiveStream">The stream to read the archive from</param>
+            <param name="format">The archive format</param>
+            <param name="password">Password for an encrypted archive</param>
+            <param name="reportErrors">Indicates whether to throw exceptions on archive errors</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.Uri)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="uri">The web stream uri</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.Uri,System.String)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="uri">The web stream uri</param>
+            <param name="password">Password for an encrypted archive</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.#ctor(System.Uri,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of SevenZipExtractor class
+            </summary>
+            <param name="uri">The web stream uri</param>
+            <param name="password">Password for an encrypted archive</param>
+            <param name="reportErrors">Indicates whether to throw exceptions on archive errors</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.Finalize">
+            <summary>
+            Frees the SevenZipExtractor class by calling Dispose method
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.Dispose">
+            <summary>
+            Releases the unmanaged resources used by SevenZipExtractor
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.Check">
+            <summary>
+            Performs basic archive consistence test
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.GetArchiveStream">
+            <summary>
+            Gets the archive input stream
+            </summary>
+            <returns>The archive input wrapper stream</returns>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.GetArchiveInfo">
+            <summary>
+            Retrieves all information about the archive
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.SolidIndexes(System.UInt32[])">
+            <summary>
+            Produces an array of indexes from 0 to the maximum value in the specified array
+            </summary>
+            <param name="indexes">The source array</param>
+            <returns>The array of indexes from 0 to the maximum value in the specified array</returns>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.GetArchiveExtractCallback(System.String,System.Int32)">
+            <summary>
+            Gets the IArchiveExtractCallback callback
+            </summary>
+            <param name="directory">The directory where extract the files</param>
+            <param name="filesCount">The number of files to be extracted</param>
+            <returns>The ArchiveExtractCallback callback</returns>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.GetArchiveExtractCallback(System.IO.Stream,System.UInt32,System.Int32)">
+            <summary>
+            Gets the IArchiveExtractCallback callback
+            </summary>
+            <param name="stream">The stream where extract the file</param>
+            <param name="index">The file index</param>
+            <param name="filesCount">The number of files to be extracted</param>
+            <returns>The ArchiveExtractCallback callback</returns>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.String,System.IO.Stream)">
+            <summary>
+            Unpacks the file by its name to the specified stream
+            </summary>
+            <param name="fileName">The file full name in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.String,System.IO.Stream,System.Boolean)">
+            <summary>
+            Unpacks the file by its name to the specified stream
+            </summary>
+            <param name="fileName">The file full name in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.UInt32,System.IO.Stream)">
+            <summary>
+            Unpacks the file by its index to the specified stream
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.UInt32,System.IO.Stream,System.Boolean)">
+            <summary>
+            Unpacks the file by its index to the specified stream
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="stream">The stream where the file is to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.UInt32,System.String)">
+            <summary>
+            Unpacks the file by its index to the specified directory
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.UInt32,System.String,System.Boolean)">
+            <summary>
+            Unpacks the file by its index to the specified directory
+            </summary>
+            <param name="index">Index in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.String,System.String)">
+            <summary>
+            Unpacks the file by its full name to the specified directory
+            </summary>
+            <param name="fileName">The file full name in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFile(System.String,System.String,System.Boolean)">
+            <summary>
+            Unpacks the file by its full name to the specified directory
+            </summary>
+            <param name="fileName">File full name in the archive file table</param>
+            <param name="directory">Directory where the file is to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFiles(System.UInt32[],System.String)">
+            <summary>
+            Unpacks files by their indexes to the specified directory
+            </summary>
+            <param name="indexes">indexes of the files in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFiles(System.UInt32[],System.String,System.Boolean)">
+            <summary>
+            Unpacks files by their indexes to the specified directory
+            </summary>
+            <param name="indexes">indexes of the files in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFiles(System.String[],System.String)">
+            <summary>
+            Unpacks files by their full names to the specified directory
+            </summary>
+            <param name="fileNames">Full file names in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractFiles(System.String[],System.String,System.Boolean)">
+            <summary>
+            Unpacks files by their full names to the specified directory
+            </summary>
+            <param name="fileNames">Full file names in the archive file table</param>
+            <param name="directory">Directory where the files are to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractArchive(System.String,System.Boolean)">
+            <summary>
+            Unpacks the whole archive to the specified directory
+            </summary>
+            <param name="directory">Directory where the files are to be unpacked</param>
+            <param name="reportErrors">Throw an exception if extraction fails</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractArchive(System.String)">
+            <summary>
+            Unpacks the whole archive to the specified directory
+            </summary>
+            <param name="directory">Directory where the files are to be unpacked</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.DecompressStream(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int32},System.EventHandler{SevenZip.ProgressEventArgs})">
+            <summary>
+            Decompress the specified stream (C# inside)
+            </summary>
+            <param name="inStream">The source compressed stream</param>
+            <param name="outStream">The destination uncompressed stream</param>
+            <param name="inLength">The length of compressed data (null for inStream.Length)</param>
+            <param name="codeProgressEvent">The event for handling the code progress</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractor.ExtractBytes(System.Byte[])">
+            <summary>
+            Decompress byte array compressed with LZMA algorithm (C# inside)
+            </summary>
+            <param name="data">Byte array to decompress</param>
+            <returns>Decompressed byte array</returns>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.FileName">
+            <summary>
+            Gets or sets archive full file name
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.PackedSize">
+            <summary>
+            Gets the size of the archive file
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.UnpackedSize">
+            <summary>
+            Gets the size of unpacked archive data
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.IsSolid">
+            <summary>
+            Gets a value indicating whether the archive is solid
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.FilesCount">
+            <summary>
+            Gets the number of files in the archive
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.Format">
+            <summary>
+            Gets archive format
+            </summary>
+        </member>
+        <member name="E:SevenZip.SevenZipExtractor.FileExtractionStarted">
+            <summary>
+            Occurs when a new file is going to be unpacked
+            </summary>
+            <remarks>Occurs when 7-zip engine requests for an output stream for a new file to unpack in</remarks>
+        </member>
+        <member name="E:SevenZip.SevenZipExtractor.FileExtractionFinished">
+            <summary>
+            Occurs when a file has been successfully unpacked
+            </summary>
+        </member>
+        <member name="E:SevenZip.SevenZipExtractor.ExtractionFinished">
+            <summary>
+            Occurs when the archive has been unpacked
+            </summary>
+        </member>
+        <member name="E:SevenZip.SevenZipExtractor.Extracting">
+            <summary>
+            Occurs when data are being extracted
+            </summary>
+            <remarks>Use this event for accurate progress handling and various ProgressBar.StepBy(e.PercentDelta) routines</remarks>
+        </member>
+        <member name="E:SevenZip.SevenZipExtractor.FileExists">
+            <summary>
+            Occurs during the extraction when a file already exists
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.ArchiveFileData">
+            <summary>
+            Gets the collection of ArchiveFileInfo with all information about files in the archive
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.ArchiveProperties">
+            <summary>
+            Gets the properties for the current archive
+            </summary>
+        </member>
+        <member name="P:SevenZip.SevenZipExtractor.ArchiveFileNames">
+            <summary>
+            Gets the collection of all file names contained in the archive.
+            </summary>
+            <remarks>
+            Each get recreates the collection
+            </remarks>
+        </member>
+        <member name="T:SevenZip.SevenZipLibraryManager">
+            <summary>
+            7-zip library low-level wrapper
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipLibraryManager.LibraryFileName">
+            <summary>
+            Path to the 7-zip dll
+            </summary>
+            <remarks>7zxa.dll supports only decoding from .7z archives.
+            Features of 7za.dll: 
+                - Supporting 7z format;
+                - Built encoders: LZMA, PPMD, BCJ, BCJ2, COPY, AES-256 Encryption.
+                - Built decoders: LZMA, PPMD, BCJ, BCJ2, COPY, AES-256 Encryption, BZip2, Deflate.
+            7z.dll (from the 7-zip distribution) supports every InArchiveFormat for encoding and decoding.
+            </remarks>
+        </member>
+        <member name="F:SevenZip.SevenZipLibraryManager._ModulePtr">
+            <summary>
+            7-zip library handle
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipLibraryManager._InUsers">
+            <summary>
+            List of InArchiveFormat users, used to control COM resources
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipLibraryManager._OutUsers">
+            <summary>
+            List of OutArchiveFormat users, used to control COM resources
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryManager.LoadLibrary(System.Object,System.Enum)">
+            <summary>
+            Loads the 7-zip library if necessary and adds user to the reference list
+            </summary>
+            <param name="user">Caller of the function</param>
+            <param name="format">Archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryManager.FreeLibrary(System.Object,System.Enum)">
+            <summary>
+            Removes user from reference list and frees the 7-zip library if it becomes empty
+            </summary>
+            <param name="user">Caller of the function</param>
+            <param name="format">Archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryManager.InArchive(SevenZip.InArchiveFormat)">
+            <summary>
+            Gets IInArchive interface for 7-zip archive handling
+            </summary>
+            <param name="format">Archive format</param>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryManager.OutArchive(SevenZip.OutArchiveFormat)">
+            <summary>
+            Gets IOutArchive interface for 7-zip archive packing
+            </summary>
+            <param name="format">Archive format</param>  
+        </member>
+        <member name="T:SevenZip.SevenZipException">
+            <summary>
+            Base SevenZip exception class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipException.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipException class
+            </summary>
+            <param name="defaultMessage">Default exception message</param>
+        </member>
+        <member name="M:SevenZip.SevenZipException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipException class
+            </summary>
+            <param name="defaultMessage">Default exception message</param>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.SevenZipException.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the SevenZipException class
+            </summary>
+            <param name="defaultMessage">Default exception message</param>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.SevenZipException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the SevenZipException class
+            </summary>
+            <param name="defaultMessage">Default exception message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.SevenZipException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the SevenZipException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.ExtractionFailedException">
+            <summary>
+            Exception class for ArchiveExtractCallback
+            </summary>
+        </member>
+        <member name="F:SevenZip.ExtractionFailedException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.ExtractionFailedException.#ctor">
+            <summary>
+            Initializes a new instance of the ExtractionFailedException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.ExtractionFailedException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the ExtractionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.ExtractionFailedException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the ExtractionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.ExtractionFailedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the ExtractionFailedException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.CompressionFailedException">
+            <summary>
+            Exception class for ArchiveUpdateCallback
+            </summary>
+        </member>
+        <member name="F:SevenZip.CompressionFailedException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.CompressionFailedException.#ctor">
+            <summary>
+            Initializes a new instance of the CompressionFailedException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.CompressionFailedException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the CompressionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.CompressionFailedException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the CompressionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.CompressionFailedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the CompressionFailedException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.LzmaException">
+            <summary>
+            Exception class for LZMA operations
+            </summary>
+        </member>
+        <member name="F:SevenZip.LzmaException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.LzmaException.#ctor">
+            <summary>
+            Initializes a new instance of the LzmaException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.LzmaException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the LzmaException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.LzmaException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the LzmaException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.LzmaException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the LzmaException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.SevenZipArchiveException">
+            <summary>
+            Exception class for 7-zip archive open or read operations
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipArchiveException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipArchiveException.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipArchiveException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipArchiveException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipArchiveException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.SevenZipArchiveException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the SevenZipArchiveException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.SevenZipArchiveException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the SevenZipArchiveException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.SevenZipInvalidFileNamesException">
+            <summary>
+            Exception class for empty common root if file name array in SevenZipCompressor
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipInvalidFileNamesException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipInvalidFileNamesException.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipInvalidFileNamesException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipInvalidFileNamesException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipInvalidFileNamesException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.SevenZipInvalidFileNamesException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the SevenZipInvalidFileNamesException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.SevenZipInvalidFileNamesException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the SevenZipInvalidFileNamesException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.SevenZipCompressionFailedException">
+            <summary>
+            Exception class for fail to create an archive in SevenZipCompressor
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipCompressionFailedException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressionFailedException.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipCompressionFailedException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressionFailedException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipCompressionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressionFailedException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the SevenZipCompressionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.SevenZipCompressionFailedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the SevenZipCompressionFailedException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.SevenZipExtractionFailedException">
+            <summary>
+            Exception class for fail to extract an archive in SevenZipExtractor
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipExtractionFailedException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractionFailedException.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipExtractionFailedException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractionFailedException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipExtractionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractionFailedException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the SevenZipExtractionFailedException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.SevenZipExtractionFailedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the SevenZipExtractionFailedException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.SevenZipLibraryException">
+            <summary>
+            Exception class for 7-zip library operations
+            </summary>
+        </member>
+        <member name="F:SevenZip.SevenZipLibraryException.DefaultMessage">
+            <summary>
+            Exception dafault message which is displayed if no extra information is specified
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryException.#ctor">
+            <summary>
+            Initializes a new instance of the SevenZipLibraryException class
+            </summary>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the SevenZipLibraryException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the SevenZipLibraryException class
+            </summary>
+            <param name="message">Additional detailed message</param>
+            <param name="inner">Inner exception occured</param>
+        </member>
+        <member name="M:SevenZip.SevenZipLibraryException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the SevenZipLibraryException class
+            </summary>
+            <param name="info">All data needed for serialization or deserialization</param>
+            <param name="context">Serialized stream descriptor</param>
+        </member>
+        <member name="T:SevenZip.ArchiveOpenCallback">
+            <summary>
+            Callback to handle the archive opening
+            </summary>
+        </member>
+        <member name="M:SevenZip.ArchiveOpenCallback.#ctor">
+            <summary>
+            Initializes a new instance of the ArchiveOpenCallback class
+            </summary>
+        </member>
+        <member name="M:SevenZip.ArchiveOpenCallback.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the ArchiveOpenCallback class
+            </summary>
+            <param name="password">Password for the archive</param>
+        </member>
+        <member name="M:SevenZip.ArchiveOpenCallback.CryptoGetTextPassword(System.String@)">
+            <summary>
+            Sets password for the archive
+            </summary>
+            <param name="password">Password for the archive</param>
+            <returns>Zero if everything is OK</returns>
+        </member>
+        <member name="T:SevenZip.ArchiveExtractCallback">
+            <summary>
+            Archive extraction callback to handle the process of unpacking files
+            </summary>
+        </member>
+        <member name="F:SevenZip.ArchiveExtractCallback._BytesCount">
+            <summary>
+            For Compressing event
+            </summary>
+        </member>
+        <member name="F:SevenZip.ArchiveExtractCallback._DoneRate">
+            <summary>
+            Rate of the done work from [0, 1]
+            </summary>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.ValidateFileName(System.String)">
+            <summary>
+            Ensures that the directory to the file name is valid and creates intermediate directories if necessary
+            </summary>
+            <param name="fileName">File name</param>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.#ctor(SevenZip.ComRoutines.IInArchive,System.String,System.Int32,SevenZip.SevenZipExtractor)">
+            <summary>
+            Initializes a new instance of the ArchiveExtractCallback class
+            </summary>
+            <param name="archive">IInArchive interface for the archive</param>
+            <param name="directory">Directory where files are to be unpacked to</param>
+            <param name="filesCount">The archive files count</param>'
+            <param name="extractor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.#ctor(SevenZip.ComRoutines.IInArchive,System.String,System.Int32,System.String,SevenZip.SevenZipExtractor)">
+            <summary>
+            Initializes a new instance of the ArchiveExtractCallback class
+            </summary>
+            <param name="archive">IInArchive interface for the archive</param>
+            <param name="directory">Directory where files are to be unpacked to</param>
+            <param name="filesCount">The archive files count</param>
+            <param name="password">Password for the archive</param>
+            <param name="extractor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.#ctor(SevenZip.ComRoutines.IInArchive,System.IO.Stream,System.Int32,System.UInt32,SevenZip.SevenZipExtractor)">
+            <summary>
+            Initializes a new instance of the ArchiveExtractCallback class
+            </summary>
+            <param name="archive">IInArchive interface for the archive</param>
+            <param name="stream">The stream where files are to be unpacked to</param>
+            <param name="filesCount">The archive files count</param>
+            <param name="fileIndex">The file index for the stream</param>
+            <param name="extractor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.#ctor(SevenZip.ComRoutines.IInArchive,System.IO.Stream,System.Int32,System.UInt32,System.String,SevenZip.SevenZipExtractor)">
+            <summary>
+            Initializes a new instance of the ArchiveExtractCallback class
+            </summary>
+            <param name="archive">IInArchive interface for the archive</param>
+            <param name="stream">The stream where files are to be unpacked to</param>
+            <param name="filesCount">The archive files count</param>
+            <param name="fileIndex">The file index for the stream</param>
+            <param name="password">Password for the archive</param>
+            <param name="extractor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.SetTotal(System.UInt64)">
+            <summary>
+            Gives the size of the unpacked archive files
+            </summary>
+            <param name="total">Size of the unpacked archive files (in bytes)</param>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.GetStream(System.UInt32,SevenZip.ComRoutines.ISequentialOutStream@,SevenZip.ComRoutines.AskMode)">
+            <summary>
+            Sets output stream for writing unpacked data
+            </summary>
+            <param name="index">Current file index</param>
+            <param name="outStream">Output stream pointer</param>
+            <param name="askExtractMode">Extraction mode</param>
+            <returns>0 if OK</returns>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.SetOperationResult(SevenZip.ComRoutines.OperationResult)">
+            <summary>
+            Called when the archive was extracted
+            </summary>
+            <param name="operationResult"></param>
+        </member>
+        <member name="M:SevenZip.ArchiveExtractCallback.CryptoGetTextPassword(System.String@)">
+            <summary>
+            Sets password for the archive
+            </summary>
+            <param name="password">Password for the archive</param>
+            <returns>Zero if everything is OK</returns>
+        </member>
+        <member name="E:SevenZip.ArchiveExtractCallback.FileExtractionStarted">
+            <summary>
+            Occurs when a new file is going to be unpacked
+            </summary>
+            <remarks>Occurs when 7-zip engine requests for an output stream for a new file to unpack in</remarks>
+        </member>
+        <member name="E:SevenZip.ArchiveExtractCallback.FileExtractionFinished">
+            <summary>
+            Occurs when a file has been successfully unpacked
+            </summary>
+        </member>
+        <member name="E:SevenZip.ArchiveExtractCallback.Open">
+            <summary>
+            Occurs when the archive is opened and 7-zip sends the size of unpacked data
+            </summary>
+        </member>
+        <member name="E:SevenZip.ArchiveExtractCallback.Extracting">
+            <summary>
+            Occurs when the extraction is performed
+            </summary>
+        </member>
+        <member name="E:SevenZip.ArchiveExtractCallback.FileExists">
+            <summary>
+            Occurs during the extraction when a file already exists
+            </summary>
+        </member>
+        <member name="T:SevenZip.ArchiveUpdateCallback">
+            <summary>
+            Archive update callback to handle the process of packing files
+            </summary>
+        </member>
+        <member name="F:SevenZip.ArchiveUpdateCallback._Files">
+            <summary>
+            Array of files to pack
+            </summary>
+        </member>
+        <member name="F:SevenZip.ArchiveUpdateCallback._ActualFilesCount">
+            <summary>
+            _Files.Count if do not count directories
+            </summary>
+        </member>
+        <member name="F:SevenZip.ArchiveUpdateCallback._RootLength">
+            <summary>
+            Common file names root length
+            </summary>
+        </member>
+        <member name="F:SevenZip.ArchiveUpdateCallback._DoneRate">
+            <summary>
+            Rate of the done work from [0, 1]
+            </summary>
+        </member>
+        <member name="F:SevenZip.ArchiveUpdateCallback._BytesCount">
+            <summary>
+            For Compressing event
+            </summary>
+        </member>
+        <member name="M:SevenZip.ArchiveUpdateCallback.#ctor(System.IO.FileInfo[],System.Int32,SevenZip.SevenZipCompressor)">
+            <summary>
+            Initializes a new instance of the ArchiveUpdateCallback class
+            </summary>
+            <param name="files">Array of files to pack</param>
+            <param name="rootLength">Common file names root length</param>
+            <param name="compressor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveUpdateCallback.#ctor(System.IO.FileInfo[],System.Int32,System.String,SevenZip.SevenZipCompressor)">
+            <summary>
+            Initializes a new instance of the ArchiveUpdateCallback class
+            </summary>
+            <param name="files">Array of files to pack</param>
+            <param name="rootLength">Common file names root length</param>
+            <param name="password">The archive password</param>
+            <param name="compressor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveUpdateCallback.#ctor(System.IO.Stream,SevenZip.SevenZipCompressor)">
+            <summary>
+            Initializes a new instance of the ArchiveUpdateCallback class
+            </summary>
+            <param name="stream">The input stream</param>
+            <param name="compressor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveUpdateCallback.#ctor(System.IO.Stream,System.String,SevenZip.SevenZipCompressor)">
+            <summary>
+            Initializes a new instance of the ArchiveUpdateCallback class
+            </summary>
+            <param name="stream">The input stream</param>
+            <param name="password">The archive password</param>
+            <param name="compressor">The owner of the callback</param>
+        </member>
+        <member name="M:SevenZip.ArchiveUpdateCallback.GetStream(System.UInt32,SevenZip.ComRoutines.ISequentialInStream@)">
+            <summary>
+            Gets the stream for 7-zip library
+            </summary>
+            <param name="index">File index</param>
+            <param name="inStream">Input file stream</param>
+            <returns>Zero if Ok</returns>
+        </member>
+        <member name="E:SevenZip.ArchiveUpdateCallback.FileCompressionStarted">
+            <summary>
+            Occurs when the next file is going to be packed
+            </summary>
+            <remarks>Occurs when 7-zip engine requests for an input stream for the next file to pack it</remarks>
+        </member>
+        <member name="E:SevenZip.ArchiveUpdateCallback.Compressing">
+            <summary>
+            Occurs when data are being compressed
+            </summary>
+        </member>
+        <member name="T:SevenZip.LzmaProgressCallback">
+            <summary>
+            Callback to implement the ICodeProgress interface
+            </summary>
+        </member>
+        <member name="M:SevenZip.LzmaProgressCallback.#ctor(System.Int64,System.EventHandler{SevenZip.ProgressEventArgs})">
+            <summary>
+            Initializes a new instance of the LzmaProgressCallback class
+            </summary>
+            <param name="inSize">The input size</param>
+            <param name="working">Progress event handler</param>
+        </member>
+        <member name="M:SevenZip.LzmaProgressCallback.SetProgress(System.Int64,System.Int64)">
+            <summary>
+            Sets the progress
+            </summary>
+            <param name="inSize">The processed input size</param>
+            <param name="outSize">The processed output size</param>
+        </member>
+    </members>
+</doc>

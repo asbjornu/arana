@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Arana.ConsoleTest")]
-[assembly: AssemblyDescription("Araña is a simple web testing library")]
+[assembly: AssemblyTitle("Arana.Release")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("OKB AS")]
-[assembly: AssemblyProduct("Arana.ConsoleTest")]
+[assembly: AssemblyProduct("Arana.Release")]
 [assembly: AssemblyCopyright("Copyright © OKB 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly : Guid("52ba94ed-42f8-4c96-a10f-3f3229771425")]
+[assembly : Guid("2513ed87-2164-49da-b2ad-9971fee84652")]
 
 // Version information for an assembly consists of the following four values:
 //
