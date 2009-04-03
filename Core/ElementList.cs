@@ -246,7 +246,7 @@ namespace Arana.Core
 
          string method = (methodAttribute != null) && !String.IsNullOrEmpty(methodAttribute.Value)
                             ? methodAttribute.Value.ToUpperInvariant()
-                            : AranaRequest.HttpGet;
+                            : HttpMethod.Get;
 
          if ((form.Attributes == null) || (form.Attributes.Count == 0))
             throw new InvalidOperationException("The HTML form has no attributes.");

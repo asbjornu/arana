@@ -45,14 +45,19 @@ namespace Arana.Core
       /// Selects a list of elements matching the given CSS selector.
       /// </summary>
       /// <param name="cssSelector">The CSS selector.</param>
-      /// <returns>A list of elements matching the given CSS selector</returns>
+      /// <returns>A list of elements matching the given CSS selector.</returns>
+      /// <exception cref="ArgumentException">
+      /// If the <paramref name="cssSelector"/> returns an empty node set.
+      /// </exception>
       public ElementList Select(string cssSelector)
       {
          IList<HtmlNode> nodes = this.engine.Parse(cssSelector);
 
-         if (nodes == null || nodes.Count == 0)
-            throw new ArgumentException("The CSS selector returned an empty node set.",
-                                        "cssSelector");
+         if ((nodes == null) || (nodes.Count == 0))
+            throw new ArgumentException(
+               String.Format("The CSS selector '{0}' returned an empty node set.",
+                             cssSelector),
+               "cssSelector");
 
          return new ElementList(nodes, this);
       }
@@ -128,7 +133,7 @@ namespace Arana.Core
                // Get a new selector engine for the location we're being redirected to
                return GetSelectorEngine(response.Data.Location,
                                         true,
-                                        AranaRequest.HttpGet,
+                                        HttpMethod.Get,
                                         null);
             }
 
