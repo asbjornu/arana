@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Arana.Core.Extensions;
 
 using Fizzler.Parser;
-
-using HtmlAgilityPack;
 
 namespace Arana.Core
 {
@@ -64,21 +61,9 @@ namespace Arana.Core
       /// <returns>
       /// A list of elements matching the given CSS selector.
       /// </returns>
-      /// <exception cref="ArgumentException">
-      /// If the <paramref name="cssSelector"/> returns an empty node set.
-      /// </exception>
       public ElementList Select(string cssSelector)
       {
-         IList<HtmlNode> selectedNodes = this.engine.Parse(cssSelector);
-
-         // Throw an exception if no nodes were selected.
-         if ((selectedNodes == null) || (selectedNodes.Count == 0))
-            throw new ArgumentException(
-               String.Format("The CSS selector '{0}' returned an empty node set.",
-                             cssSelector),
-               "cssSelector");
-
-         return new ElementList(selectedNodes, this);
+         return new ElementList(this.engine.Parse(cssSelector), this);
       }
 
 
