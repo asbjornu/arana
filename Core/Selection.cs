@@ -43,12 +43,34 @@ namespace Arana.Core
       /// <summary>
       /// Initializes a new instance of the <see cref="Selection"/> class.
       /// </summary>
-      /// <param name="htmlNodes">The HTML nodes.</param>
       /// <param name="engine">The engine.</param>
-      internal Selection(IEnumerable<HtmlNode> htmlNodes, AranaEngine engine)
-         : base(htmlNodes)
+      /// <param name="cssSelector">The CSS selector.</param>
+      internal Selection(AranaEngine engine, string cssSelector)
+         : this(engine.SelectorEngine.Parse(cssSelector), engine)
+      {
+         CssSelector = cssSelector;
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="Selection"/> class.
+      /// </summary>
+      /// <param name="nodes">The nodes.</param>
+      /// <param name="engine">The engine.</param>
+      private Selection(IEnumerable<HtmlNode> nodes, AranaEngine engine)
+         : this(nodes)
       {
          this.engine = engine;
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="Selection"/> class.
+      /// </summary>
+      /// <param name="nodes">The nodes.</param>
+      private Selection(IEnumerable<HtmlNode> nodes)
+         : base(nodes)
+      {
       }
 
 
@@ -117,8 +139,14 @@ namespace Arana.Core
       /// <returns>The tag name of the first element in the currently selected list of elements.</returns>
       public string TagName
       {
-         get { return Count > 0 ? this[0].Name : null; }
+         get { return (Count == 0) ? null : this[0].Name; }
       }
+
+      /// <summary>
+      /// Gets the CSS selector that was used to select the elements in the list of currently selected elements.
+      /// </summary>
+      /// <value>The CSS selector.</value>
+      internal string CssSelector { get; private set; }
 
 
       /// <summary>
@@ -130,7 +158,7 @@ namespace Arana.Core
       public override string ToString()
       {
          return String.Join(String.Concat(',', Environment.NewLine),
-                            this.Select(node => node.GetSelector()).ToArray());
+                            this.Select(node => node.GetCssSelector()).ToArray());
       }
 
 
@@ -189,12 +217,9 @@ namespace Arana.Core
       /// <returns>
       /// The CSS selector for the first element in the list of currently selected elements.
       /// </returns>
-      public string GetSelector()
+      public string GetCssSelector()
       {
-         if (Count == 0)
-            throw new IndexOutOfRangeException("No elements in the list.");
-
-         return this[0].GetSelector();
+         return (Count == 0) ? null : this[0].GetCssSelector();
       }
 
 
@@ -282,11 +307,16 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
+         if (Count == 0)
+            throw new InvalidOperationException(
+               String.Format("No elements selected with '{0}'.", CssSelector));
+
          Selection form = this["form"];
 
          if (form.Count == 0)
             throw new InvalidOperationException(
-               "The selected element(s) does not contain an HTML 'form' element.");
+               String.Format("The elements selected with '{0}' does not contain an HTML 'form' element.",
+                             CssSelector));
 
          string method = form.Attribute("method");
          string action = form.Attribute("action");
@@ -305,6 +335,7 @@ namespace Arana.Core
          if (String.IsNullOrEmpty(action))
             throw new InvalidOperationException("No valid 'action' to perform.");
 
+         // TODO: Use GetFormElementsCssSelector() when Fizzler supports it.
          Selection formElements = this.engine.Select(FormElementsSelector);
 
          if (formElements.Count > 0)
@@ -313,6 +344,34 @@ namespace Arana.Core
          this.engine.NavigateTo(action, followRedirect, method, requestDictionary);
 
          return this.engine;
+      }
+
+
+      /// <summary>
+      /// Gets the CSS selector required to select all form elements children of the currently
+      /// selected 'form' element.
+      /// </summary>
+      /// <returns>
+      /// The CSS selector required to select all form elements children of the currently
+      /// selected 'form' element.
+      /// </returns>
+      private string GetFormElementsCssSelector()
+      {
+         string selector = GetCssSelector();
+
+         StringBuilder sb = new StringBuilder();
+
+         for (int i = 0; i < FormElements.Length; i++)
+         {
+            sb.Append(selector);
+            sb.Append(' ');
+            sb.Append(FormElements[i]);
+
+            if (i < (FormElements.Length - 1))
+               sb.Append(", ");
+         }
+
+         return sb.ToString();
       }
 
 

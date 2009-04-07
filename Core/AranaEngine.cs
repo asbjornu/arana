@@ -12,11 +12,6 @@ namespace Arana.Core
    public class AranaEngine
    {
       /// <summary>
-      /// The <see cref="SelectorEngine" /> used to parse and execute CSS selectors.
-      /// </summary>
-      private SelectorEngine selectorEngine;
-
-      /// <summary>
       /// A local field used to preserve the last request made for reference
       /// to future requests (to preserve the base URI as a way to resolve
       /// relative URI's, etc).
@@ -53,6 +48,11 @@ namespace Arana.Core
          get { return (this.request == null) ? null : this.request.Uri; }
       }
 
+      /// <summary>
+      /// The <see cref="Fizzler.Parser.SelectorEngine" /> used to parse and execute CSS selectors.
+      /// </summary>
+      internal SelectorEngine SelectorEngine { get; private set; }
+
 
       /// <summary>
       /// Selects a list of elements matching the given CSS selector.
@@ -63,7 +63,7 @@ namespace Arana.Core
       /// </returns>
       public Selection Select(string cssSelector)
       {
-         return new Selection(this.selectorEngine.Parse(cssSelector), this);
+         return new Selection(this, cssSelector);
       }
 
 
@@ -75,7 +75,7 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       internal void NavigateTo(string uri, bool followRedirect)
       {
-         this.selectorEngine = GetSelectorEngine(uri, followRedirect, null, null);
+         SelectorEngine = GetSelectorEngine(uri, followRedirect, null, null);
       }
 
 
@@ -92,12 +92,12 @@ namespace Arana.Core
                                string httpMethod,
                                RequestDictionary requestValues)
       {
-         this.selectorEngine = GetSelectorEngine(uri, followRedirect, httpMethod, requestValues);
+         SelectorEngine = GetSelectorEngine(uri, followRedirect, httpMethod, requestValues);
       }
 
 
       /// <summary>
-      /// Gets a new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
+      /// Gets a new <see cref="Fizzler.Parser.SelectorEngine"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
@@ -105,7 +105,7 @@ namespace Arana.Core
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>
-      /// A new <see cref="SelectorEngine"/> for the given <paramref name="uri"/>.
+      /// A new <see cref="Fizzler.Parser.SelectorEngine"/> for the given <paramref name="uri"/>.
       /// </returns>
       /// <exception cref="InvalidUriException">
       /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
