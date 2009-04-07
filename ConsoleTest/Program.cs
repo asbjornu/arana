@@ -35,7 +35,11 @@ namespace Arana.Test.ConsoleApplication
       {
          AranaEngine engine = new AranaEngine(Settings.WebSiteUri);
 
-         ElementList anchor1 = engine.Select("div.login a");
+         ElementList e = engine.Select("div");
+
+         Console.WriteLine(e);
+
+         /*ElementList anchor1 = engine.Select("div.login a");
 
          Console.WriteLine(anchor1.InnerText);
 
@@ -45,7 +49,7 @@ namespace Arana.Test.ConsoleApplication
 
          ElementList anchor2 = engine.Select(selector);
 
-         Console.WriteLine(anchor2.InnerText);
+         Console.WriteLine(anchor2.InnerText);*/
 
          /*Console.WriteLine(engine.Select("title").InnerText);
 
