@@ -15,7 +15,7 @@ namespace Arana.Core.Extensions
       /// </summary>
       /// <param name="node">The node.</param>
       /// <returns>The CSS selector for the given <paramref name="node"/>.</returns>
-      public static string GetSelector(this HtmlNode @node)
+      public static string GetCssSelector(this HtmlNode @node)
       {
          StringBuilder selectorBuilder = new StringBuilder();
 
@@ -59,7 +59,7 @@ namespace Arana.Core.Extensions
 
          // If we're to carry on, prepend the selector of the parent element
          if (carryOn)
-            selectorBuilder.Insert(0, node.ParentNode.GetSelector());
+            selectorBuilder.Insert(0, node.ParentNode.GetCssSelector());
 
          return selectorBuilder.ToString().Trim();
       }
