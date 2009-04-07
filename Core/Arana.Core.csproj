@@ -55,14 +55,14 @@
   <ItemGroup>
     <Compile Include="AranaRequest.cs" />
     <Compile Include="AranaResponse.cs" />
-    <Compile Include="ElementList.Attributes.cs" />
+    <Compile Include="Selection.Attributes.cs" />
     <Compile Include="Extensions\CookieExtensions.cs" />
     <Compile Include="Extensions\HtmlAttributeExtensions.cs" />
     <Compile Include="Extensions\HtmlNodeExtensions.cs" />
     <Compile Include="Extensions\HttpStatusCodeExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="AranaEngine.cs" />
-    <Compile Include="ElementList.cs" />
+    <Compile Include="Selection.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="InvalidUriException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

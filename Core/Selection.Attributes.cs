@@ -10,7 +10,7 @@ using HtmlAgilityPack;
 
 namespace Arana.Core
 {
-   public partial class ElementList
+   public partial class Selection
    {
       /// <summary>
       /// Gets the value of the 'class' attribute(s) of the currently selected list of elements.
@@ -30,7 +30,7 @@ namespace Arana.Core
       /// </summary>
       /// <param name="className">The id.</param>
       /// <returns>The list of currently selected elements.</returns>
-      public ElementList Class(string className)
+      public Selection Class(string className)
       {
          return Attribute("class", className);
       }
@@ -54,7 +54,7 @@ namespace Arana.Core
       /// </summary>
       /// <param name="id">The id.</param>
       /// <returns>The list of currently selected elements.</returns>
-      public ElementList ID(string id)
+      public Selection ID(string id)
       {
          return Attribute("id", id);
       }
@@ -77,7 +77,7 @@ namespace Arana.Core
       /// </summary>
       /// <param name="name">The name.</param>
       /// <returns>The list of currently selected elements.</returns>
-      public ElementList Name(string name)
+      public Selection Name(string name)
       {
          return Attribute("name", name);
       }
@@ -100,7 +100,7 @@ namespace Arana.Core
       /// </summary>
       /// <param name="value">The value.</param>
       /// <returns>The list of currently selected elements.</returns>
-      public ElementList Value(string value)
+      public Selection Value(string value)
       {
          return Attribute("value", value);
       }
@@ -163,7 +163,7 @@ namespace Arana.Core
       /// <param name="name">The name.</param>
       /// <param name="value">The value.</param>
       /// <returns>The list of currently selected elements.</returns>
-      private ElementList Attribute(string name, string value)
+      private Selection Attribute(string name, string value)
       {
          foreach (HtmlAttribute attribute in Attributes(name))
             attribute.Value = value;
