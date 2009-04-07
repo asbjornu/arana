@@ -69,44 +69,16 @@ namespace Arana.Core
       /// </exception>
       public ElementList Select(string cssSelector)
       {
-         return Select(cssSelector, null);
-      }
-
-
-      /// <summary>
-      /// Selects a list of elements matching the given CSS selector, with the
-      /// given <paramref name="parent"/> as a context.
-      /// </summary>
-      /// <param name="cssSelector">The CSS selector.</param>
-      /// <param name="parent">The parent to use context when selecting nodes.</param>
-      /// <returns>
-      /// A list of elements matching the given CSS selector.
-      /// </returns>
-      /// <exception cref="ArgumentException">
-      /// If the <paramref name="cssSelector"/> returns an empty node set.
-      /// </exception>
-      public ElementList Select(string cssSelector, ElementList parent)
-      {
          IList<HtmlNode> selectedNodes = this.engine.Parse(cssSelector);
-         List<HtmlNode> filteredNodes = new List<HtmlNode>();
-
-         if (parent == null)
-            // If the parent is null, just add all nodes
-            filteredNodes.AddRange(selectedNodes);
-         else
-            // Else, add only nodes that has 'parent' as a parent node.
-            foreach (HtmlNode node in selectedNodes)
-               if (parent.IsParentOf(node))
-                  filteredNodes.Add(node);
 
          // Throw an exception if no nodes were selected.
-         if ((filteredNodes == null) || (filteredNodes.Count == 0))
+         if ((selectedNodes == null) || (selectedNodes.Count == 0))
             throw new ArgumentException(
                String.Format("The CSS selector '{0}' returned an empty node set.",
                              cssSelector),
                "cssSelector");
 
-         return new ElementList(filteredNodes, this);
+         return new ElementList(selectedNodes, this);
       }
 
 

@@ -13,9 +13,35 @@ namespace Arana.Core
    public partial class ElementList
    {
       /// <summary>
+      /// Gets the value of the 'class' attribute(s) of the currently selected list of elements.
+      /// </summary>
+      /// <returns>
+      /// The value of the 'class' attribute(s) of the currently selected list of elements.
+      /// </returns>
+      public string Class()
+      {
+         return Attribute("class");
+      }
+
+
+      /// <summary>
+      /// Sets the value of the 'class' attribute(s) of the currently selected list of elements
+      /// to the specified <paramref name="className"/>.
+      /// </summary>
+      /// <param name="className">The id.</param>
+      /// <returns>The list of currently selected elements.</returns>
+      public ElementList Class(string className)
+      {
+         return Attribute("class", className);
+      }
+
+
+      /// <summary>
       /// Gets the value of the 'id' attribute(s) of the currently selected list of elements.
       /// </summary>
-      /// <returns>The value of the 'id' attribute(s) of the currently selected list of elements.</returns>
+      /// <returns>
+      /// The value of the 'id' attribute(s) of the currently selected list of elements.
+      /// </returns>
       public string ID()
       {
          return Attribute("id");
@@ -37,6 +63,7 @@ namespace Arana.Core
       /// <summary>
       /// Gets the value of the 'name' attribute(s) of the currently selected list of elements.
       /// </summary>
+      /// <returns></returns>
       /// <value>The value of the 'name' attribute(s) of the currently selected list of elements.</value>
       public string Name()
       {
@@ -59,6 +86,7 @@ namespace Arana.Core
       /// <summary>
       /// Gets the value of the 'value' attribute(s) of the currently selected list of elements.
       /// </summary>
+      /// <returns></returns>
       /// <value>The value of the 'value' attribute(s) of the currently selected list of elements.</value>
       public string Value()
       {
@@ -114,7 +142,9 @@ namespace Arana.Core
       /// Gets the value of the attribute(s) with the given <paramref name="name"/>.
       /// </summary>
       /// <param name="name">The name of the attribute.</param>
-      /// <returns>The value of the attribute(s) with the given <paramref name="name"/>.</returns>
+      /// <returns>
+      /// The value of the attribute(s) with the given <paramref name="name"/>.
+      /// </returns>
       private string Attribute(string name)
       {
          StringBuilder sb = new StringBuilder();
@@ -122,7 +152,7 @@ namespace Arana.Core
          foreach (HtmlAttribute attribute in Attributes(name))
             sb.AppendLine(attribute.Value);
 
-         return sb.ToString();
+         return sb.ToString().Trim();
       }
 
 
