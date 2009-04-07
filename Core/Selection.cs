@@ -15,9 +15,9 @@ using HtmlAgilityPack;
 namespace Arana.Core
 {
    /// <summary>
-   /// Provides an encapsulation of <see cref="List{HtmlNode}" />.
+   /// A list of HTML elements selected with <see cref="AranaEngine.Select(System.String)" />.
    /// </summary>
-   public partial class ElementList : List<HtmlNode>
+   public partial class Selection : List<HtmlNode>
    {
       /// <summary>
       /// Contains the tag names of all HTML form elements that should be posted to
@@ -41,11 +41,11 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="ElementList"/> class.
+      /// Initializes a new instance of the <see cref="Selection"/> class.
       /// </summary>
       /// <param name="htmlNodes">The HTML nodes.</param>
       /// <param name="engine">The engine.</param>
-      internal ElementList(IEnumerable<HtmlNode> htmlNodes, AranaEngine engine)
+      internal Selection(IEnumerable<HtmlNode> htmlNodes, AranaEngine engine)
          : base(htmlNodes)
       {
          this.engine = engine;
@@ -53,15 +53,15 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets the <see cref="ElementList"/> with the specified <param name="tagName"/>.
+      /// Gets the <see cref="Selection"/> with the specified <param name="tagName"/>.
       /// </summary>
       /// <value>
-      /// The <see cref="ElementList"/> with the specified <param name="tagName"/>.
+      /// The <see cref="Selection"/> with the specified <param name="tagName"/>.
       /// </value>
       /// <exception cref="ArgumentNullException">
       /// If <paramref name="tagName"/> is null or empty.
       /// </exception>
-      public ElementList this[string tagName]
+      public Selection this[string tagName]
       {
          get
          {
@@ -72,7 +72,7 @@ namespace Arana.Core
                     where (String.Compare(htmlNode.Name, tagName, true) == 0)
                     select htmlNode;
 
-            return new ElementList(new List<HtmlNode>(v), this.engine);
+            return new Selection(new List<HtmlNode>(v), this.engine);
          }
       }
 
@@ -164,7 +164,7 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Follow(bool followRedirect)
       {
-         ElementList anchors = this["a"];
+         Selection anchors = this["a"];
 
          if (anchors.Count == 0)
             throw new InvalidOperationException("The selected element(s) does not contain an HTML 'a' element.");
@@ -206,14 +206,14 @@ namespace Arana.Core
       /// The very next sibling for each <see cref="T:HtmlAgilityPack.HtmlNode"/>
       /// in the list of currently selected elements.
       /// </returns>
-      public ElementList Next()
+      public Selection Next()
       {
          var v = from htmlNode in this
                  let nextSibling = htmlNode.NextSibling
                  where (nextSibling != null)
                  select nextSibling;
 
-         return new ElementList(new List<HtmlNode>(v), this.engine);
+         return new Selection(new List<HtmlNode>(v), this.engine);
       }
 
 
@@ -225,14 +225,14 @@ namespace Arana.Core
       /// The very previous sibling for each <see cref="T:HtmlAgilityPack.HtmlNode"/>
       /// in the list of currently selected elements.
       /// </returns>
-      public ElementList Previous()
+      public Selection Previous()
       {
          var v = from htmlNode in this
                  let nextSibling = htmlNode.PreviousSibling
                  where (nextSibling != null)
                  select nextSibling;
 
-         return new ElementList(new List<HtmlNode>(v), this.engine);
+         return new Selection(new List<HtmlNode>(v), this.engine);
       }
 
 
@@ -282,7 +282,7 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
-         ElementList form = this["form"];
+         Selection form = this["form"];
 
          if (form.Count == 0)
             throw new InvalidOperationException(
@@ -305,7 +305,7 @@ namespace Arana.Core
          if (String.IsNullOrEmpty(action))
             throw new InvalidOperationException("No valid 'action' to perform.");
 
-         ElementList formElements = this.engine.Select(FormElementsSelector);
+         Selection formElements = this.engine.Select(FormElementsSelector);
 
          if (formElements.Count > 0)
             requestDictionary = formElements.GetRequestCollection(requestValues);

@@ -61,9 +61,9 @@ namespace Arana.Core
       /// <returns>
       /// A list of elements matching the given CSS selector.
       /// </returns>
-      public ElementList Select(string cssSelector)
+      public Selection Select(string cssSelector)
       {
-         return new ElementList(this.selectorEngine.Parse(cssSelector), this);
+         return new Selection(this.selectorEngine.Parse(cssSelector), this);
       }
 
 
