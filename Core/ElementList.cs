@@ -122,6 +122,19 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </returns>
+      public override string ToString()
+      {
+         return String.Join(String.Concat(',', Environment.NewLine),
+                            this.Select(node => node.GetSelector()).ToArray());
+      }
+
+
+      /// <summary>
       /// Follows the 'href' attribute on the selected HTML elements.
       /// </summary>
       /// <returns>An updated <see cref="AranaEngine" />.</returns>
