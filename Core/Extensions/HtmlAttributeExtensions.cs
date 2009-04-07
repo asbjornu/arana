@@ -10,6 +10,27 @@ namespace Arana.Core.Extensions
    internal static class HtmlAttributeExtensions
    {
       /// <summary>
+      /// Gets the value of the attribute with the given <paramref name="name"/>
+      /// within the <paramref name="attributes"/> collection.
+      /// </summary>
+      /// <param name="attributes">The attributes.</param>
+      /// <param name="name">The name.</param>
+      /// <returns>
+      /// The value of the attribute with the given <paramref name="name"/>
+      /// within the <paramref name="attributes"/> collection.
+      /// </returns>
+      public static string Get(this HtmlAttributeCollection @attributes, string name)
+      {
+         if ((attributes == null) || (attributes.Count == 0))
+            return null;
+
+         HtmlAttribute attribute = attributes[name];
+
+         return attribute.HasValue() ? attribute.Value : null;
+      }
+
+
+      /// <summary>
       /// Determines whether the specified attribute has value.
       /// </summary>
       /// <param name="attribute">The attribute.</param>

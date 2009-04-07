@@ -111,6 +111,15 @@ namespace Arana.Core
          }
       }
 
+      /// <summary>
+      /// Gets the tag name of the first element in the currently selected list of elements.
+      /// </summary>
+      /// <returns>The tag name of the first element in the currently selected list of elements.</returns>
+      public string TagName
+      {
+         get { return Count > 0 ? this[0].Name : null; }
+      }
+
 
       /// <summary>
       /// Follows the 'href' attribute on the selected HTML elements.
@@ -158,6 +167,21 @@ namespace Arana.Core
          this.engine.NavigateTo(href, followRedirect);
 
          return this.engine;
+      }
+
+
+      /// <summary>
+      /// Gets the CSS selector for the first element in the list of currently selected elements.
+      /// </summary>
+      /// <returns>
+      /// The CSS selector for the first element in the list of currently selected elements.
+      /// </returns>
+      public string GetSelector()
+      {
+         if (Count == 0)
+            throw new IndexOutOfRangeException("No elements in the list.");
+
+         return this[0].GetSelector();
       }
 
 
@@ -268,42 +292,14 @@ namespace Arana.Core
          if (String.IsNullOrEmpty(action))
             throw new InvalidOperationException("No valid 'action' to perform.");
 
-         ElementList formElements = this.engine.Select(FormElementsSelector, form);
+         ElementList formElements = this.engine.Select(FormElementsSelector);
 
-         if ((formElements != null) && (formElements.Count > 0))
+         if (formElements.Count > 0)
             requestDictionary = formElements.GetRequestCollection(requestValues);
 
          this.engine.NavigateTo(action, followRedirect, method, requestDictionary);
 
          return this.engine;
-      }
-
-
-      /// <summary>
-      /// Determines whether any of the elements in the currently selected list
-      /// are parents of the specified <paramref name="node"/>.
-      /// </summary>
-      /// <param name="node">The HTML node.</param>
-      /// <returns>
-      /// 	<c>true</c> if any of the elements in the currently selected list are
-      /// parents of the specified node; otherwise, <c>false</c>.
-      /// </returns>
-      /// <exception cref="ArgumentNullException">
-      /// If <paramref name="node"/> is null.
-      /// </exception>
-      internal bool IsParentOf(HtmlNode node)
-      {
-         if (node == null)
-            throw new ArgumentNullException("node");
-
-         HtmlNode parentNode;
-
-         while ((parentNode = node.ParentNode) != null)
-            foreach (HtmlNode htmlNode in this)
-               if (parentNode == htmlNode)
-                  return true;
-
-         return false;
       }
 
 

@@ -36,16 +36,17 @@ namespace Arana.Test.ConsoleApplication
       {
          AranaEngine engine = new AranaEngine(Settings.WebSiteUri);
 
-         engine.Select("div.login a").Follow();
-         Console.WriteLine(engine.Select("title").InnerText);
+         ElementList anchor1 = engine.Select("div.login a");
 
-         engine.Select("form#aspnetForm").Submit(false, new NameValueCollection
-         {
-            { "email", Settings.Email },
-            { "password", Settings.Password },
-         });
+         Console.WriteLine(anchor1.InnerText);
 
-         Console.WriteLine(engine.Response.Location);
+         string selector = anchor1.GetSelector();
+
+         Console.WriteLine(selector);
+
+         ElementList anchor2 = engine.Select(selector);
+
+         Console.WriteLine(anchor2.InnerText);
 
          /*Console.WriteLine(engine.Select("title").InnerText);
 
