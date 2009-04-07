@@ -66,7 +66,9 @@ namespace Arana.Core
             throw new InvalidOperationException(
                String.Format("The method '{0}' is invalid.", this.method));
 
-         if ((previousRequest != null) && (previousRequest.cookies != null) && (previousRequest.cookies.Count > 0))
+         if ((previousRequest != null) &&
+             (previousRequest.cookies != null) &&
+             (previousRequest.cookies.Count > 0))
          {
             this.cookies = this.cookies ?? new CookieCollection();
             this.cookies.Add(previousRequest.cookies);
@@ -165,31 +167,37 @@ namespace Arana.Core
       private HttpWebRequest CreateRequest(string uri,
                                            RequestDictionary requestValues)
       {
-         Uri createdUri = uri.ToUri((this.previousRequest == null) ? null : this.previousRequest.baseUri);
+         bool methodIsGet = (this.method == HttpMethod.Get);
+         Uri createdUri = uri.ToUri((this.previousRequest != null)
+                                       ? this.previousRequest.baseUri
+                                       : null);
+
          this.baseUri = new Uri(createdUri.GetLeftPart(UriPartial.Authority));
          HttpWebRequest request = HttpWebRequest.Create(createdUri) as HttpWebRequest;
 
          if (request == null)
-            throw new InvalidUriException(uri, "Couldn't create an HTTP request for the given URI.");
+            throw new InvalidUriException(uri);
 
-         // Set and default the HTTP method
+         // Set the HTTP method
          request.Method = this.method;
 
-         // Add the given values to the request if they are 
+         // Add the request values if we have any
          if ((requestValues != null) && (requestValues.Count > 0))
          {
-            string requestString = requestValues.GetRequestString((this.method == HttpMethod.Get));
+            string requestString = requestValues.GetRequestString(methodIsGet);
 
-            // If the HTTP method is GET, create a new request with the values in the query string
-            if (this.method == HttpMethod.Get)
-            {
-               uri = String.Concat(uri + requestString);
-               return CreateRequest(uri, null);
-            }
+            // If the HTTP method is GET, recreate the request with
+            // the values in the query string
+            if (methodIsGet)
+               return CreateRequest(String.Concat(uri + requestString), null);
 
-            using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream(), Encoding.UTF8))
+            using (Stream stream = request.GetRequestStream())
             {
-               streamWriter.Write(requestString);
+               // TODO: Enable writing in other encodings than UTF-8
+               using (StreamWriter streamWriter = new StreamWriter(stream, Encoding.UTF8))
+               {
+                  streamWriter.Write(requestString);
+               }
             }
          }
 
@@ -215,6 +223,10 @@ namespace Arana.Core
 
          if (request.Method != HttpMethod.Get)
             request.ContentType = "application/x-www-form-urlencoded";
+
+         // Set the "Referer" header
+         if (this.previousRequest != null)
+            request.Referer = this.previousRequest.Uri.ToString();
 
          // If there's any cookies to add to the request, do it
          if ((this.cookies == null) || (this.cookies.Count <= 0))
