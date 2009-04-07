@@ -14,7 +14,7 @@ namespace Arana.Core
       /// <summary>
       /// The <see cref="SelectorEngine" /> used to parse and execute CSS selectors.
       /// </summary>
-      private SelectorEngine engine;
+      private SelectorEngine selectorEngine;
 
       /// <summary>
       /// A local field used to preserve the last request made for reference
@@ -63,7 +63,7 @@ namespace Arana.Core
       /// </returns>
       public ElementList Select(string cssSelector)
       {
-         return new ElementList(this.engine.Parse(cssSelector), this);
+         return new ElementList(this.selectorEngine.Parse(cssSelector), this);
       }
 
 
@@ -75,7 +75,7 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       internal void NavigateTo(string uri, bool followRedirect)
       {
-         this.engine = GetSelectorEngine(uri, followRedirect, null, null);
+         this.selectorEngine = GetSelectorEngine(uri, followRedirect, null, null);
       }
 
 
@@ -92,7 +92,7 @@ namespace Arana.Core
                                string httpMethod,
                                RequestDictionary requestValues)
       {
-         this.engine = GetSelectorEngine(uri, followRedirect, httpMethod, requestValues);
+         this.selectorEngine = GetSelectorEngine(uri, followRedirect, httpMethod, requestValues);
       }
 
 
