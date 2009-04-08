@@ -1,6 +1,5 @@
 ﻿using System;
-
-using Arana.Core.Extensions;
+using System.Net;
 
 using Fizzler.Parser;
 
@@ -24,8 +23,19 @@ namespace Arana.Core
       /// </summary>
       /// <param name="uri">The application URI.</param>
       public AranaEngine(string uri)
+         : this(uri, null)
       {
-         NavigateTo(uri, true);
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AranaEngine"/> class.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="credentials">The credentials.</param>
+      public AranaEngine(string uri, ICredentials credentials)
+      {
+         NavigateTo(uri, true, credentials);
       }
 
 
@@ -75,7 +85,20 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       internal void NavigateTo(string uri, bool followRedirect)
       {
-         SelectorEngine = GetSelectorEngine(uri, followRedirect, null, null);
+         SelectorEngine = GetSelectorEngine(uri, followRedirect, null, null, null);
+      }
+
+
+      /// <summary>
+      /// Navigates to the specified <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
+      /// <param name="credentials">The credentials.</param>
+      internal void NavigateTo(string uri, bool followRedirect, ICredentials credentials)
+      {
+         SelectorEngine = GetSelectorEngine(uri, followRedirect, null, credentials, null);
       }
 
 
@@ -92,7 +115,7 @@ namespace Arana.Core
                                string httpMethod,
                                RequestDictionary requestValues)
       {
-         SelectorEngine = GetSelectorEngine(uri, followRedirect, httpMethod, requestValues);
+         SelectorEngine = GetSelectorEngine(uri, followRedirect, httpMethod, null, requestValues);
       }
 
 
@@ -103,6 +126,7 @@ namespace Arana.Core
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="httpMethod">The HTTP method.</param>
+      /// <param name="credentials">The credentials.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>
       /// A new <see cref="Fizzler.Parser.SelectorEngine"/> for the given <paramref name="uri"/>.
@@ -113,9 +137,14 @@ namespace Arana.Core
       private SelectorEngine GetSelectorEngine(string uri,
                                                bool followRedirect,
                                                string httpMethod,
+                                               ICredentials credentials,
                                                RequestDictionary requestValues)
       {
-         this.request = new AranaRequest(this.request, uri, httpMethod, requestValues);
+         this.request = new AranaRequest(this.request,
+                                         uri,
+                                         httpMethod,
+                                         credentials,
+                                         requestValues);
 
          using (AranaResponse response = this.request.GetResponse())
          {
@@ -134,6 +163,7 @@ namespace Arana.Core
                return GetSelectorEngine(response.Data.Location,
                                         true,
                                         HttpMethod.Get,
+                                        credentials,
                                         null);
             }
 
