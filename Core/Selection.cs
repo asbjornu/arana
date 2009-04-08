@@ -192,6 +192,10 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Follow(bool followRedirect)
       {
+         if (Count == 0)
+            throw new InvalidOperationException(
+               String.Format("No elements selected with '{0}'.", CssSelector));
+
          Selection anchors = this["a"];
 
          if (anchors.Count == 0)
