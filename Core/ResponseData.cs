@@ -4,6 +4,8 @@ using System.Net;
 
 using Arana.Core.Extensions;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace Arana.Core
 {
    /// <summary>
@@ -51,6 +53,27 @@ namespace Arana.Core
       /// </summary>
       /// <value>One of the <see cref="T:System.Net.HttpStatusCode"/> values.</value>
       public HttpStatusCode Status { get; private set; }
+
+      /// <summary>
+      /// Gets the base of the HTTP <see cref="Status" /> Code.
+      /// 100, 200, 300, 400 or 500 for respective HTTP status codes.
+      /// </summary>
+      /// <value>The base status code of the given specific status code.</value>
+      /// <example>
+      ///   For a given <see cref="HttpStatusCode" /> of 304 (Not Modified),
+      ///   the base is found like this:
+      /// 
+      ///   <code>
+      ///          statusCode = 304
+      ///           304 / 100 = 3.04
+      ///    Math.Floor(3.04) = 3.00
+      ///          3.00 * 100 = 300
+      ///   </code>
+      /// </example>
+      public int StatusBase
+      {
+         get { return (int)Math.Floor((double)Status / 100) * 100; }
+      }
 
 
       /// <summary>
