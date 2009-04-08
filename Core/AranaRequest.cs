@@ -21,7 +21,7 @@ namespace Arana.Core
       /// <summary>
       /// The underlying <see cref="HttpWebRequest" /> object used to perform the HTTP requests.
       /// </summary>
-      private readonly HttpWebRequest baseRequest;
+      private readonly HttpWebRequest currentWebRequest;
 
       /// <summary>
       /// Gets the HTTP method for the request.
@@ -33,6 +33,11 @@ namespace Arana.Core
       /// Contains a reference to the previous request made. Null if this is the first request.
       /// </summary>
       private readonly AranaRequest previousRequest;
+
+      /// <summary>
+      /// The credentials to use on requests.
+      /// </summary>
+      private readonly ICredentials requestCredentials;
 
       /// <summary>
       /// The base URI of the web application we're testing.
@@ -53,12 +58,15 @@ namespace Arana.Core
       /// URI's.</param>
       /// <param name="uri">The URI.</param>
       /// <param name="method">The HTTP method to use for the request.</param>
+      /// <param name="credentials">The credentials.</param>
       /// <param name="requestValues">The request values.</param>
       internal AranaRequest(AranaRequest previousRequest,
                             string uri,
                             string method,
+                            ICredentials credentials,
                             RequestDictionary requestValues)
       {
+         this.requestCredentials = GetCredentials(previousRequest, credentials);
          this.method = (method ?? HttpMethod.Get).ToUpperInvariant();
 
          // Throw an exception if the HTTP method used is invalid.
@@ -75,7 +83,7 @@ namespace Arana.Core
          }
 
          this.previousRequest = previousRequest;
-         this.baseRequest = CreateRequest(uri, requestValues);
+         this.currentWebRequest = CreateRequest(uri, requestValues);
       }
 
 
@@ -85,7 +93,7 @@ namespace Arana.Core
       /// <value>The Uniform Resource Identifier (<see cref="T:System.Uri" />) of the request.</value>
       internal Uri Uri
       {
-         get { return this.baseRequest.RequestUri; }
+         get { return this.currentWebRequest.RequestUri; }
       }
 
 
@@ -106,8 +114,8 @@ namespace Arana.Core
 
             try
             {
-               this.baseRequest.AllowAutoRedirect = false;
-               response = this.baseRequest.GetResponse() as HttpWebResponse;
+               this.currentWebRequest.AllowAutoRedirect = false;
+               response = this.currentWebRequest.GetResponse() as HttpWebResponse;
             }
             catch (WebException ex)
             {
@@ -140,6 +148,31 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Gets the base URI of <paramref name="request"/>, if it's not null.
+      /// </summary>
+      /// <param name="request">The request.</param>
+      /// <returns>The base URI of <paramref name="request"/>, if it's not null.</returns>
+      private static Uri GetBaseUri(AranaRequest request)
+      {
+         return (request != null) ? request.baseUri : null;
+      }
+
+
+      /// <summary>
+      /// Gets the <see cref="ICredentials" /> to use for the request.
+      /// </summary>
+      /// <returns>The <see cref="ICredentials" /> to use for the request.</returns>
+      private static ICredentials GetCredentials(AranaRequest request,
+                                                 ICredentials credentials)
+      {
+         return credentials ??
+                ((request != null) && (request.requestCredentials != null)
+                    ? request.requestCredentials
+                    : null);
+      }
+
+
+      /// <summary>
       /// Gets the user agent string.
       /// </summary>
       /// <returns>The user agent string.</returns>
@@ -168,9 +201,7 @@ namespace Arana.Core
                                            RequestDictionary requestValues)
       {
          bool methodIsGet = (this.method == HttpMethod.Get);
-         Uri createdUri = uri.ToUri((this.previousRequest != null)
-                                       ? this.previousRequest.baseUri
-                                       : null);
+         Uri createdUri = uri.ToUri(GetBaseUri(this.previousRequest));
 
          this.baseUri = new Uri(createdUri.GetLeftPart(UriPartial.Authority));
          HttpWebRequest request = HttpWebRequest.Create(createdUri) as HttpWebRequest;
@@ -215,6 +246,7 @@ namespace Arana.Core
       {
          request.UserAgent = UserAgentString;
          request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+         request.Credentials = this.requestCredentials;
 
          // TODO: Set more accepted charsets and handle decoding of them
          request.Headers.Add("Accept-Charset", "utf-8");
