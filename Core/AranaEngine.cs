@@ -128,7 +128,7 @@ namespace Arana.Core
             this.request.SetCookie(Response);
 
             // If we're to follow redirects and the status indicates a redirect;
-            if (followRedirect && (response.Data.Status.GetBase() == 300))
+            if (followRedirect && (response.Data.StatusBase == 300))
             {
                // Get a new selector engine for the location we're being redirected to
                return GetSelectorEngine(response.Data.Location,

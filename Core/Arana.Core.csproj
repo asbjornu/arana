@@ -59,7 +59,6 @@
     <Compile Include="Extensions\CookieExtensions.cs" />
     <Compile Include="Extensions\HtmlAttributeExtensions.cs" />
     <Compile Include="Extensions\HtmlNodeExtensions.cs" />
-    <Compile Include="Extensions\HttpStatusCodeExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="AranaEngine.cs" />
     <Compile Include="Selection.cs" />
