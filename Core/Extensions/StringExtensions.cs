@@ -10,6 +10,23 @@ namespace Arana.Core.Extensions
    {
       /// <summary>
       /// Determines whether the given <see cref="T:System.String"/> is equal
+      /// to any of the values in the specified <paramref name="values"/> array,
+      /// in a case insensitive way.
+      /// </summary>
+      /// <param name="s">The <see cref="T:System.String"/> to compare.</param>
+      /// <param name="values">The values to compare with.</param>
+      /// <returns>
+      /// 	<c>true</c> if any of the specified <paramref name="values"/> are
+      /// equal to the given <see cref="T:System.String"/>; otherwise, <c>false</c>.
+      /// </returns>
+      public static bool IsEqualTo(this string @s, params string[] values)
+      {
+         return IsEqualTo(s, true, values);
+      }
+
+
+      /// <summary>
+      /// Determines whether the given <see cref="T:System.String"/> is equal
       /// to any of the values in the specified <paramref name="values"/> array.
       /// </summary>
       /// <param name="s">The <see cref="T:System.String"/> to compare.</param>

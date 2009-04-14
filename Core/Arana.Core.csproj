@@ -55,6 +55,8 @@
   <ItemGroup>
     <Compile Include="AranaRequest.cs" />
     <Compile Include="AranaResponse.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Preselection.cs" />
     <Compile Include="Selection.Attributes.cs" />
     <Compile Include="Extensions\CookieExtensions.cs" />
     <Compile Include="Extensions\HtmlAttributeExtensions.cs" />

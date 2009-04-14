@@ -25,7 +25,7 @@ namespace Arana.Core
       /// </summary>
       private static readonly string[] FormElements = new[]
       {
-         "input", "textarea", "button"
+         "input", "textarea", "button", "select"
       };
 
       /// <summary>
@@ -91,10 +91,10 @@ namespace Arana.Core
                throw new ArgumentNullException("tagName");
 
             var v = from htmlNode in this
-                    where (String.Compare(htmlNode.Name, tagName, true) == 0)
+                    where htmlNode.NameIsEqualTo(tagName)
                     select htmlNode;
 
-            return new Selection(new List<HtmlNode>(v), this.engine);
+            return new Selection(v, this.engine);
          }
       }
 
@@ -268,6 +268,43 @@ namespace Arana.Core
       /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
+      /// <param name="formElementsSelection">The form elements selection.</param>
+      /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain a 'form' element.
+      /// 2. If a currently selected 'form' element doesn't have any attributes.
+      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
+      /// </exception>
+      /// <exception cref="ArgumentNullException">
+      /// 	<paramref name="formElementsSelection"/> is null.
+      /// </exception>
+      /// <exception cref="ArgumentException">
+      /// 	<paramref name="formElementsSelection"/> is empty.
+      /// </exception>
+      /// <example>
+      /// 	<code>
+      /// selection.Submit(new Preselection {
+      ///   { "input[name='product']", input =&gt; input.Value("NewProduct") },
+      ///   { "input[name='type']", input =&gt; input.Value("NewType") },
+      /// });
+      /// </code>
+      /// </example>
+      public AranaEngine Submit(Preselection formElementsSelection)
+      {
+         if (formElementsSelection == null)
+            throw new ArgumentNullException("formElementsSelection");
+
+         if (formElementsSelection.Count == 0)
+            throw new ArgumentException("Preselection can't be empty.",
+                                        "formElementsSelection");
+
+         return Submit(true, formElementsSelection.Invoke(this.engine));
+      }
+
+
+      /// <summary>
+      /// Submits the selected 'form' element, given its 'action' attribute.
+      /// </summary>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
       /// <exception cref="InvalidOperationException">
       /// 1. If the currently selected elements doesn't contain a 'form' element.
@@ -396,29 +433,15 @@ namespace Arana.Core
       {
          RequestDictionary requestDictionary = new RequestDictionary(Count);
 
-         foreach (HtmlNode node in this)
-         {
-            // Skip nodes that aren't form elements
-            if (!node.Name.IsEqualTo(true, FormElements))
-               continue;
-
-            HtmlAttribute nameAttribute = node.Attributes["name"];
-            HtmlAttribute valueAttribute = node.Attributes["value"];
-
-            // Skip elements that donesn't have a valid 'name' attribute
-            if (!nameAttribute.HasValue())
-               continue;
-
-            string name = nameAttribute.Value;
-
-            // Retrieve the value for the given form element from the request values collection.
-            string value = requestValues[name];
-            value = String.IsNullOrEmpty(value) && valueAttribute.HasValue()
-                       ? valueAttribute.Value
-                       : value;
-
-            requestDictionary.Set(name, value);
-         }
+         (from node in this
+          let valueAttr = node.Attributes.Get("value")
+          let name = node.Attributes.Get("name")
+          let value = String.IsNullOrEmpty(name)
+                         ? valueAttr
+                         : (requestValues[name] ?? valueAttr)
+          where !String.IsNullOrEmpty(value)
+          select new { Name = name, Value = value }
+         ).Each(result => requestDictionary.Set(result.Name, result.Value));
 
          return requestDictionary;
       }
