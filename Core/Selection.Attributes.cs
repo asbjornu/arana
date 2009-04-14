@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
-using HtmlAgilityPack;
+using Arana.Core.Extensions;
 
-// ReSharper disable UnusedMember.Global
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMethodReturnValue.Global
+using HtmlAgilityPack;
 
 namespace Arana.Core
 {
    public partial class Selection
    {
+      // ReSharper disable UnusedMember.Global
+      // ReSharper disable MemberCanBePrivate.Global
+      // ReSharper disable UnusedMethodReturnValue.Global
+
       /// <summary>
       /// Gets the value of the 'class' attribute(s) of the currently selected list of elements.
       /// </summary>
@@ -102,41 +104,20 @@ namespace Arana.Core
       /// <returns>The list of currently selected elements.</returns>
       public Selection Value(string value)
       {
+         // If the currently selected list of elements contains a non-form element, throw.
+         foreach (HtmlNode node in this)
+            if (Array.IndexOf(FormElements, node.Name) == -1)
+               throw new InvalidOperationException(
+                  String.Format("Can't add 'value' attribute to element '{0}'.",
+                                node.Name));
+
          return Attribute("value", value);
       }
 
 
-      /// <summary>
-      /// Gets the attribute(s) with the given <paramref name="name"/>
-      /// of the currently selected list of elements.
-      /// </summary>
-      /// <param name="name">The name of the attributes to retrieve.</param>
-      /// <returns>
-      /// The attribute(s) with the given <paramref name="name"/> of
-      /// the currently selected list of elements.
-      /// </returns>
-      internal IEnumerable<HtmlAttribute> Attributes(string name)
-      {
-         return from htmlNode in this
-                let attribute = htmlNode.Attributes[name]
-                where (attribute != null)
-                select attribute;
-      }
-
-
-      /// <summary>
-      /// Gets the attribute(s) of the currently selected list of elements.
-      /// </summary>
-      /// <returns>
-      /// The attribute(s) of the currently selected list of elements.
-      /// </returns>
-      internal IEnumerable<HtmlAttribute> Attributes()
-      {
-         foreach (HtmlNode htmlNode in this)
-            foreach (HtmlAttribute attribute in htmlNode.Attributes)
-               yield return attribute;
-      }
-
+      // ReSharper restore UnusedMember.Global
+      // ReSharper restore MemberCanBePrivate.Global
+      // ReSharper restore UnusedMethodReturnValue.Global
 
       /// <summary>
       /// Gets the value of the attribute(s) with the given <paramref name="name"/>.
@@ -149,8 +130,18 @@ namespace Arana.Core
       {
          StringBuilder sb = new StringBuilder();
 
-         foreach (HtmlAttribute attribute in Attributes(name))
-            sb.AppendLine(attribute.Value);
+         foreach (HtmlNode node in this)
+         {
+            string value =
+               // If the node's name is 'select' and the attribute we're after is 'value',
+               node.NameIsEqualTo("select") && name.IsEqualTo("value")
+               // fetch the 'value' from a special sub routine
+                  ? node.GetSelectedValue()
+               // Else, just get the attribute's value.
+                  : node.Attributes.Get(name);
+
+            sb.AppendLine(value);
+         }
 
          return sb.ToString().Trim();
       }
@@ -162,13 +153,32 @@ namespace Arana.Core
       /// </summary>
       /// <param name="name">The name.</param>
       /// <param name="value">The value.</param>
-      /// <returns>The list of currently selected elements.</returns>
+      /// <returns>
+      /// The list of currently selected elements, updated with the new <paramref name="value"/>.
+      /// </returns>
       private Selection Attribute(string name, string value)
       {
-         foreach (HtmlAttribute attribute in Attributes(name))
-            attribute.Value = value;
+         foreach (HtmlNode node in this)
+            if (node.NameIsEqualTo("select") && name.IsEqualTo("value"))
+               node.SetSelectedValue(value);
+            else
+               (node.Attributes[name] ?? node.Attributes.Append(name)).Value = value;
 
          return this;
+      }
+
+
+      /// <summary>
+      /// Gets the attribute(s) of the currently selected list of elements.
+      /// </summary>
+      /// <returns>
+      /// The attribute(s) of the currently selected list of elements.
+      /// </returns>
+      private IEnumerable<HtmlAttribute> Attributes()
+      {
+         foreach (HtmlNode htmlNode in this)
+            foreach (HtmlAttribute attribute in htmlNode.Attributes)
+               yield return attribute;
       }
    }
 }
