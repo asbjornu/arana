@@ -71,7 +71,8 @@ namespace Arana.Core
 
             if ((selection == null) || (selection.Count == 0))
                throw new InvalidOperationException(
-                  String.Format("After invoking the function corresponding to the CSS selector '{0}', an empty selection was returned.",
+                  String.Format("After invoking the function corresponding to the " +
+                                "CSS selector '{0}', an empty selection was returned.",
                                 cssSelector));
 
             // Get the name of the invoked selection
