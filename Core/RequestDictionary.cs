@@ -18,21 +18,6 @@ namespace Arana.Core
       {
       }
 
-      /// <summary>
-      /// Sets the specified <paramref name="key"/> and <paramref name="value"/>
-      /// in the dictionary. Overwrites the existing value if the <paramref name="key"/>
-      /// exists, otherwise it's added.
-      /// </summary>
-      /// <param name="key">The key.</param>
-      /// <param name="value">The value.</param>
-      public void Set(string key, string value)
-      {
-         if (ContainsKey(key))
-            this[key] = value;
-         else
-            Add(key, value);
-      }
-
 
       /// <summary>
       /// Gets the request string.
@@ -61,6 +46,22 @@ namespace Arana.Core
          }
 
          return stringBuilder.ToString();
+      }
+
+
+      /// <summary>
+      /// Sets the specified <paramref name="key"/> and <paramref name="value"/>
+      /// in the dictionary. Overwrites the existing value if the <paramref name="key"/>
+      /// exists, otherwise it's added.
+      /// </summary>
+      /// <param name="key">The key.</param>
+      /// <param name="value">The value.</param>
+      public void Set(string key, string value)
+      {
+         if (ContainsKey(key))
+            this[key] = value;
+         else
+            Add(key, value);
       }
    }
 }
