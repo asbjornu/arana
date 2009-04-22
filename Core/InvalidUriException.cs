@@ -68,7 +68,8 @@ namespace Arana.Core
       /// <returns>The message</returns>
       private static string CreateMessage(string uri, string message)
       {
-         return String.Format("The URI '{0}' is invalid. {1}", uri, message).Trim();
+         return String.Format("The URI '{0}' is either invalid or returned invalid (or no) data. {1}",
+                              uri, message).Trim();
       }
    }
 }
