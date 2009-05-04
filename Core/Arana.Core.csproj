@@ -36,10 +36,6 @@
     <DocumentationFile>bin\Release\Arana.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Fizzler.Parser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ThirdParty\Fizzler.Parser.dll</HintPath>
-    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.3.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdParty\HtmlAgilityPack.dll</HintPath>
@@ -53,13 +49,24 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs">
+      <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs">
+      <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs</Link>
+    </Compile>
+    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs">
+      <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs</Link>
+    </Compile>
     <Compile Include="AranaRequest.cs" />
     <Compile Include="AranaResponse.cs" />
+    <Compile Include="Extensions\HtmlAttributeExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Preselection.cs" />
     <Compile Include="Selection.Attributes.cs" />
     <Compile Include="Extensions\CookieExtensions.cs" />
-    <Compile Include="Extensions\HtmlAttributeExtensions.cs" />
     <Compile Include="Extensions\HtmlNodeExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="AranaEngine.cs" />
@@ -72,6 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Arana.Core.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThirdParty\Fizzler\Fizzler\Fizzler.csproj">
+      <Project>{939036D6-29FD-46E4-B6CD-52618F51081B}</Project>
+      <Name>Fizzler</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

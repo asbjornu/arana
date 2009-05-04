@@ -16,7 +16,8 @@ namespace Arana.Core
       /// </summary>
       /// <param name="request">The request, used to retrieve the URI of the requested resource, and such.</param>
       /// <param name="getHttpWebResponse">A function reference used to get the <see cref="HttpWebResponse"/>.</param>
-      internal AranaResponse(AranaRequest request, Func<HttpWebResponse> getHttpWebResponse)
+      internal AranaResponse(AranaRequest request,
+                             Func<HttpWebResponse> getHttpWebResponse)
       {
          if (getHttpWebResponse == null)
             throw new ArgumentNullException("getHttpWebResponse");
@@ -32,13 +33,16 @@ namespace Arana.Core
       /// <value>The response data.</value>
       public ResponseData Data { get; private set; }
 
+      #region IDisposable Members
 
       /// <summary>
       /// Disposes the underlying <see cref="HttpWebResponse" />.
       /// </summary>
       public void Dispose()
       {
-         ((IDisposable)this.response).Dispose();
+         ((IDisposable) this.response).Dispose();
       }
+
+      #endregion
    }
 }

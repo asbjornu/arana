@@ -93,7 +93,8 @@ namespace Arana.Core
       /// </summary>
       /// <param name="cssSelector">The CSS selector.</param>
       /// <param name="selectionFunc">The selection function.</param>
-      private static void Validate(string cssSelector, Func<Selection, Selection> selectionFunc)
+      private static void Validate(string cssSelector,
+                                   Func<Selection, Selection> selectionFunc)
       {
          if (String.IsNullOrEmpty(cssSelector))
             throw new InvalidOperationException(

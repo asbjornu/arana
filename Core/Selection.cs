@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
-
 using Arana.Core.Extensions;
-
 using HtmlAgilityPack;
 
 // ReSharper disable UnusedMember.Global
@@ -23,10 +21,8 @@ namespace Arana.Core
       /// Contains the tag names of all HTML form elements that should be posted to
       /// the server when the form is submitted.
       /// </summary>
-      private static readonly string[] FormElements = new[]
-      {
-         "input", "textarea", "button", "select"
-      };
+      private static readonly string[] FormElements =
+         new[] { "input", "textarea", "button", "select" };
 
       /// <summary>
       /// Contains a comma separated list of the tag names of all HTML form elements
@@ -46,11 +42,10 @@ namespace Arana.Core
       /// <param name="engine">The engine.</param>
       /// <param name="cssSelector">The CSS selector.</param>
       internal Selection(AranaEngine engine, string cssSelector)
-         : this(engine.SelectorEngine.Parse(cssSelector), engine)
+         : this(engine.QuerySelectorAll(cssSelector), engine)
       {
          CssSelector = cssSelector;
       }
-
 
       /// <summary>
       /// Initializes a new instance of the <see cref="Selection"/> class.
@@ -75,29 +70,28 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets the <see cref="Selection"/> with the specified <param name="tagName"/>.
+      /// Gets the <see cref="Selection"/> with the specified <param name="tagNames"/>.
       /// </summary>
       /// <value>
-      /// The <see cref="Selection"/> with the specified <param name="tagName"/>.
+      /// The <see cref="Selection"/> with the specified <param name="tagNames"/>.
       /// </value>
       /// <exception cref="ArgumentNullException">
-      /// If <paramref name="tagName"/> is null or empty.
+      /// If <paramref name="tagNames"/> is null or empty.
       /// </exception>
-      public Selection this[string tagName]
+      public Selection this[params string[] tagNames]
       {
          get
          {
-            if (String.IsNullOrEmpty(tagName))
-               throw new ArgumentNullException("tagName");
+            if ((tagNames == null) || (tagNames.Length == 0))
+               throw new ArgumentNullException("tagNames");
 
-            var v = from htmlNode in this
-                    where htmlNode.NameIsEqualTo(tagName)
-                    select htmlNode;
+            IEnumerable<HtmlNode> v = from htmlNode in this
+                                      where htmlNode.NameIsEqualTo(tagNames)
+                                      select htmlNode;
 
             return new Selection(v, this.engine);
          }
       }
-
 
       /// <summary>
       /// Gets the inner HTML of the currently selected list of elements.
@@ -192,14 +186,7 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Follow(bool followRedirect)
       {
-         if (Count == 0)
-            throw new InvalidOperationException(
-               String.Format("No elements selected with '{0}'.", CssSelector));
-
-         Selection anchors = this["a"];
-
-         if (anchors.Count == 0)
-            throw new InvalidOperationException("The selected element(s) does not contain an HTML 'a' element.");
+         Selection anchors = Select("a");
 
          if ((anchors.Attributes() == null) || (anchors.Attributes().Count() == 0))
             throw new InvalidOperationException("The HTML anchor has no attributes.");
@@ -207,7 +194,8 @@ namespace Arana.Core
          string href = anchors.Attribute("href");
 
          if (String.IsNullOrEmpty(href))
-            throw new InvalidOperationException("The HTML anchor has an empty 'href' attribute.");
+            throw new InvalidOperationException(
+               "The HTML anchor has an empty 'href' attribute.");
 
          this.engine.NavigateTo(href, followRedirect);
 
@@ -228,40 +216,40 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Returns the very next sibling for each <see cref="T:HtmlAgilityPack.HtmlNode"/>
+      /// Returns the very next sibling for each <see cref="HtmlNode"/>
       /// in the list of currently selected elements.
       /// </summary>
       /// <returns>
-      /// The very next sibling for each <see cref="T:HtmlAgilityPack.HtmlNode"/>
+      /// The very next sibling for each <see cref="HtmlNode"/>
       /// in the list of currently selected elements.
       /// </returns>
       public Selection Next()
       {
-         var v = from htmlNode in this
-                 let nextSibling = htmlNode.NextSibling
-                 where (nextSibling != null)
-                 select nextSibling;
+         IEnumerable<HtmlNode> v = from htmlNode in this
+                                   let nextSibling = htmlNode.NextSibling
+                                   where (nextSibling != null)
+                                   select nextSibling;
 
-         return new Selection(new List<HtmlNode>(v), this.engine);
+         return new Selection(v, this.engine);
       }
 
 
       /// <summary>
-      /// Returns the very previous sibling for each <see cref="T:HtmlAgilityPack.HtmlNode"/>
+      /// Returns the very previous sibling for each <see cref="HtmlNode"/>
       /// in the list of currently selected elements.
       /// </summary>
       /// <returns>
-      /// The very previous sibling for each <see cref="T:HtmlAgilityPack.HtmlNode"/>
+      /// The very previous sibling for each <see cref="HtmlNode"/>
       /// in the list of currently selected elements.
       /// </returns>
       public Selection Previous()
       {
-         var v = from htmlNode in this
-                 let nextSibling = htmlNode.PreviousSibling
-                 where (nextSibling != null)
-                 select nextSibling;
+         IEnumerable<HtmlNode> v = from htmlNode in this
+                                   let nextSibling = htmlNode.PreviousSibling
+                                   where (nextSibling != null)
+                                   select nextSibling;
 
-         return new Selection(new List<HtmlNode>(v), this.engine);
+         return new Selection(v, this.engine);
       }
 
 
@@ -332,6 +320,23 @@ namespace Arana.Core
          return Submit(true, requestValues);
       }
 
+      /// <summary>
+      /// Checks a selected radio button or checkbox to be submitted with
+      /// <see cref="Submit()" />.
+      /// </summary>
+      /// <returns>The value of the radio button or checkbox' 'value' attribute.</returns>
+      public Selection Check()
+      {
+         Selection input = Select("input");
+         string value = input.Value();
+
+         if (String.IsNullOrEmpty(value))
+            throw new InvalidOperationException(
+               String.Format("The input field '{0}' does not have a valid 'value'.",
+                             input));
+
+         return input.Value(value);
+      }
 
       /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
@@ -348,19 +353,16 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
-         if (Count == 0)
-            throw new InvalidOperationException(
-               String.Format("No elements selected with '{0}'.", CssSelector));
-
-         Selection form = this["form"];
-
-         if (form.Count == 0)
-            throw new InvalidOperationException(
-               String.Format("The elements selected with '{0}' does not contain an HTML 'form' element.",
-                             CssSelector));
+         Selection form = Select("form");
 
          string method = form.Attribute("method");
-         string action = form.Attribute("action");
+         // Set the URI to post the form to. Default to the current URI.
+         string action = form.Attribute("action").NullWhenEmpty() ??
+                         this.engine.Uri.ToString();
+
+         if (String.IsNullOrEmpty(action))
+            throw new InvalidOperationException("No valid 'action' to perform.");
+
          RequestDictionary requestDictionary = null;
 
          // Set the HTTP method. Default to "GET".
@@ -368,13 +370,6 @@ namespace Arana.Core
                      ? HttpMethod.Get
                      : method.ToUpperInvariant();
 
-         // Set the URI to post the form to. Default to the current URI.
-         action = String.IsNullOrEmpty(action)
-                     ? this.engine.Uri.ToString()
-                     : action;
-
-         if (String.IsNullOrEmpty(action))
-            throw new InvalidOperationException("No valid 'action' to perform.");
 
          // TODO: Use GetFormElementsCssSelector() when Fizzler supports it.
          Selection formElements = this.engine.Select(FormElementsSelector);
@@ -444,6 +439,28 @@ namespace Arana.Core
          ).Each(result => requestDictionary.Set(result.Name, result.Value));
 
          return requestDictionary;
+      }
+
+
+      /// <summary>
+      /// Selects elements with the specified tag name.
+      /// </summary>
+      /// <param name="tagNames">Name of the tags.</param>
+      /// <returns>
+      /// A <see cref="Selection"/> of the elements with the specified <paramref name="tagNames"/>.
+      /// </returns>
+      private Selection Select(params string[] tagNames)
+      {
+         if (Count == 0)
+            throw new InvalidOperationException(
+               String.Format("No elements selected with '{0}'.", CssSelector));
+
+         Selection selection = this[tagNames];
+
+         if (selection.Count == 0)
+            throw new InvalidOperationException("The list of selected elements is empty.");
+
+         return selection;
       }
    }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
-
-using Fizzler.Parser;
+using Fizzler.Systems.HtmlAgilityPack;
+using HtmlAgilityPack;
 
 namespace Arana.Core
 {
@@ -27,7 +28,6 @@ namespace Arana.Core
       {
       }
 
-
       /// <summary>
       /// Initializes a new instance of the <see cref="AranaEngine"/> class.
       /// </summary>
@@ -37,6 +37,13 @@ namespace Arana.Core
       {
          NavigateTo(uri, true, credentials);
       }
+
+
+      /// <summary>
+      /// Gets or sets the document.
+      /// </summary>
+      /// <value>The document.</value>
+      internal HtmlDocument Document { get; private set; }
 
 
       /// <summary>
@@ -59,9 +66,26 @@ namespace Arana.Core
       }
 
       /// <summary>
-      /// The <see cref="Fizzler.Parser.SelectorEngine" /> used to parse and execute CSS selectors.
+      /// Queries the current <see cref="Document"/> with the given <paramref name="cssSelector"/>
+      /// and returns the matching <see cref="HtmlNode"/>s.
       /// </summary>
-      internal SelectorEngine SelectorEngine { get; private set; }
+      /// <param name="cssSelector">The CSS selector.</param>
+      /// <returns>
+      /// The <see cref="HtmlNode"/>s matching the <paramref name="cssSelector"/>.
+      /// </returns>
+      internal IEnumerable<HtmlNode> QuerySelectorAll(string cssSelector)
+      {
+         if (String.IsNullOrEmpty(cssSelector))
+            throw new ArgumentNullException("cssSelector");
+
+         if (Document == null)
+            throw new InvalidOperationException("The Document is null.");
+
+         if (Document.DocumentNode == null)
+            throw new InvalidOperationException("The Document's DocumentNode is null.");
+
+         return Document.DocumentNode.QuerySelectorAll(cssSelector);
+      }
 
 
       /// <summary>
@@ -85,7 +109,7 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       internal void NavigateTo(string uri, bool followRedirect)
       {
-         SelectorEngine = GetSelectorEngine(uri, followRedirect, null, null, null);
+         SetCurrentDocument(uri, followRedirect, null, null, null);
       }
 
 
@@ -98,7 +122,7 @@ namespace Arana.Core
       /// <param name="credentials">The credentials.</param>
       internal void NavigateTo(string uri, bool followRedirect, ICredentials credentials)
       {
-         SelectorEngine = GetSelectorEngine(uri, followRedirect, null, credentials, null);
+         SetCurrentDocument(uri, followRedirect, null, credentials, null);
       }
 
 
@@ -115,12 +139,11 @@ namespace Arana.Core
                                string httpMethod,
                                RequestDictionary requestValues)
       {
-         SelectorEngine = GetSelectorEngine(uri, followRedirect, httpMethod, null, requestValues);
+         SetCurrentDocument(uri, followRedirect, httpMethod, null, requestValues);
       }
 
-
       /// <summary>
-      /// Gets a new <see cref="Fizzler.Parser.SelectorEngine"/> for the given <paramref name="uri"/>.
+      /// Sets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
@@ -129,16 +152,45 @@ namespace Arana.Core
       /// <param name="credentials">The credentials.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>
-      /// A new <see cref="Fizzler.Parser.SelectorEngine"/> for the given <paramref name="uri"/>.
+      /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </returns>
       /// <exception cref="InvalidUriException">
       /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
       /// </exception>
-      private SelectorEngine GetSelectorEngine(string uri,
-                                               bool followRedirect,
-                                               string httpMethod,
-                                               ICredentials credentials,
-                                               RequestDictionary requestValues)
+      private void SetCurrentDocument(string uri,
+                                      bool followRedirect,
+                                      string httpMethod,
+                                      ICredentials credentials,
+                                      RequestDictionary requestValues)
+      {
+         Document = GetDocument(uri,
+                                followRedirect,
+                                httpMethod,
+                                credentials,
+                                requestValues);
+      }
+
+
+      /// <summary>
+      /// Gets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
+      /// <param name="httpMethod">The HTTP method.</param>
+      /// <param name="credentials">The credentials.</param>
+      /// <param name="requestValues">The request values.</param>
+      /// <returns>
+      /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
+      /// </returns>
+      /// <exception cref="InvalidUriException">
+      /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
+      /// </exception>
+      private HtmlDocument GetDocument(string uri,
+                                       bool followRedirect,
+                                       string httpMethod,
+                                       ICredentials credentials,
+                                       RequestDictionary requestValues)
       {
          this.request = new AranaRequest(this.request,
                                          uri,
@@ -160,17 +212,32 @@ namespace Arana.Core
             if (followRedirect && (response.Data.StatusBase == 300))
             {
                // Get a new selector engine for the location we're being redirected to
-               return GetSelectorEngine(response.Data.Location,
-                                        true,
-                                        HttpMethod.Get,
-                                        credentials,
-                                        null);
+               return GetDocument(response.Data.Location,
+                                  true,
+                                  HttpMethod.Get,
+                                  credentials,
+                                  null);
             }
 
             return !String.IsNullOrEmpty(Response.Body)
-                      ? new SelectorEngine(Response.Body)
+                      ? GetDocument(Response.Body)
                       : null;
          }
+      }
+
+
+      /// <summary>
+      /// Gets an <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
+      /// </summary>
+      /// <param name="html">The HTML.</param>
+      /// <returns>
+      /// An <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
+      /// </returns>
+      private static HtmlDocument GetDocument(string html)
+      {
+         HtmlDocument document = new HtmlDocument();
+         document.LoadHtml(html);
+         return document;
       }
    }
 }
