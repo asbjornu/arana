@@ -1,7 +1,5 @@
 ﻿using System;
-
 using ILMerging;
-
 using SevenZip;
 
 namespace Arana.Release
@@ -68,11 +66,11 @@ namespace Arana.Release
 
          ILMerge merge = new ILMerge
          {
-            Log = true,
-            TargetKind = ILMerge.Kind.Dll,
-            KeyFile = path.KeyFile,
-            AttributeFile = path.Arana,
-            OutputFile = path.OutputFile,
+               Log = true,
+               TargetKind = ILMerge.Kind.Dll,
+               KeyFile = path.KeyFile,
+               AttributeFile = path.Arana,
+               OutputFile = path.OutputFile,
          };
 
          merge.SetInputAssemblies(path.InputAssemblies);

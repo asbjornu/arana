@@ -19,6 +19,9 @@ namespace Arana.Release
          if (String.IsNullOrEmpty(path1))
             throw new ArgumentNullException("path1");
 
+         if (String.IsNullOrEmpty(path2))
+            throw new ArgumentNullException("path2");
+
          return Path.Combine(path1, path2);
       }
 
@@ -34,6 +37,9 @@ namespace Arana.Release
          if (String.IsNullOrEmpty(string1))
             throw new ArgumentNullException("string1");
 
+         if (String.IsNullOrEmpty(string2))
+            throw new ArgumentNullException("string2");
+
          return String.Concat(string1, string2);
       }
 
@@ -45,10 +51,15 @@ namespace Arana.Release
       /// <param name="sourcePath">The source path.</param>
       /// <param name="destinationPath">The destination path.</param>
       /// <param name="overwrite">if set to <c>true</c>, overwrites any existing file at <paramref name="destinationPath"/>.</param>
-      public static void CopyTo(this string @sourcePath, string destinationPath, bool overwrite)
+      public static void CopyTo(this string @sourcePath,
+                                string destinationPath,
+                                bool overwrite)
       {
          if (String.IsNullOrEmpty(sourcePath))
             throw new ArgumentNullException("sourcePath");
+
+         if (String.IsNullOrEmpty(destinationPath))
+            throw new ArgumentNullException("destinationPath");
 
          File.Copy(sourcePath, destinationPath, overwrite);
       }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-
 using Arana.Core;
 
 namespace Arana.Release
@@ -33,7 +32,8 @@ namespace Arana.Release
          Arana = coreReleaseBin.CombineWith(coreAssemblyName.ConcatWith(".dll"));
          Fizzler = thirdParty.CombineWith("Fizzler.Parser.dll");
          HtmlAgilityPack = thirdParty.CombineWith("HtmlAgilityPack.dll");
-         InputDocumentation = coreReleaseBin.CombineWith(coreAssemblyName.ConcatWith(".xml"));
+         InputDocumentation =
+               coreReleaseBin.CombineWith(coreAssemblyName.ConcatWith(".xml"));
          OutputDocumentation = ReleaseOutputBin.CombineWith("Arana.xml");
          OutputFile = ReleaseOutputBin.CombineWith("Arana.dll");
          SevenZip = thirdParty.CombineWith("7z.dll");
@@ -138,19 +138,23 @@ namespace Arana.Release
       /// <param name="coreAssemblyName">Name of the core assembly.</param>
       /// <param name="releaseBin">The path to the 'Release' application's 'bin' folder..</param>
       /// <param name="version">The version.</param>
-      private static void GetAssemblyInfo(out string coreAssemblyName, out string releaseBin, out string version)
+      private static void GetAssemblyInfo(out string coreAssemblyName,
+                                          out string releaseBin,
+                                          out string version)
       {
-         Assembly coreAssembly = Assembly.GetAssembly(typeof(AranaEngine));
-         Assembly releaseAssembly = Assembly.GetAssembly(typeof(PathHelper));
+         Assembly coreAssembly = Assembly.GetAssembly(typeof (AranaEngine));
+         Assembly releaseAssembly = Assembly.GetAssembly(typeof (PathHelper));
 
          if ((releaseAssembly == null) || String.IsNullOrEmpty(releaseAssembly.Location))
-            throw new InvalidOperationException("The 'Release' Assembly null or has no location.");
+            throw new InvalidOperationException(
+                  "The 'Release' Assembly null or has no location.");
 
          FileInfo releaseAssemblyInfo = new FileInfo(releaseAssembly.Location);
 
          if ((releaseAssemblyInfo.Directory == null) ||
              (releaseAssemblyInfo.Directory.Parent == null))
-            throw new InvalidOperationException("The 'Release' Assembly has an invalid directory structure.");
+            throw new InvalidOperationException(
+                  "The 'Release' Assembly has an invalid directory structure.");
 
          AssemblyName coreName = coreAssembly.GetName();
 
@@ -188,7 +192,8 @@ namespace Arana.Release
             throw new FileNotFoundException("Fizzler assembly not found.", Fizzler);
 
          if (!File.Exists(HtmlAgilityPack))
-            throw new FileNotFoundException("HtmlAgilityPack assembly not found.", HtmlAgilityPack);
+            throw new FileNotFoundException("HtmlAgilityPack assembly not found.",
+                                            HtmlAgilityPack);
 
          // Create the "Output" directory if it doesn't exist
          if (!Directory.Exists(ReleaseOutputBin))

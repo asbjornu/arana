@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-
 using Arana.Core.Extensions;
 
 namespace Arana.Core

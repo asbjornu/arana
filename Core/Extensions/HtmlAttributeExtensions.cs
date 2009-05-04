@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using System;
+using HtmlAgilityPack;
 
 namespace Arana.Core.Extensions
 {
@@ -37,7 +38,7 @@ namespace Arana.Core.Extensions
       public static string Get(this HtmlAttributeCollection @attributes, string name)
       {
          if ((attributes == null) || (attributes.Count == 0))
-            return null;
+            throw new ArgumentNullException("attributes");
 
          HtmlAttribute attribute = attributes[name];
 

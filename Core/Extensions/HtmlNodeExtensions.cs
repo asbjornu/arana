@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-
 using HtmlAgilityPack;
 
 namespace Arana.Core.Extensions
@@ -40,12 +39,8 @@ namespace Arana.Core.Extensions
          else if (!String.IsNullOrEmpty(className))
          {
             string[] classNames = className.Split(' ');
-
-            // TODO: Bring this logic back once Fizzler implements support for multi-class selectors
-            // className = String.Join(".", classNames);
-
-            className = classNames[classNames.Length - 1];
-            selectorBuilder.AppendFormat("{0}.{1}", node.Name, className);
+            className = String.Join(".", classNames);
+            selectorBuilder.Append(className);
          }
          else if (!String.IsNullOrEmpty(name))
          {
@@ -81,8 +76,9 @@ namespace Arana.Core.Extensions
 
          if (!node.NameIsEqualTo("select"))
             throw new InvalidOperationException(
-               String.Format("Can't get the selected value from '{0}' since it's not a 'select' element.",
-                             node.Name));
+               String.Format(
+                  "Can't get the selected value from '{0}' since it's not a 'select' element.",
+                  node.Name));
 
          string selectedValue = null;
 
@@ -114,20 +110,27 @@ namespace Arana.Core.Extensions
 
       /// <summary>
       /// Determines whether the <paramref name="node"/>'s tag name is equal to
-      /// the specified <paramref name="tagName"/>, in a case insensitive match.
+      /// the specified <paramref name="tagNames"/>, in a case insensitive match.
       /// </summary>
       /// <param name="node">The node.</param>
-      /// <param name="tagName">The name of the tag.</param>
+      /// <param name="tagNames">The names of the tag.</param>
       /// <returns>
       /// 	<c>true</c> if the <paramref name="node"/>'s tag name is equal to
-      /// the specified <paramref name="tagName"/>; otherwise, <c>false</c>.
+      /// the specified <paramref name="tagNames"/>; otherwise, <c>false</c>.
       /// </returns>
-      public static bool NameIsEqualTo(this HtmlNode @node, string tagName)
+      public static bool NameIsEqualTo(this HtmlNode @node, params string[] tagNames)
       {
          if (node == null)
             throw new ArgumentNullException("node");
 
-         return (String.Compare(node.Name, tagName, true) == 0);
+         if (tagNames == null || tagNames.Length == 0)
+            throw new ArgumentNullException("tagNames");
+
+         foreach (string tagName in tagNames)
+            if (String.Compare(node.Name, tagName, true) == 0)
+               return true;
+
+         return false;
       }
 
 
@@ -144,8 +147,9 @@ namespace Arana.Core.Extensions
 
          if (!node.NameIsEqualTo("select"))
             throw new InvalidOperationException(
-               String.Format("Can't set the selected value to '{0}' since it's not a 'select' element.",
-                             node.Name));
+               String.Format(
+                  "Can't set the selected value to '{0}' since it's not a 'select' element.",
+                  node.Name));
 
          if (!node.HasChildNodes)
             return;

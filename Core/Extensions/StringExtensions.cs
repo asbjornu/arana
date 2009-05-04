@@ -48,6 +48,22 @@ namespace Arana.Core.Extensions
          return false;
       }
 
+      /// <summary>
+      /// Returns null if the <see cref="T:System.String" /> is null or equals
+      /// to <see cref="string.Empty" />. Useful with the ?? operator. Example:
+      /// <example>
+      /// <code>
+      /// string value = value.NullWhenEmpty() ?? "Some default";
+      /// </code>
+      /// </example>
+      /// </summary>
+      /// <param name="s">The <see cref="T:System.String" />.</param>
+      /// <returns>Null if <paramref name="s"/> is null or equals to <see cref="string.Empty" />.</returns>
+      public static string NullWhenEmpty(this string @s)
+      {
+         return String.IsNullOrEmpty(s) ? null : s;
+      }
+
 
       /// <summary>
       /// Trims the <see cref="T:System.String"/>. If it is null or empty,
@@ -88,7 +104,8 @@ namespace Arana.Core.Extensions
             // If we've got here it means the URI must be relative, so throw an exception
             // if there's no base URI to resolve the relative URI to.
             if (baseUri == null)
-               throw new InvalidUriException(uri, "The base URI can't be null when the URI is relative.");
+               throw new InvalidUriException(uri,
+                                             "The base URI can't be null when the URI is relative.");
 
             return new Uri(baseUri, uri);
          }

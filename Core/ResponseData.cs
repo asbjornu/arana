@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-
 using Arana.Core.Extensions;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -72,7 +71,7 @@ namespace Arana.Core
       /// </example>
       public int StatusBase
       {
-         get { return (int)Math.Floor((double)Status / 100) * 100; }
+         get { return (int) Math.Floor((double) Status / 100) * 100; }
       }
 
 
@@ -127,7 +126,8 @@ namespace Arana.Core
             // exception as the Domain property of the cookie is required.
             if (uri == null)
                throw new ArgumentNullException(
-                  "uri", "The URI can't be null when the cookie has no 'domain' parameter available.");
+                  "uri",
+                  "The URI can't be null when the cookie has no 'domain' parameter available.");
 
             cookie.Domain = uri.Authority;
          }

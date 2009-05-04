@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
-
 using Arana.Core.Extensions;
 
 namespace Arana.Core
@@ -103,33 +102,34 @@ namespace Arana.Core
       /// <returns>
       /// The <see cref="AranaResponse"/> for the current <see cref="AranaRequest"/>.
       /// </returns>
-      /// <exception cref="InvalidUriException">
-      /// 
-      /// </exception>
       internal AranaResponse GetResponse()
       {
-         return new AranaResponse(this, () =>
-         {
-            HttpWebResponse response;
+         return new AranaResponse(
+            this,
+            () =>
+            {
+               HttpWebResponse response;
 
-            try
-            {
-               this.currentWebRequest.AllowAutoRedirect = false;
-               response = this.currentWebRequest.GetResponse() as HttpWebResponse;
-            }
-            catch (WebException ex)
-            {
-               response = ex.Response as HttpWebResponse;
+               try
+               {
+                  this.currentWebRequest.AllowAutoRedirect = false;
+                  response =
+                     this.currentWebRequest.GetResponse() as
+                     HttpWebResponse;
+               }
+               catch (WebException ex)
+               {
+                  response = ex.Response as HttpWebResponse;
+
+                  if (response == null)
+                     throw new InvalidUriException(Uri, ex);
+               }
 
                if (response == null)
-                  throw new InvalidUriException(Uri, ex);
-            }
+                  throw new InvalidUriException(Uri);
 
-            if (response == null)
-               throw new InvalidUriException(Uri);
-
-            return response;
-         });
+               return response;
+            });
       }
 
 
@@ -178,7 +178,7 @@ namespace Arana.Core
       /// <returns>The user agent string.</returns>
       private static string GetUserAgentString()
       {
-         Assembly assembly = Assembly.GetAssembly(typeof(AranaRequest));
+         Assembly assembly = Assembly.GetAssembly(typeof (AranaRequest));
 
          return String.Format("Arana/{0} ({1} {2}; N; .NET CLR {3}; {4})",
                               assembly.GetName().Version,
@@ -204,7 +204,7 @@ namespace Arana.Core
          Uri createdUri = uri.ToUri(GetBaseUri(this.previousRequest));
 
          this.baseUri = new Uri(createdUri.GetLeftPart(UriPartial.Authority));
-         HttpWebRequest request = HttpWebRequest.Create(createdUri) as HttpWebRequest;
+         HttpWebRequest request = WebRequest.Create(createdUri) as HttpWebRequest;
 
          if (request == null)
             throw new InvalidUriException(uri);
@@ -245,7 +245,8 @@ namespace Arana.Core
       private void SetRequestProperties(HttpWebRequest request)
       {
          request.UserAgent = UserAgentString;
-         request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+         request.Accept =
+            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
          request.Credentials = this.requestCredentials;
 
          // TODO: Set more accepted charsets and handle decoding of them
