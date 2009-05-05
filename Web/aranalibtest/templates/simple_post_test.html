@@ -13,19 +13,19 @@
     <p class="textbox">
       <label for="textbox">Textbox:</label>
       <input type="text" id="textbox" name="textbox" value="{{ textbox }}">
-      {{ textbox }}
+      <span class="value">{{ textbox }}</span>
     </p>
     
     <p class="radio">
       <label for="radio">Radiobutton:</label>
       <input type="radio" id="radio" name="radio">
-      {{ radio }}
+      <span class="value">{{ radio }}</span>
     </p>
     
     <p class="textarea">
       <label for="textarea">Text area:</label>
       <textarea id="textarea" name="textarea">{{ textarea }}</textarea>
-      {{ textarea }}
+      <span class="value">{{ textarea }}</span>
     </p>
     
     <p class="select">
@@ -36,12 +36,12 @@
         <option value="3">Option 3</option>
         <option value="4">Option 4</option>
       </select>
-      {{ select }}
+      <span class="value">{{ select }}</span>
     </p>
     
     <p class="submit">
       <input type="submit" name="submit" value="Submit">
-      {{ submit }}
+      <span class="value">{{ submit }}</span>
     </p>
   </fieldset>
 </form>
