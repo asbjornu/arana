@@ -27,6 +27,27 @@ p {
   margin-bottom: 1em;
 }
 
+h2, h3, h4, h5, h6 {
+  margin-bottom: 1em;
+}
+
+ul {
+  margin-left: 1em;
+}
+
+a:link,
+a:active {
+  color: #511;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:visited {
+  color: #000;
+}
+
 div#header {
   position: absolute;
   top: 0;
