@@ -4,15 +4,16 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /
-  script: home.py
-
-- url: /style
-  static_dir: style
+- url: /static
+  static_dir: static
 
 - url: /(.*\.(gif|png|jpg))
   static_files: static/\1
   upload: static/(.*\.(gif|png|jpg))
 
+- url: /favicon.ico
+  static_files: static/images/favicon.png
+  upload: static/images/favicon.png
+
 - url: /.*
-  script: not_found.py
+  script: main.py
