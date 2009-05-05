@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Parsing", "Parsing", "{41F6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fizzler", "ThirdParty\Fizzler\Fizzler\Fizzler.csproj", "{939036D6-29FD-46E4-B6CD-52618F51081B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arana.Core.Test", "Arana.Core.Test\Arana.Core.Test.csproj", "{C63CBD11-6964-43DC-A56B-21544A86958A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,12 +35,20 @@ Global
 		{E93219F7-DBBE-4EC0-BAC8-D47DADDCDD08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E93219F7-DBBE-4EC0-BAC8-D47DADDCDD08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E93219F7-DBBE-4EC0-BAC8-D47DADDCDD08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{939036D6-29FD-46E4-B6CD-52618F51081B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{939036D6-29FD-46E4-B6CD-52618F51081B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C63CBD11-6964-43DC-A56B-21544A86958A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C63CBD11-6964-43DC-A56B-21544A86958A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C63CBD11-6964-43DC-A56B-21544A86958A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C63CBD11-6964-43DC-A56B-21544A86958A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ADB12B26-9016-4E61-9CE1-DBBE583E34BF} = {AA1D39E3-2073-400A-9A74-0C59E0A8B1C7}
+		{C63CBD11-6964-43DC-A56B-21544A86958A} = {AA1D39E3-2073-400A-9A74-0C59E0A8B1C7}
 		{E93219F7-DBBE-4EC0-BAC8-D47DADDCDD08} = {AC40023A-706D-4D76-B950-B5662AAAF6DB}
+		{939036D6-29FD-46E4-B6CD-52618F51081B} = {41F6C527-7C7D-448F-9A43-67BC3AB9FAD8}
 	EndGlobalSection
 EndGlobal
