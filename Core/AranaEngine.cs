@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using Fizzler.Systems.HtmlAgilityPack;
+using Arana.Core.Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 
 namespace Arana.Core

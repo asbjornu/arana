@@ -17,15 +17,15 @@ namespace Arana.Test.ConsoleApplication
             Console.WriteLine(ex);
          }
 
-         PressAnyKey("Press any key to exit.");
+         PressAnyKey();
       }
 
 
-      private static void PressAnyKey(string message)
+      private static void PressAnyKey()
       {
          Console.WriteLine();
          Console.WriteLine();
-         Console.WriteLine(message);
+         Console.WriteLine("Press any key to exit.");
          Console.WriteLine();
          Console.ReadKey(true);
       }
@@ -37,7 +37,6 @@ namespace Arana.Test.ConsoleApplication
 
          Selection e = engine.Select("div");
 
-         Console.WriteLine(e);
          Console.WriteLine(e);
       }
    }
