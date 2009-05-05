@@ -33,29 +33,12 @@ namespace Arana.Test.ConsoleApplication
 
       private static void TestArana()
       {
-         AranaEngine engine = new AranaEngine(Settings.WebSiteUri);
+         AranaEngine engine = new AranaEngine("http://test.aranalib.net/");
 
          Selection e = engine.Select("div");
 
          Console.WriteLine(e);
-
-         /*ElementList anchor1 = engine.Select("div.login a");
-
-         Console.WriteLine(anchor1.InnerText);
-
-         string selector = anchor1.GetSelector();
-
-         Console.WriteLine(selector);
-
-         ElementList anchor2 = engine.Select(selector);
-
-         Console.WriteLine(anchor2.InnerText);*/
-
-         /*Console.WriteLine(engine.Select("title").InnerText);
-
-         engine.Select(".card-overview .section.settings a").Follow();
-
-         Console.WriteLine(engine.Select("title").InnerText);*/
+         Console.WriteLine(e);
       }
    }
 }
