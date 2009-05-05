@@ -48,6 +48,10 @@ a:visited {
   color: #000;
 }
 
+a img {
+		border: none;
+}
+
 div#header {
   position: absolute;
   top: 0;
@@ -73,4 +77,18 @@ div#header span {
 
 div#content {
   padding: 115px 1em 1em 1em;
+}
+
+form label {
+	display: block;
+	font-weight: bold;
+}
+
+form fieldset {
+		padding: 1em;
+		border: 2px solid #511;
+}
+
+form fieldset legend {
+		padding: 0 .2em;
 }

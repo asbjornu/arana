@@ -14,11 +14,7 @@
 
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('',
-  (r'', 'app.views.home')
-    # Example:
-    # (r'^foo/', include('foo.urls')),
-
-    # Uncomment this for admin:
-#     (r'^admin/', include('django.contrib.admin.urls')),
+urlpatterns = patterns('app.views',
+  (r'^$', 'index'),  
+  (r'^simple_post_test.*$', 'simple_post_test'),
 )
