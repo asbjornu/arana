@@ -27,6 +27,7 @@ namespace Arana.Core.Test
          {
             { "p.textbox input", input => input.Value(textBoxValue) },
             { "p.radio input", radio => radio.Check() },
+            { "p.checkbox input", checkbox => checkbox.Check() },
             { "p.textarea textarea", textarea => textarea.Value(textAreaValue) },
             { "p.select select", select => select.Choose(3) },
          });
@@ -38,6 +39,7 @@ namespace Arana.Core.Test
          string submittedTextBoxValue = engine.Select("p.textbox span.value").InnerText;
          string submittedTextAreaValue = engine.Select("p.textarea span.value").InnerText;
          string submittedRadioButtonValue = engine.Select("p.radio span.value").InnerText;
+         string submittedCheckBoxValue = engine.Select("p.checkbox span.value").InnerText;
          string submittedSelectValue = engine.Select("p.select span.value").InnerText;
          string submittedSubmitValue = engine.Select("p.submit span.value").InnerText;
 
@@ -52,6 +54,10 @@ namespace Arana.Core.Test
          Assert.AreEqual("on",
                          submittedRadioButtonValue,
                          "The submitted value of the radio button is invalid.");
+
+         Assert.AreEqual("on",
+                         submittedCheckBoxValue,
+                         "The submitted value of the checkbox is invalid.");
 
          Assert.AreEqual("4",
                          submittedSelectValue,
