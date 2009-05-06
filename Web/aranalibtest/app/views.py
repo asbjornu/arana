@@ -10,17 +10,13 @@ def index(request):
   return HttpResponse(template.render(Context()))
 
 def simple_post_test(request):
-  # initialize request values
-  context = Context({
-    'textbox'   : request.POST.get('textbox',   ''),
-    'radio'     : request.POST.get('radio',     ''),
-    'textarea'  : request.POST.get('textarea',  ''),
-    'select'    : request.POST.get('select',    ''),
-    'submit'    : request.POST.get('submit',    ''),
-  })
+  # initialize the request context
+  context = Context(request.POST)
   
   # set up the template
   template = loader.get_template('simple_post_test.html')
   
-  # render the thing
-  return HttpResponse(template.render(context))
+  # render the template
+  response = template.render(context)
+  
+  return HttpResponse(response)
