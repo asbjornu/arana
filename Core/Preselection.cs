@@ -89,6 +89,18 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Ensures the validity of the dictionary.
+      /// </summary>
+      private void ValidateDictionary()
+      {
+         foreach (string cssSelector in Keys)
+         {
+            Func<Selection, Selection> selectionFunc = this[cssSelector];
+            Validate(cssSelector, selectionFunc);
+         }
+      }
+
+      /// <summary>
       /// Validates the specified CSS selector and selection function.
       /// </summary>
       /// <param name="cssSelector">The CSS selector.</param>
@@ -103,19 +115,6 @@ namespace Arana.Core
          if (selectionFunc == null)
             throw new InvalidOperationException(
                "The Selection function (lambda) provided to Preselection can't be null.");
-      }
-
-
-      /// <summary>
-      /// Ensures the validity of the dictionary.
-      /// </summary>
-      private void ValidateDictionary()
-      {
-         foreach (string cssSelector in Keys)
-         {
-            Func<Selection, Selection> selectionFunc = this[cssSelector];
-            Validate(cssSelector, selectionFunc);
-         }
       }
    }
 }

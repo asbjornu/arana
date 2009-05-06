@@ -16,28 +16,32 @@ namespace Arana.Release
       /// <param name="solutionDirectory">The solution directory.</param>
       public PathHelper(string solutionDirectory)
       {
-         string coreAssemblyName, releaseBin, version;
-         GetAssemblyInfo(out coreAssemblyName, out releaseBin, out version);
+         string coreAssemblyName, releaseBinFolder, version, solutionFolder;
 
-         Solution = solutionDirectory;
+         GetAssemblyInfo(out coreAssemblyName,
+                         out releaseBinFolder,
+                         out solutionFolder,
+                         out version);
+
+         Solution = solutionDirectory ?? solutionFolder;
 
          string thirdParty = Solution.CombineWith("ThirdParty");
 
          Core = Solution.CombineWith("Core");
          KeyFile = Core.CombineWith(coreAssemblyName.ConcatWith(".snk"));
 
-         string coreReleaseBin = Core.CombineWith("bin").CombineWith("Release");
-         ReleaseOutputBin = releaseBin.CombineWith("Output");
+         string coreReleaseBin = Core.CombineWith("bin", "Release");
 
+         ReleaseOutputBin = releaseBinFolder.CombineWith("Output");
          Arana = coreReleaseBin.CombineWith(coreAssemblyName.ConcatWith(".dll"));
-         Fizzler = thirdParty.CombineWith("Fizzler.Parser.dll");
+         Fizzler = thirdParty.CombineWith("Fizzler", "bin", "Release", "Fizzler.dll");
          HtmlAgilityPack = thirdParty.CombineWith("HtmlAgilityPack.dll");
-         InputDocumentation =
-               coreReleaseBin.CombineWith(coreAssemblyName.ConcatWith(".xml"));
+         InputDocumentation = coreReleaseBin.CombineWith(
+            coreAssemblyName.ConcatWith(".xml"));
          OutputDocumentation = ReleaseOutputBin.CombineWith("Arana.xml");
          OutputFile = ReleaseOutputBin.CombineWith("Arana.dll");
          SevenZip = thirdParty.CombineWith("7z.dll");
-         Archive = releaseBin.CombineWith("Archive");
+         Archive = releaseBinFolder.CombineWith("Archive");
          OutputArchiveName = Archive.CombineWith(String.Format("Arana-{0}", version));
 
          ValidateExistance();
@@ -136,31 +140,41 @@ namespace Arana.Release
       /// Gets the assembly info.
       /// </summary>
       /// <param name="coreAssemblyName">Name of the core assembly.</param>
-      /// <param name="releaseBin">The path to the 'Release' application's 'bin' folder..</param>
+      /// <param name="releaseBinFolder">The path to the 'Release' application's 'bin' folder.</param>
+      /// <param name="solutionFolder">The path to the Solution folder of Araña.</param>
       /// <param name="version">The version.</param>
       private static void GetAssemblyInfo(out string coreAssemblyName,
-                                          out string releaseBin,
+                                          out string releaseBinFolder,
+                                          out string solutionFolder,
                                           out string version)
       {
-         Assembly coreAssembly = Assembly.GetAssembly(typeof (AranaEngine));
-         Assembly releaseAssembly = Assembly.GetAssembly(typeof (PathHelper));
+         Assembly coreAssembly = Assembly.GetAssembly(typeof(AranaEngine));
+         Assembly releaseAssembly = Assembly.GetAssembly(typeof(PathHelper));
 
          if ((releaseAssembly == null) || String.IsNullOrEmpty(releaseAssembly.Location))
             throw new InvalidOperationException(
-                  "The 'Release' Assembly null or has no location.");
+               "The 'Release' Assembly is null or has no location.");
+
+         if (coreAssembly == null)
+            throw new InvalidOperationException(
+               "The 'Araña.Core' Assembly is null.");
 
          FileInfo releaseAssemblyInfo = new FileInfo(releaseAssembly.Location);
 
          if ((releaseAssemblyInfo.Directory == null) ||
+             (releaseAssemblyInfo.Directory.Parent == null) ||
+             (releaseAssemblyInfo.Directory.Parent.Parent == null) ||
+             (releaseAssemblyInfo.Directory.Parent.Parent.Parent == null) ||
              (releaseAssemblyInfo.Directory.Parent == null))
             throw new InvalidOperationException(
-                  "The 'Release' Assembly has an invalid directory structure.");
+               "The 'Release' Assembly has an invalid directory structure.");
 
          AssemblyName coreName = coreAssembly.GetName();
 
          coreAssemblyName = coreName.Name;
-         releaseBin = releaseAssemblyInfo.Directory.Parent.FullName;
-         version = coreName.Version.ToString(2);
+         releaseBinFolder = releaseAssemblyInfo.Directory.Parent.FullName;
+         solutionFolder = releaseAssemblyInfo.Directory.Parent.Parent.Parent.FullName;
+         version = coreName.Version.ToString();
       }
 
 

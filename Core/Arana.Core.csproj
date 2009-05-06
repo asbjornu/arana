@@ -75,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Arana.Core.snk" />
+    <Compile Include="Selection\Selection.Actions.cs" />
+    <Compile Include="Selection\Selection.Follow.cs" />
+    <Compile Include="Selection\Selection.Traversal.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThirdParty\Fizzler\Fizzler\Fizzler.csproj">

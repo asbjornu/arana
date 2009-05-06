@@ -13,11 +13,6 @@ namespace Arana.Core
    internal class AranaRequest
    {
       /// <summary>
-      /// Contains the Araña Engine's User Agent string as used when performing HTTP web requests.
-      /// </summary>
-      private static readonly string UserAgentString = GetUserAgentString();
-
-      /// <summary>
       /// The underlying <see cref="HttpWebRequest" /> object used to perform the HTTP requests.
       /// </summary>
       private readonly HttpWebRequest currentWebRequest;
@@ -37,6 +32,11 @@ namespace Arana.Core
       /// The credentials to use on requests.
       /// </summary>
       private readonly ICredentials requestCredentials;
+
+      /// <summary>
+      /// Contains the Araña Engine's User Agent string as used when performing HTTP web requests.
+      /// </summary>
+      private static readonly string UserAgentString = GetUserAgentString();
 
       /// <summary>
       /// The base URI of the web application we're testing.
@@ -146,49 +146,6 @@ namespace Arana.Core
          this.cookies.Add(responseData.Cookie);
       }
 
-
-      /// <summary>
-      /// Gets the base URI of <paramref name="request"/>, if it's not null.
-      /// </summary>
-      /// <param name="request">The request.</param>
-      /// <returns>The base URI of <paramref name="request"/>, if it's not null.</returns>
-      private static Uri GetBaseUri(AranaRequest request)
-      {
-         return (request != null) ? request.baseUri : null;
-      }
-
-
-      /// <summary>
-      /// Gets the <see cref="ICredentials" /> to use for the request.
-      /// </summary>
-      /// <returns>The <see cref="ICredentials" /> to use for the request.</returns>
-      private static ICredentials GetCredentials(AranaRequest request,
-                                                 ICredentials credentials)
-      {
-         return credentials ??
-                ((request != null) && (request.requestCredentials != null)
-                    ? request.requestCredentials
-                    : null);
-      }
-
-
-      /// <summary>
-      /// Gets the user agent string.
-      /// </summary>
-      /// <returns>The user agent string.</returns>
-      private static string GetUserAgentString()
-      {
-         Assembly assembly = Assembly.GetAssembly(typeof (AranaRequest));
-
-         return String.Format("Arana/{0} ({1} {2}; N; .NET CLR {3}; {4})",
-                              assembly.GetName().Version,
-                              Environment.OSVersion.Platform,
-                              Environment.OSVersion.VersionString,
-                              Environment.Version,
-                              assembly.GetName().ProcessorArchitecture);
-      }
-
-
       /// <summary>
       /// Creates the request.
       /// </summary>
@@ -209,6 +166,11 @@ namespace Arana.Core
          if (request == null)
             throw new InvalidUriException(uri);
 
+         if (!methodIsGet && ((requestValues == null) || (requestValues.Count == 0)))
+            throw new InvalidOperationException(
+               String.Format("Can't do a {0} with an empty HTTP body.",
+                             this.method));
+
          // Set the HTTP method
          request.Method = this.method;
 
@@ -224,8 +186,8 @@ namespace Arana.Core
 
             using (Stream stream = request.GetRequestStream())
             {
-               // TODO: Enable writing in other encodings than UTF-8
-               using (StreamWriter streamWriter = new StreamWriter(stream, Encoding.UTF8))
+               using (StreamWriter streamWriter =
+                  new StreamWriter(stream, Encoding.ASCII))
                {
                   streamWriter.Write(requestString);
                }
@@ -267,6 +229,48 @@ namespace Arana.Core
 
          request.CookieContainer = new CookieContainer(this.cookies.Count);
          request.CookieContainer.Add(this.cookies);
+      }
+
+
+      /// <summary>
+      /// Gets the base URI of <paramref name="request"/>, if it's not null.
+      /// </summary>
+      /// <param name="request">The request.</param>
+      /// <returns>The base URI of <paramref name="request"/>, if it's not null.</returns>
+      private static Uri GetBaseUri(AranaRequest request)
+      {
+         return (request != null) ? request.baseUri : null;
+      }
+
+
+      /// <summary>
+      /// Gets the <see cref="ICredentials" /> to use for the request.
+      /// </summary>
+      /// <returns>The <see cref="ICredentials" /> to use for the request.</returns>
+      private static ICredentials GetCredentials(AranaRequest request,
+                                                 ICredentials credentials)
+      {
+         return credentials ??
+                ((request != null) && (request.requestCredentials != null)
+                    ? request.requestCredentials
+                    : null);
+      }
+
+
+      /// <summary>
+      /// Gets the user agent string.
+      /// </summary>
+      /// <returns>The user agent string.</returns>
+      private static string GetUserAgentString()
+      {
+         Assembly assembly = Assembly.GetAssembly(typeof(AranaRequest));
+
+         return String.Format("Arana/{0} ({1} {2}; N; .NET CLR {3}; {4})",
+                              assembly.GetName().Version,
+                              Environment.OSVersion.Platform,
+                              Environment.OSVersion.VersionString,
+                              Environment.Version,
+                              assembly.GetName().ProcessorArchitecture);
       }
    }
 }

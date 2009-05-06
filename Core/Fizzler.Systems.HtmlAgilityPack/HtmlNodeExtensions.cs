@@ -44,7 +44,7 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// </summary>
       /// <param name="node">The node.</param>
       /// <returns></returns>
-      private static IEnumerable<HtmlNode> Children(this HtmlNode @node)
+      internal static IEnumerable<HtmlNode> Children(this HtmlNode @node)
       {
          if (node == null)
             throw new ArgumentNullException("node");

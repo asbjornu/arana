@@ -8,10 +8,6 @@ namespace Arana.Core
 {
    public partial class Selection
    {
-      // ReSharper disable UnusedMember.Global
-      // ReSharper disable MemberCanBePrivate.Global
-      // ReSharper disable UnusedMethodReturnValue.Global
-
       /// <summary>
       /// Gets the value of the 'class' attribute(s) of the currently selected list of elements.
       /// </summary>
@@ -100,22 +96,37 @@ namespace Arana.Core
       /// </summary>
       /// <param name="value">The value.</param>
       /// <returns>The list of currently selected elements.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// If called on a 'select' element. Choose() should be used instead.
+      /// </exception>
+      /// <exception cref="InvalidOperationException">
+      /// If called on a radio button. Check() should be used instead.
+      /// </exception>
+      /// <exception cref="InvalidOperationException">
+      /// If the element isn't valid for form submission.
+      /// </exception>
       public Selection Value(string value)
       {
-         // If the currently selected list of elements contains a non-form element, throw.
-         foreach (HtmlNode node in this)
-            if (Array.IndexOf(FormElements, node.Name) == -1)
+         this.Each(node =>
+         {
+            if (!node.NameIsEqualTo(FormElements))
                throw new InvalidOperationException(
-                  String.Format("Can't add 'value' attribute to element '{0}'.",
+                  String.Format("Can't set the 'value' of element '{0}'.",
                                 node.Name));
+
+            if (node.NameIsEqualTo("select"))
+               throw new InvalidOperationException(
+                  "Can't set the 'value' on a 'select' element. Use Choose() instead.");
+
+            if (node.NameIsEqualTo("input") &&
+                node.Attributes.Get("type").IsEqualTo("radio"))
+               throw new InvalidOperationException(
+                  "Can't set the 'value' on a radio button. Use Check() instead.");
+         });
 
          return Attribute("value", value);
       }
 
-
-      // ReSharper restore UnusedMember.Global
-      // ReSharper restore MemberCanBePrivate.Global
-      // ReSharper restore UnusedMethodReturnValue.Global
 
       /// <summary>
       /// Gets the value of the attribute(s) with the given <paramref name="name"/>.
@@ -130,13 +141,12 @@ namespace Arana.Core
 
          foreach (HtmlNode node in this)
          {
-            string value =
-               // If the node's name is 'select' and the attribute we're after is 'value',
-               node.NameIsEqualTo("select") && name.IsEqualTo("value")
-               // fetch the 'value' from a special sub routine
-                  ? node.GetSelectedValue()
-               // Else, just get the attribute's value.
-                  : node.Attributes.Get(name);
+            // If the attribute name we're looking for is 'value',
+            string value = name.IsEqualTo("value")
+                           // Get the value with the extension method
+                              ? node.GetValue()
+                           // Else, get the attribute's value, whichever attribute it is
+                              : node.Attributes.Get(name);
 
             sb.AppendLine(value);
          }
@@ -157,8 +167,10 @@ namespace Arana.Core
       private Selection Attribute(string name, string value)
       {
          foreach (HtmlNode node in this)
-            if (node.NameIsEqualTo("select") && name.IsEqualTo("value"))
-               node.SetSelectedValue(value);
+            // If we're trying to set the 'value' on 'textarea';
+            if (name.IsEqualTo("value") && node.NameIsEqualTo("textarea"))
+               // set the textarea's inner HTML instead.
+               node.InnerHtml = value;
             else
                (node.Attributes[name] ?? node.Attributes.Append(name)).Value = value;
 

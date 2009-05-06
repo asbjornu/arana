@@ -35,6 +35,7 @@
         <REDUNDANT_THIS_QUALIFIER_STYLE>USE_FOR_FIELD</REDUNDANT_THIS_QUALIFIER_STYLE>
         <SIMPLE_EMBEDDED_STATEMENT_STYLE>LINE_BREAK</SIMPLE_EMBEDDED_STATEMENT_STYLE>
         <SPACE_AROUND_MULTIPLICATIVE_OP>True</SPACE_AROUND_MULTIPLICATIVE_OP>
+        <SPACE_BEFORE_TYPEOF_PARENTHESES>False</SPACE_BEFORE_TYPEOF_PARENTHESES>
         <SPACE_WITHIN_SINGLE_LINE_ARRAY_INITIALIZER_BRACES>True</SPACE_WITHIN_SINGLE_LINE_ARRAY_INITIALIZER_BRACES>
         <STICK_COMMENT>False</STICK_COMMENT>
         <WRAP_ARGUMENTS_STYLE>CHOP_IF_LONG</WRAP_ARGUMENTS_STYLE>
@@ -64,6 +65,333 @@
         <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="EnumMember" />
         <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="Other" />
       </Naming2>
+      <CustomMemberReorderingPatterns><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<Patterns xmlns="urn:shemas-jetbrains-com:member-reordering-patterns">
+
+  <!--Do not reorder COM interfaces-->
+  <Pattern>
+    <Match>
+      <And Weight="100">
+        <Kind Is="interface"/>
+        <HasAttribute CLRName="System.Runtime.InteropServices.InterfaceTypeAttribute"/>
+      </And>
+    </Match>
+  </Pattern>
+
+  <!--Special formatting of NUnit test fixture-->
+  <Pattern RemoveAllRegions="true">
+    <Match>
+      <And Weight="100">
+        <Kind Is="class"/>
+        <HasAttribute CLRName="NUnit.Framework.TestFixtureAttribute" Inherit="true"/>
+      </And>
+    </Match>
+
+    <!--Setup/Teardow-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="method"/>
+          <Or>
+            <HasAttribute CLRName="NUnit.Framework.SetUpAttribute" Inherit="true"/>
+            <HasAttribute CLRName="NUnit.Framework.TearDownAttribute" Inherit="true"/>
+            <HasAttribute CLRName="NUnit.Framework.FixtureSetUpAttribute" Inherit="true"/>
+            <HasAttribute CLRName="NUnit.Framework.FixtureTearDownAttribute" Inherit="true"/>
+          </Or>
+        </And>
+      </Match>
+    </Entry>
+
+    <!--All other members-->
+    <Entry/>
+
+    <!--Test methods-->
+    <Entry>
+      <Match>
+        <And Weight="100">
+          <Kind Is="method"/>
+          <HasAttribute CLRName="NUnit.Framework.TestAttribute" Inherit="false"/>
+        </And>
+      </Match>
+      <Sort>
+        <Name/>
+      </Sort>
+    </Entry>
+  </Pattern>
+
+  <!--Default pattern-->
+  <Pattern RemoveAllRegions="true">
+
+    <!--delegate-->
+    <Entry>
+      <Match>
+        <And Weight="100">
+          <Access Is="public"/>
+          <Kind Is="delegate"/>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--enums-->
+    <Entry>
+      <Match>
+        <Kind Is="enum"/>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--constants-->
+    <Entry>
+      <Match>
+        <Kind Is="constant"/>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--static and readonly fields-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="field"/>
+          <Or>
+            <Static/>
+            <Readonly/>
+          </Or>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--fields-->
+    <Entry>
+      <Match>
+        <Kind Is="field"/>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--Constructors. Place static one first-->
+    <Entry>
+      <Match>
+        <Kind Is="constructor"/>
+      </Match>
+      <Sort>
+        <Static/>
+        <Access Order="public protected internal private" />
+      </Sort>
+    </Entry>
+
+    <!--Destructors. Place static one first-->
+    <Entry>
+      <Match>
+        <Kind Is="destructor"/>
+      </Match>
+      <Sort>
+        <Static/>
+        <Access Order="public protected internal private" />
+      </Sort>
+    </Entry>
+
+    <!--Instance indexers-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="indexer"/>
+          <Not>
+            <Static/>
+          </Not>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Abstract/>
+        <Virtual/>
+        <Override/>
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--instance properties-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="property"/>
+          <Not>
+            <Static/>
+          </Not>
+          <Not>
+            <Kind Is="indexer"/>
+          </Not>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Abstract/>
+        <Virtual/>
+        <Override/>
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--Methods-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="method"/>
+          <Not>
+            <Static/>
+          </Not>
+          <Not>
+            <HandlesEvent />
+          </Not>
+          <Not>
+            <Kind Is="destructor"/>
+          </Not>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Abstract/>
+        <Virtual/>
+        <Override/>
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--Event Handling-->
+    <Entry>
+      <Match>
+        <HandlesEvent />
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Abstract/>
+        <Virtual/>
+        <Override/>
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!-- event -->
+    <Entry>
+      <Match>
+        <Kind Is="event"/>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!-- operator -->
+    <Entry>
+      <Match>
+        <Kind Is="operator"/>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--interface implementations-->
+    <Entry>
+      <Match>
+        <And Weight="100">
+          <Kind Is="member"/>
+          <ImplementsInterface/>
+        </And>
+      </Match>
+      <Sort>
+        <ImplementsInterface Immediate="true"/>
+      </Sort>
+    </Entry>
+
+    <!--Class indexers-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="indexer"/>
+          <Static/>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Abstract/>
+        <Virtual/>
+        <Override/>
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--Class properties-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="property"/>
+          <Static/>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Abstract/>
+        <Virtual/>
+        <Override/>
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--Class Methods-->
+    <Entry>
+      <Match>
+        <And>
+          <Kind Is="method"/>
+          <Static/>
+        </And>
+      </Match>
+      <Sort>
+        <Access Order="public protected internal private" />
+        <Abstract/>
+        <Virtual/>
+        <Override/>
+        <Name/>
+      </Sort>
+    </Entry>
+
+    <!--all other members-->
+    <Entry/>
+
+    <!--nested types-->
+    <Entry>
+      <Match>
+        <Kind Is="type"/>
+      </Match>
+      <Sort>
+        <Name/>
+      </Sort>
+      <Group>
+        <Name Region="Nested type: ${Name}"/>
+      </Group>
+    </Entry>
+  </Pattern>
+
+</Patterns>]]></CustomMemberReorderingPatterns>
     </CSharp>
     <VB>
       <FormatSettings>
@@ -74,6 +402,8 @@
     </VB>
     <GenerateMemberBody />
     <Naming2>
+      <ExceptionName IsNull="False">
+      </ExceptionName>
       <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="aaBb" ElementKind="NotPublicInstanceFields" />
       <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="TypesAndNamespaces" />
       <PredefinedRule Inspect="True" Prefix="I" Suffix="" Style="AaBb" ElementKind="Interfaces" />
