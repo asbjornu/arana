@@ -6,14 +6,14 @@
    internal static class HttpMethod
    {
       /// <summary>
-      /// Contains the value for the HTTP "DELETE" method.
-      /// </summary>
-      private const string Delete = "DELETE";
-
-      /// <summary>
       /// Contains the value for the HTTP "GET" method.
       /// </summary>
       internal const string Get = "GET";
+
+      /// <summary>
+      /// Contains the value for the HTTP "DELETE" method.
+      /// </summary>
+      private const string Delete = "DELETE";
 
       /// <summary>
       /// Contains the value for the HTTP "HEAD" method.

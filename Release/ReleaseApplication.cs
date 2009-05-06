@@ -9,13 +9,6 @@ namespace Arana.Release
    /// </summary>
    internal static class ReleaseApplication
    {
-#if DEBUG
-      private const bool Debug = true;
-#else
-      private const bool Debug = false;
-#endif
-
-
       /// <summary>
       /// The application's entry point.
       /// </summary>
@@ -24,20 +17,17 @@ namespace Arana.Release
       public static int Main(string[] args)
       {
          int result = 0;
-
-         if (Debug)
-         {
-            Console.WriteLine();
-            Console.WriteLine("No merging or archiving done in debug mode.");
-            Console.WriteLine();
-            return result;
-         }
+         bool isDebugging = (args == null) || (args.Length == 0);
 
          try
          {
-            string solutionDirectory = args[0].Replace('"', ' ').Trim();
-            PathHelper path = MergeOutput(solutionDirectory);
-            CompressOutput(path);
+            string solutionDirectory = isDebugging
+                                          ? null
+                                          : args[0].Replace('"', ' ').Trim();
+
+            PathHelper pathHelper = new PathHelper(solutionDirectory);
+            MergeOutput(pathHelper);
+            CompressOutput(pathHelper);
 
             Console.WriteLine();
             Console.WriteLine("Successfully merged and compressed Araña.");
@@ -58,27 +48,23 @@ namespace Arana.Release
       /// <summary>
       /// Merges the output.
       /// </summary>
-      /// <param name="solutionDirectory">The solution directory.</param>
+      /// <param name="pathHelper">The path helper.</param>
       /// <returns></returns>
-      private static PathHelper MergeOutput(string solutionDirectory)
+      private static void MergeOutput(PathHelper pathHelper)
       {
-         PathHelper path = new PathHelper(solutionDirectory);
-
          ILMerge merge = new ILMerge
          {
-               Log = true,
-               TargetKind = ILMerge.Kind.Dll,
-               KeyFile = path.KeyFile,
-               AttributeFile = path.Arana,
-               OutputFile = path.OutputFile,
+            Log = true,
+            TargetKind = ILMerge.Kind.Dll,
+            KeyFile = pathHelper.KeyFile,
+            AttributeFile = pathHelper.Arana,
+            OutputFile = pathHelper.OutputFile,
          };
 
-         merge.SetInputAssemblies(path.InputAssemblies);
+         merge.SetInputAssemblies(pathHelper.InputAssemblies);
          merge.Merge();
 
-         path.InputDocumentation.CopyTo(path.OutputDocumentation, true);
-
-         return path;
+         pathHelper.InputDocumentation.CopyTo(pathHelper.OutputDocumentation, true);
       }
 
 

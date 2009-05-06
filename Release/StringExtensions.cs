@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Arana.Release
 {
@@ -12,17 +13,22 @@ namespace Arana.Release
       /// Combines the file system path of <paramref name="path1"/> with <paramref name="path2"/>.
       /// </summary>
       /// <param name="path1">The first path.</param>
-      /// <param name="path2">The second path.</param>
+      /// <param name="additionalPaths">The additional paths.</param>
       /// <returns>The combined path</returns>
-      public static string CombineWith(this string @path1, string path2)
+      public static string CombineWith(this string @path1, params string[] additionalPaths)
       {
          if (String.IsNullOrEmpty(path1))
             throw new ArgumentNullException("path1");
 
-         if (String.IsNullOrEmpty(path2))
-            throw new ArgumentNullException("path2");
+         if ((additionalPaths == null) || (additionalPaths.Length == 0))
+            throw new ArgumentNullException("additionalPaths");
 
-         return Path.Combine(path1, path2);
+         string builtPath = path1;
+
+         foreach (string path in additionalPaths)
+            builtPath = Path.Combine(builtPath, path);
+
+         return builtPath;
       }
 
 

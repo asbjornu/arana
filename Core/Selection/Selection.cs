@@ -4,11 +4,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using Arana.Core.Extensions;
+using Arana.Core.Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
-
-// ReSharper disable UnusedMember.Global
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMethodReturnValue.Global
 
 namespace Arana.Core
 {
@@ -46,6 +43,7 @@ namespace Arana.Core
       {
          CssSelector = cssSelector;
       }
+
 
       /// <summary>
       /// Initializes a new instance of the <see cref="Selection"/> class.
@@ -156,127 +154,20 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Follows the 'href' attribute on the selected HTML elements.
+      /// Selects a list of elements matching the given CSS selector.
       /// </summary>
-      /// <returns>An updated <see cref="AranaEngine" />.</returns>
-      /// <exception cref="InvalidOperationException">
-      /// 1. If the currently selected elements doesn't contain an 'a' element.
-      /// 2. If a currently selected 'a' element doesn't have any attributes.
-      /// 3. If a currently selected 'a' element has an empty or non-existent 'href' attribute.
-      /// </exception>
-      public AranaEngine Follow()
-      {
-         return Follow(true);
-      }
-
-
-      /// <summary>
-      /// Follows the 'href' attribute on the selected HTML elements.
-      /// </summary>
-      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
-      /// <returns>An updated <see cref="AranaEngine"/>.</returns>
-      /// <exception cref="InvalidOperationException">
-      /// 	<list type="number">
-      /// 		<item>If the currently selected elements doesn't contain an 'a' element.</item>
-      /// 		<item>If a currently selected 'a' element doesn't have any attributes.</item>
-      /// 		<item>If a currently selected 'a' element has an empty or non-existent 'href' attribute.</item>
-      /// 	</list>
-      /// </exception>
-      public AranaEngine Follow(bool followRedirect)
-      {
-         Selection anchors = Select("a");
-
-         if ((anchors.Attributes() == null) || (anchors.Attributes().Count() == 0))
-            throw new InvalidOperationException("The HTML anchor has no attributes.");
-
-         string href = anchors.Attribute("href");
-
-         if (String.IsNullOrEmpty(href))
-            throw new InvalidOperationException(
-               "The HTML anchor has an empty 'href' attribute.");
-
-         this.engine.NavigateTo(href, followRedirect);
-
-         return this.engine;
-      }
-
-
-      /// <summary>
-      /// Gets the CSS selector for the first element in the list of currently selected elements.
-      /// </summary>
+      /// <param name="cssSelector">The CSS selector.</param>
       /// <returns>
-      /// The CSS selector for the first element in the list of currently selected elements.
+      /// A list of elements matching the given CSS selector.
       /// </returns>
-      public string GetCssSelector()
+      public Selection Select(string cssSelector)
       {
-         return (Count == 0) ? null : this[0].GetCssSelector();
-      }
+         List<HtmlNode> selection = new List<HtmlNode>();
 
+         foreach (HtmlNode node in this)
+            selection.AddRange(node.QuerySelectorAll(cssSelector));
 
-      /// <summary>
-      /// Returns the very next sibling for each <see cref="HtmlNode"/>
-      /// in the list of currently selected elements.
-      /// </summary>
-      /// <returns>
-      /// The very next sibling for each <see cref="HtmlNode"/>
-      /// in the list of currently selected elements.
-      /// </returns>
-      public Selection Next()
-      {
-         IEnumerable<HtmlNode> v = from htmlNode in this
-                                   let nextSibling = htmlNode.NextSibling
-                                   where (nextSibling != null)
-                                   select nextSibling;
-
-         return new Selection(v, this.engine);
-      }
-
-
-      /// <summary>
-      /// Returns the very previous sibling for each <see cref="HtmlNode"/>
-      /// in the list of currently selected elements.
-      /// </summary>
-      /// <returns>
-      /// The very previous sibling for each <see cref="HtmlNode"/>
-      /// in the list of currently selected elements.
-      /// </returns>
-      public Selection Previous()
-      {
-         IEnumerable<HtmlNode> v = from htmlNode in this
-                                   let nextSibling = htmlNode.PreviousSibling
-                                   where (nextSibling != null)
-                                   select nextSibling;
-
-         return new Selection(v, this.engine);
-      }
-
-
-      /// <summary>
-      /// Gets the CSS selector required to select all form elements children of the currently
-      /// selected 'form' element.
-      /// </summary>
-      /// <returns>
-      /// The CSS selector required to select all form elements children of the currently
-      /// selected 'form' element.
-      /// </returns>
-      private string GetFormElementsCssSelector()
-      {
-         string selector = GetCssSelector();
-
-         StringBuilder sb = new StringBuilder();
-
-         for (int i = 0; i < FormElements.Length; i++)
-         {
-            sb.Append(selector);
-            sb.Append(' ');
-            sb.Append(FormElements[i]);
-
-            if (i < (FormElements.Length - 1))
-               sb.Append(", ");
-         }
-
-         return sb.ToString();
+         return new Selection(selection, this.engine);
       }
 
 
@@ -298,11 +189,8 @@ namespace Arana.Core
          RequestDictionary requestDictionary = new RequestDictionary(Count);
 
          (from node in this
-          let valueAttr = node.Attributes.Get("value")
           let name = node.Attributes.Get("name")
-          let value = String.IsNullOrEmpty(name)
-                         ? valueAttr
-                         : (requestValues[name] ?? valueAttr)
+          let value = requestValues[name] ?? node.GetValue()
           where !String.IsNullOrEmpty(value)
           select new { Name = name, Value = value }
          ).Each(result => requestDictionary.Set(result.Name, result.Value));
@@ -318,7 +206,7 @@ namespace Arana.Core
       /// <returns>
       /// A <see cref="Selection"/> of the elements with the specified <paramref name="tagNames"/>.
       /// </returns>
-      private Selection Select(params string[] tagNames)
+      private Selection Get(params string[] tagNames)
       {
          if (Count == 0)
             throw new InvalidOperationException(
@@ -327,7 +215,15 @@ namespace Arana.Core
          Selection selection = this[tagNames];
 
          if (selection.Count == 0)
-            throw new InvalidOperationException("The list of selected elements is empty.");
+         {
+            string tags = String.Join(", ", tagNames);
+            string message = String.Format("The tags '{0}' was not found in the current "
+                                           + "selection of elements selected with '{1}'",
+                                           tags,
+                                           CssSelector);
+
+            throw new InvalidOperationException(message);
+         }
 
          return selection;
       }

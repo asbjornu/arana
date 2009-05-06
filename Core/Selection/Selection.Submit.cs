@@ -75,24 +75,6 @@ namespace Arana.Core
       }
 
       /// <summary>
-      /// Checks a selected radio button or checkbox to be submitted with
-      /// <see cref="Submit()" />.
-      /// </summary>
-      /// <returns>The value of the radio button or checkbox' 'value' attribute.</returns>
-      public Selection Check()
-      {
-         Selection input = Select("input");
-         string value = input.Value();
-
-         if (String.IsNullOrEmpty(value))
-            throw new InvalidOperationException(
-               String.Format("The input field '{0}' does not have a valid 'value'.",
-                             input));
-
-         return input.Value(value);
-      }
-
-      /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
@@ -107,7 +89,7 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
-         Selection form = Select("form");
+         Selection form = Get("form");
 
          string method = form.Attribute("method");
          // Set the URI to post the form to. Default to the current URI.
@@ -124,9 +106,10 @@ namespace Arana.Core
                      ? HttpMethod.Get
                      : method.ToUpperInvariant();
 
-
-         // TODO: Use GetFormElementsCssSelector() when Fizzler supports it.
          Selection formElements = this.engine.Select(FormElementsSelector);
+
+         // TODO: Use this node-context based select when Fizzler doesn't bug on it
+         // Selection formElements = form.Select(FormElementsSelector);
 
          if (formElements.Count > 0)
             requestDictionary = formElements.GetRequestCollection(requestValues);

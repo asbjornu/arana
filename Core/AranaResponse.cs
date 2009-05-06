@@ -33,8 +33,6 @@ namespace Arana.Core
       /// <value>The response data.</value>
       public ResponseData Data { get; private set; }
 
-      #region IDisposable Members
-
       /// <summary>
       /// Disposes the underlying <see cref="HttpWebResponse" />.
       /// </summary>
@@ -42,7 +40,5 @@ namespace Arana.Core
       {
          ((IDisposable) this.response).Dispose();
       }
-
-      #endregion
    }
 }

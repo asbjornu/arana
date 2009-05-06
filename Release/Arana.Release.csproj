@@ -68,6 +68,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>$(TargetPath) "$(SolutionDir)"</PostBuildEvent>
+    <PostBuildEvent>if "$(ConfigurationName)"=="Release" "$(TargetPath)" "$(SolutionDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

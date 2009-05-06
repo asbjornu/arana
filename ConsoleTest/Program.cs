@@ -1,5 +1,4 @@
-﻿﻿using System;
-
+﻿using System;
 using Arana.Core;
 
 namespace Arana.Test.ConsoleApplication
@@ -33,11 +32,23 @@ namespace Arana.Test.ConsoleApplication
 
       private static void TestArana()
       {
-         AranaEngine engine = new AranaEngine("http://test.aranalib.net/");
+         AranaEngine engine = new AranaEngine("http://localhost:9999/");
 
-         Selection e = engine.Select("div");
+         engine.Select("li#simple-post-test a").Follow();
 
-         Console.WriteLine(e);
+         engine.Select("form").Submit(new Preselection
+         {
+            { "p.textbox input", input => input.Value("Textbox1") },
+            { "p.radio input", radio => radio.Check() },
+            { "p.textarea textarea", textarea => textarea.Value("Textarea1") },
+            { "p.select select", select => select.Choose(3) },
+         });
+
+         Console.WriteLine(engine.Select("p.textbox span.value").InnerText);
+         Console.WriteLine(engine.Select("p.radio span.value").InnerText);
+         Console.WriteLine(engine.Select("p.textarea span.value").InnerText);
+         Console.WriteLine(engine.Select("p.select span.value").InnerText);
+         Console.WriteLine(engine.Select("p.submit span.value").InnerText);
       }
    }
 }
