@@ -33,6 +33,38 @@ namespace Arana.Core
       /// </example>
       public AranaEngine Submit(Preselection formElementsSelection)
       {
+         return Submit(true, formElementsSelection);
+      }
+
+      /// <summary>
+      /// Submits the selected 'form' element, given its 'action' attribute.
+      /// </summary>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow
+      /// redirection responses from the Internet resource; otherwise, <c>false</c>.</param>
+      /// <param name="formElementsSelection">The form elements selection.</param>
+      /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain a 'form' element.
+      /// 2. If a currently selected 'form' element doesn't have any attributes.
+      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
+      /// </exception>
+      /// <exception cref="ArgumentNullException">
+      /// 	<paramref name="formElementsSelection"/> is null.
+      /// </exception>
+      /// <exception cref="ArgumentException">
+      /// 	<paramref name="formElementsSelection"/> is empty.
+      /// </exception>
+      /// <example>
+      /// 	<code>
+      /// selection.Submit(false, new Preselection
+      /// {
+      ///   { "input[name='product']", input =&gt; input.Value("NewProduct") },
+      ///   { "input[name='type']", input =&gt; input.Value("NewType") },
+      /// });
+      /// </code>
+      /// </example>
+      public AranaEngine Submit(bool followRedirect, Preselection formElementsSelection)
+      {
          if (formElementsSelection == null)
             throw new ArgumentNullException("formElementsSelection");
 
@@ -55,7 +87,7 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Submit()
       {
-         return Submit(true, null);
+         return Submit(true, (NameValueCollection) null);
       }
 
 
@@ -69,6 +101,7 @@ namespace Arana.Core
       /// 2. If a currently selected 'form' element doesn't have any attributes.
       /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
       /// </exception>
+      [Obsolete("If possible, use the Submit(Preselection) overload instead.")]
       public AranaEngine Submit(NameValueCollection requestValues)
       {
          return Submit(true, requestValues);
@@ -77,16 +110,18 @@ namespace Arana.Core
       /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
-      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow
+      /// redirection responses from the Internet resource; otherwise, <c>false</c>.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
       /// <exception cref="InvalidOperationException">
       /// 	<list type="number">
       /// 		<item>If the currently selected elements doesn't contain a 'form' element.</item>
-      /// 		<item>If a currently selected 'form' element has an empty or non-existent 'action' attribute and an action URI can't be deduced from a previous <see cref="AranaRequest"/>.</item>
+      /// 		<item>If a currently selected 'form' element has an empty or non-existent 'action'
+      /// attribute and an action URI can't be deduced from a previous <see cref="AranaRequest"/>.</item>
       /// 	</list>
       /// </exception>
+      [Obsolete("If possible, use the Submit(bool, Preselection) overload instead.")]
       public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
          Selection form = Get("form");
