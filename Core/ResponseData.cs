@@ -50,6 +50,12 @@ namespace Arana.Core
       /// <value>The "Set-Cookie" HTTP header from the resposne..</value>
       public Cookie Cookie { get; private set; }
 
+      /// <summary>
+      /// Gets the <see cref="Dictionary{TKey,TValue}"/> of headers from the response.
+      /// </summary>
+      /// <value>
+      /// The <see cref="Dictionary{String,String}"/> of headers from the response..
+      /// </value>
       public Dictionary<string, string> Headers { get; private set; }
 
       /// <summary>
