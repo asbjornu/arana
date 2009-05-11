@@ -23,9 +23,15 @@
     </p>
     
     <p class="checkbox">
-      <label for="checkbox">Checkbox:</label>
+      <label for="checkbox">Checkbox without value:</label>
       <input type="checkbox" id="checkbox" name="checkbox">
       <span class="value">{{ checkbox }}</span>
+    </p>
+
+    <p class="checkbox-with-value">
+      <label for="checkbox-with-value">Checkbox with value:</label>
+      <input type="checkbox" id="checkbox-with-value" name="checkbox_with_value" value="checkbox-value!">
+      <span class="value">{{ checkbox_with_value }}</span>
     </p>
 
     <p class="textarea">

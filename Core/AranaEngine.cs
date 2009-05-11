@@ -28,6 +28,7 @@ namespace Arana.Core
       {
       }
 
+
       /// <summary>
       /// Initializes a new instance of the <see cref="AranaEngine"/> class.
       /// </summary>
@@ -37,13 +38,6 @@ namespace Arana.Core
       {
          NavigateTo(uri, true, credentials);
       }
-
-
-      /// <summary>
-      /// Gets or sets the document.
-      /// </summary>
-      /// <value>The document.</value>
-      internal HtmlDocument Document { get; private set; }
 
 
       /// <summary>
@@ -66,26 +60,10 @@ namespace Arana.Core
       }
 
       /// <summary>
-      /// Queries the current <see cref="Document"/> with the given <paramref name="cssSelector"/>
-      /// and returns the matching <see cref="HtmlNode"/>s.
+      /// Gets or sets the document.
       /// </summary>
-      /// <param name="cssSelector">The CSS selector.</param>
-      /// <returns>
-      /// The <see cref="HtmlNode"/>s matching the <paramref name="cssSelector"/>.
-      /// </returns>
-      internal IEnumerable<HtmlNode> QuerySelectorAll(string cssSelector)
-      {
-         if (String.IsNullOrEmpty(cssSelector))
-            throw new ArgumentNullException("cssSelector");
-
-         if (Document == null)
-            throw new InvalidOperationException("The Document is null.");
-
-         if (Document.DocumentNode == null)
-            throw new InvalidOperationException("The Document's DocumentNode is null.");
-
-         return Document.DocumentNode.QuerySelectorAll(cssSelector);
-      }
+      /// <value>The document.</value>
+      internal HtmlDocument Document { get; private set; }
 
 
       /// <summary>
@@ -142,32 +120,33 @@ namespace Arana.Core
          SetCurrentDocument(uri, followRedirect, httpMethod, null, requestValues);
       }
 
+
       /// <summary>
-      /// Sets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
+      /// Queries the current <see cref="Document"/> with the given <paramref name="cssSelector"/>
+      /// and returns the matching <see cref="HtmlNode"/>s.
       /// </summary>
-      /// <param name="uri">The URI.</param>
-      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
-      /// <param name="httpMethod">The HTTP method.</param>
-      /// <param name="credentials">The credentials.</param>
-      /// <param name="requestValues">The request values.</param>
+      /// <param name="cssSelector">The CSS selector.</param>
       /// <returns>
-      /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
+      /// The <see cref="HtmlNode"/>s matching the <paramref name="cssSelector"/>.
       /// </returns>
-      /// <exception cref="InvalidUriException">
-      /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
-      /// </exception>
-      private void SetCurrentDocument(string uri,
-                                      bool followRedirect,
-                                      string httpMethod,
-                                      ICredentials credentials,
-                                      RequestDictionary requestValues)
+      internal IEnumerable<HtmlNode> QuerySelectorAll(string cssSelector)
       {
-         Document = GetDocument(uri,
-                                followRedirect,
-                                httpMethod,
-                                credentials,
-                                requestValues);
+         if (String.IsNullOrEmpty(cssSelector))
+         {
+            throw new ArgumentNullException("cssSelector");
+         }
+
+         if (Document == null)
+         {
+            throw new InvalidOperationException("The Document is null.");
+         }
+
+         if (Document.DocumentNode == null)
+         {
+            throw new InvalidOperationException("The Document's DocumentNode is null.");
+         }
+
+         return Document.DocumentNode.QuerySelectorAll(cssSelector);
       }
 
 
@@ -201,7 +180,9 @@ namespace Arana.Core
          using (AranaResponse response = this.request.GetResponse())
          {
             if (response == null)
+            {
                throw new InvalidUriException(uri);
+            }
 
             Response = response.Data;
 
@@ -223,6 +204,35 @@ namespace Arana.Core
                       ? GetDocument(Response.Body)
                       : null;
          }
+      }
+
+
+      /// <summary>
+      /// Sets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
+      /// <param name="httpMethod">The HTTP method.</param>
+      /// <param name="credentials">The credentials.</param>
+      /// <param name="requestValues">The request values.</param>
+      /// <returns>
+      /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
+      /// </returns>
+      /// <exception cref="InvalidUriException">
+      /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
+      /// </exception>
+      private void SetCurrentDocument(string uri,
+                                      bool followRedirect,
+                                      string httpMethod,
+                                      ICredentials credentials,
+                                      RequestDictionary requestValues)
+      {
+         Document = GetDocument(uri,
+                                followRedirect,
+                                httpMethod,
+                                credentials,
+                                requestValues);
       }
 
 

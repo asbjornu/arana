@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Arana.Core.snk" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Selection\Selection.Actions.cs" />
     <Compile Include="Selection\Selection.Follow.cs" />
     <Compile Include="Selection\Selection.Traversal.cs" />

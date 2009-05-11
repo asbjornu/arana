@@ -70,8 +70,10 @@ namespace Arana.Core
 
          // Throw an exception if the HTTP method used is invalid.
          if (!this.method.IsEqualTo(false, HttpMethod.All))
+         {
             throw new InvalidOperationException(
                String.Format("The method '{0}' is invalid.", this.method));
+         }
 
          if ((previousRequest != null) &&
              (previousRequest.cookies != null) &&
@@ -122,11 +124,15 @@ namespace Arana.Core
                   response = ex.Response as HttpWebResponse;
 
                   if (response == null)
+                  {
                      throw new InvalidUriException(Uri, ex);
+                  }
                }
 
                if (response == null)
+               {
                   throw new InvalidUriException(Uri);
+               }
 
                return response;
             });
@@ -140,11 +146,14 @@ namespace Arana.Core
       internal void SetCookie(ResponseData responseData)
       {
          if (responseData.Cookie == null)
+         {
             return;
+         }
 
          this.cookies = this.cookies ?? new CookieCollection();
          this.cookies.Add(responseData.Cookie);
       }
+
 
       /// <summary>
       /// Creates the request.
@@ -164,12 +173,15 @@ namespace Arana.Core
          HttpWebRequest request = WebRequest.Create(createdUri) as HttpWebRequest;
 
          if (request == null)
+         {
             throw new InvalidUriException(uri);
+         }
 
+         // Set the content length to '0' when the body is empty on non-GET requests
          if (!methodIsGet && ((requestValues == null) || (requestValues.Count == 0)))
-            throw new InvalidOperationException(
-               String.Format("Can't do a {0} with an empty HTTP body.",
-                             this.method));
+         {
+            request.ContentLength = 0;
+         }
 
          // Set the HTTP method
          request.Method = this.method;
@@ -182,7 +194,9 @@ namespace Arana.Core
             // If the HTTP method is GET, recreate the request with
             // the values in the query string
             if (methodIsGet)
+            {
                return CreateRequest(String.Concat(uri + requestString), null);
+            }
 
             using (Stream stream = request.GetRequestStream())
             {
@@ -217,15 +231,21 @@ namespace Arana.Core
          // TODO: Set Accept-Encoding and handle decoding
 
          if (request.Method != HttpMethod.Get)
+         {
             request.ContentType = "application/x-www-form-urlencoded";
+         }
 
          // Set the "Referer" header
          if (this.previousRequest != null)
+         {
             request.Referer = this.previousRequest.Uri.ToString();
+         }
 
          // If there's any cookies to add to the request, do it
          if ((this.cookies == null) || (this.cookies.Count <= 0))
+         {
             return;
+         }
 
          request.CookieContainer = new CookieContainer(this.cookies.Count);
          request.CookieContainer.Add(this.cookies);

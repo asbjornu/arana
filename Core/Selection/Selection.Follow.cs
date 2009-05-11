@@ -38,15 +38,19 @@ namespace Arana.Core
          Selection anchors = Get("a");
 
          if ((anchors.Attributes() == null) || (anchors.Attributes().Count() == 0))
+         {
             throw new InvalidOperationException(
                String.Format("The HTML anchor selected with '{0}' has no attributes.",
                              CssSelector));
+         }
 
          string href = anchors.Attribute("href");
 
          if (String.IsNullOrEmpty(href))
+         {
             throw new InvalidOperationException(
                "The HTML anchor has an empty 'href' attribute.");
+         }
 
          this.engine.NavigateTo(href, followRedirect);
 

@@ -15,6 +15,11 @@ namespace Arana.Core
    public partial class Selection
    {
       /// <summary>
+      /// The <see cref="AranaEngine" /> to use for requests.
+      /// </summary>
+      private readonly AranaEngine engine;
+
+      /// <summary>
       /// Contains the tag names of all HTML form elements that should be posted to
       /// the server when the form is submitted.
       /// </summary>
@@ -26,11 +31,6 @@ namespace Arana.Core
       /// that should be posted to the server when the form is submitted.
       /// </summary>
       private static readonly string FormElementsSelector = String.Join(",", FormElements);
-
-      /// <summary>
-      /// The <see cref="AranaEngine" /> to use for requests.
-      /// </summary>
-      private readonly AranaEngine engine;
 
 
       /// <summary>
@@ -81,7 +81,9 @@ namespace Arana.Core
          get
          {
             if ((tagNames == null) || (tagNames.Length == 0))
+            {
                throw new ArgumentNullException("tagNames");
+            }
 
             IEnumerable<HtmlNode> v = from htmlNode in this
                                       where htmlNode.NameIsEqualTo(tagNames)
@@ -91,22 +93,6 @@ namespace Arana.Core
          }
       }
 
-      /// <summary>
-      /// Gets the inner HTML of the currently selected list of elements.
-      /// </summary>
-      /// <value>The inner HTML of the currently selected list of elements.</value>
-      public string InnerHtml
-      {
-         get
-         {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (HtmlNode htmlNode in this)
-               sb.AppendLine(htmlNode.InnerHtml);
-
-            return sb.ToString().Trim();
-         }
-      }
 
       /// <summary>
       /// Gets the inner text of the currently selected list of elements.
@@ -119,7 +105,9 @@ namespace Arana.Core
             StringBuilder sb = new StringBuilder();
 
             foreach (HtmlNode htmlNode in this)
+            {
                sb.AppendLine(htmlNode.InnerText);
+            }
 
             return sb.ToString().Trim();
          }
@@ -140,6 +128,7 @@ namespace Arana.Core
       /// <value>The CSS selector.</value>
       internal string CssSelector { get; private set; }
 
+
       /// <summary>
       /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
       /// </summary>
@@ -150,6 +139,38 @@ namespace Arana.Core
       {
          return String.Join(String.Concat(',', Environment.NewLine),
                             this.Select(node => node.GetCssSelector()).ToArray());
+      }
+
+
+      /// <summary>
+      /// Gets the inner HTML of the currently selected list of elements.
+      /// </summary>
+      /// <value>The inner HTML of the currently selected list of elements.</value>
+      public string InnerHtml()
+      {
+         StringBuilder sb = new StringBuilder();
+
+         foreach (HtmlNode htmlNode in this)
+         {
+            sb.AppendLine(htmlNode.InnerHtml);
+         }
+
+         return sb.ToString().Trim();
+      }
+
+
+      /// <summary>
+      /// Sets the inner HTML of the currently selected list of elements.
+      /// </summary>
+      /// <value>The list of currently selected elements.</value>
+      public Selection InnerHtml(string html)
+      {
+         foreach (HtmlNode htmlNode in this)
+         {
+            htmlNode.InnerHtml = html;
+         }
+
+         return this;
       }
 
 
@@ -165,37 +186,11 @@ namespace Arana.Core
          List<HtmlNode> selection = new List<HtmlNode>();
 
          foreach (HtmlNode node in this)
+         {
             selection.AddRange(node.QuerySelectorAll(cssSelector));
+         }
 
          return new Selection(selection, this.engine);
-      }
-
-
-      /// <summary>
-      /// Gets a <see cref="NameValueCollection"/> containing the names of all
-      /// the form elements within the collection, with either the current values
-      /// of the elements or with the value provided in the specified
-      /// <paramref name="requestValues"/>, matched by the key.
-      /// </summary>
-      /// <param name="requestValues">The request values.
-      /// A <see cref="NameValueCollection"/> containing the names of all the
-      /// elements that should have the corresponding value set.</param>
-      /// <returns>
-      /// The merged <see cref="NameValueCollection"/> with the values from
-      /// <paramref name="requestValues"/> applied.
-      /// </returns>
-      private RequestDictionary GetRequestCollection(NameValueCollection requestValues)
-      {
-         RequestDictionary requestDictionary = new RequestDictionary(Count);
-
-         (from node in this
-          let name = node.Attributes.Get("name")
-          let value = requestValues[name] ?? node.GetValue()
-          where !String.IsNullOrEmpty(value)
-          select new { Name = name, Value = value }
-         ).Each(result => requestDictionary.Set(result.Name, result.Value));
-
-         return requestDictionary;
       }
 
 
@@ -209,8 +204,10 @@ namespace Arana.Core
       private Selection Get(params string[] tagNames)
       {
          if (Count == 0)
+         {
             throw new InvalidOperationException(
                String.Format("No elements selected with '{0}'.", CssSelector));
+         }
 
          Selection selection = this[tagNames];
 
@@ -226,6 +223,59 @@ namespace Arana.Core
          }
 
          return selection;
+      }
+
+
+      /// <summary>
+      /// Gets a <see cref="RequestDictionary"/> containing the names of all
+      /// the form elements within the collection, with either the current values
+      /// of the elements or with the value provided in the specified
+      /// <paramref name="requestValues"/>, matched by the key.
+      /// </summary>
+      /// <param name="requestValues">The request values.
+      /// A <see cref="NameValueCollection"/> containing the names of all the
+      /// elements that should have the corresponding value set.</param>
+      /// <returns>
+      /// The merged <see cref="RequestDictionary"/> with the values from
+      /// <paramref name="requestValues"/> applied.
+      /// </returns>
+      private RequestDictionary GetRequestCollection(NameValueCollection requestValues)
+      {
+         RequestDictionary requestDictionary = new RequestDictionary(Count);
+
+         foreach (HtmlNode node in this)
+         {
+            string name = node.Attributes.Get("name");
+
+            // If the name should be empty for whatever reason, skip
+            if (String.IsNullOrEmpty(name))
+            {
+               continue;
+            }
+
+            string type = node.Attributes.Get("type");
+            string check = node.Attributes.Get("checked");
+            string valueFromAttribute = node.Attributes.Get("value");
+            string value = null;
+
+            // If the node is a checkbox or radio button,
+            if (type.IsEqualTo("checkbox", "radio"))
+            {
+               // Only set its value if the input is 'checked'
+               if (check != null)
+               {
+                  value = requestValues.Get(name, valueFromAttribute);
+               }
+            }
+            else
+            {
+               value = requestValues.Get(name, valueFromAttribute);
+            }
+
+            requestDictionary.Set(name, value);
+         }
+
+         return requestDictionary;
       }
    }
 }

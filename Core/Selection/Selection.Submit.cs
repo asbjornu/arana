@@ -36,6 +36,7 @@ namespace Arana.Core
          return Submit(true, formElementsSelection);
       }
 
+
       /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
@@ -66,11 +67,15 @@ namespace Arana.Core
       public AranaEngine Submit(bool followRedirect, Preselection formElementsSelection)
       {
          if (formElementsSelection == null)
+         {
             throw new ArgumentNullException("formElementsSelection");
+         }
 
          if (formElementsSelection.Count == 0)
+         {
             throw new ArgumentException("Preselection can't be empty.",
                                         "formElementsSelection");
+         }
 
          return Submit(true, formElementsSelection.Invoke(this.engine));
       }
@@ -94,22 +99,6 @@ namespace Arana.Core
       /// <summary>
       /// Submits the selected 'form' element, given its 'action' attribute.
       /// </summary>
-      /// <param name="requestValues">The request values.</param>
-      /// <returns>An updated <see cref="AranaEngine"/>.</returns>
-      /// <exception cref="InvalidOperationException">
-      /// 1. If the currently selected elements doesn't contain a 'form' element.
-      /// 2. If a currently selected 'form' element doesn't have any attributes.
-      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
-      /// </exception>
-      [Obsolete("If possible, use the Submit(Preselection) overload instead.")]
-      public AranaEngine Submit(NameValueCollection requestValues)
-      {
-         return Submit(true, requestValues);
-      }
-
-      /// <summary>
-      /// Submits the selected 'form' element, given its 'action' attribute.
-      /// </summary>
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow
       /// redirection responses from the Internet resource; otherwise, <c>false</c>.</param>
       /// <param name="requestValues">The request values.</param>
@@ -121,8 +110,7 @@ namespace Arana.Core
       /// attribute and an action URI can't be deduced from a previous <see cref="AranaRequest"/>.</item>
       /// 	</list>
       /// </exception>
-      [Obsolete("If possible, use the Submit(bool, Preselection) overload instead.")]
-      public AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
+      private AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
       {
          Selection form = Get("form");
 
@@ -132,7 +120,9 @@ namespace Arana.Core
                          this.engine.Uri.ToString();
 
          if (String.IsNullOrEmpty(action))
+         {
             throw new InvalidOperationException("No valid 'action' to perform.");
+         }
 
          RequestDictionary requestDictionary = null;
 
@@ -143,11 +133,13 @@ namespace Arana.Core
 
          Selection formElements = this.engine.Select(FormElementsSelector);
 
-         // TODO: Use this node-context based select when Fizzler doesn't bug on it
+         // TODO: Use this node-context based select when Fizzler/HtmlAgilityPack doesn't bug on it
          // Selection formElements = form.Select(FormElementsSelector);
 
          if (formElements.Count > 0)
+         {
             requestDictionary = formElements.GetRequestCollection(requestValues);
+         }
 
          this.engine.NavigateTo(action, followRedirect, method, requestDictionary);
 

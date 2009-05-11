@@ -20,7 +20,9 @@ namespace Arana.Core
                              Func<HttpWebResponse> getHttpWebResponse)
       {
          if (getHttpWebResponse == null)
+         {
             throw new ArgumentNullException("getHttpWebResponse");
+         }
 
          this.response = getHttpWebResponse();
          Data = new ResponseData(this.response, request.Uri);
@@ -32,6 +34,7 @@ namespace Arana.Core
       /// </summary>
       /// <value>The response data.</value>
       public ResponseData Data { get; private set; }
+
 
       /// <summary>
       /// Disposes the underlying <see cref="HttpWebResponse" />.
