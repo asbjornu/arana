@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Parsing", "Parsing", "{41F6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fizzler", "ThirdParty\Fizzler\Fizzler\Fizzler.csproj", "{939036D6-29FD-46E4-B6CD-52618F51081B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arana.Core.Test", "Arana.Core.Test\Arana.Core.Test.csproj", "{C63CBD11-6964-43DC-A56B-21544A86958A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Test", "Core.Test\Core.Test.csproj", "{C63CBD11-6964-43DC-A56B-21544A86958A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
