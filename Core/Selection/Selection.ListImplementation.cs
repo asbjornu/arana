@@ -8,7 +8,6 @@ namespace Arana.Core
    {
       private readonly List<HtmlNode> nodes;
 
-      #region IList<HtmlNode> Members
 
       /// <summary>
       /// Determines the index of a specific item in the <see cref="T:System.Collections.Generic.IList`1"/>.
@@ -21,6 +20,7 @@ namespace Arana.Core
       {
          return this.nodes.IndexOf(item);
       }
+
 
       /// <summary>
       /// Inserts an item to the <see cref="T:System.Collections.Generic.IList`1"/> at the specified index.
@@ -38,6 +38,7 @@ namespace Arana.Core
          this.nodes.Insert(index, item);
       }
 
+
       /// <summary>
       /// Removes the <see cref="T:System.Collections.Generic.IList`1"/> item at the specified index.
       /// </summary>
@@ -53,6 +54,7 @@ namespace Arana.Core
          this.nodes.RemoveAt(index);
       }
 
+
       /// <summary>
       /// Gets or sets the <see cref="HtmlAgilityPack.HtmlNode"/> at the specified index.
       /// </summary>
@@ -62,6 +64,7 @@ namespace Arana.Core
          get { return this.nodes[index]; }
          set { this.nodes[index] = value; }
       }
+
 
       /// <summary>
       /// Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
@@ -75,6 +78,7 @@ namespace Arana.Core
          this.nodes.Add(item);
       }
 
+
       /// <summary>
       /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
       /// </summary>
@@ -85,6 +89,7 @@ namespace Arana.Core
       {
          this.nodes.Clear();
       }
+
 
       /// <summary>
       /// Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"/> contains a specific value.
@@ -97,6 +102,7 @@ namespace Arana.Core
       {
          return this.nodes.Contains(item);
       }
+
 
       /// <summary>
       /// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
@@ -123,6 +129,7 @@ namespace Arana.Core
          this.nodes.CopyTo(array, arrayIndex);
       }
 
+
       /// <summary>
       /// Gets a value indicating whether the Collection is read-only.
       /// </summary>
@@ -133,6 +140,7 @@ namespace Arana.Core
       {
          get { return false; }
       }
+
 
       /// <summary>
       /// Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
@@ -149,6 +157,7 @@ namespace Arana.Core
          return this.nodes.Remove(item);
       }
 
+
       /// <summary>
       /// Returns an enumerator that iterates through the collection.
       /// </summary>
@@ -159,6 +168,7 @@ namespace Arana.Core
       {
          return this.nodes.GetEnumerator();
       }
+
 
       /// <summary>
       /// Returns an enumerator that iterates through a collection.
@@ -171,6 +181,7 @@ namespace Arana.Core
          return this.nodes.GetEnumerator();
       }
 
+
       /// <summary>
       /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
       /// </summary>
@@ -182,7 +193,5 @@ namespace Arana.Core
       {
          get { return this.nodes.Count; }
       }
-
-      #endregion
    }
 }

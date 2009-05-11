@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using System.Web;
 using Arana.Core.Extensions;
 
 namespace Arana.Core
@@ -31,7 +30,9 @@ namespace Arana.Core
          StringBuilder stringBuilder = new StringBuilder();
 
          if (getRequest)
+         {
             stringBuilder.Append('?');
+         }
 
          int i = 0;
 
@@ -42,7 +43,9 @@ namespace Arana.Core
             stringBuilder.AppendFormat("{0}={1}", key, value);
 
             if (i++ < (Count - 1))
+            {
                stringBuilder.Append('&');
+            }
          }
 
          return stringBuilder.ToString();
@@ -59,9 +62,13 @@ namespace Arana.Core
       public void Set(string key, string value)
       {
          if (ContainsKey(key))
+         {
             this[key] = value;
+         }
          else
+         {
             Add(key, value);
+         }
       }
    }
 }

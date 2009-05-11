@@ -35,6 +35,9 @@ from google.appengine.ext.webapp import util
 import django.core.handlers.wsgi
 
 def main():
+  # Set up logging
+  logging.getLogger().setLevel(logging.DEBUG)
+
   # Create a Django application for WSGI.
   application = django.core.handlers.wsgi.WSGIHandler()
 

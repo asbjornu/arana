@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using Arana.Core.Extensions;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -26,6 +28,13 @@ namespace Arana.Core
 
          string cookie = response.GetResponseHeader("Set-Cookie");
          Cookie = ParseCookie(cookie, requestUri);
+         Headers = new Dictionary<string, string>(response.Headers.Count);
+
+         foreach (string key in response.Headers.AllKeys)
+         {
+            string value = response.Headers[key];
+            Headers.Add(key, value);
+         }
       }
 
 
@@ -40,6 +49,8 @@ namespace Arana.Core
       /// </summary>
       /// <value>The "Set-Cookie" HTTP header from the resposne..</value>
       public Cookie Cookie { get; private set; }
+
+      public Dictionary<string, string> Headers { get; private set; }
 
       /// <summary>
       /// Gets the "Location" HTTP header from the response.
@@ -76,6 +87,29 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </returns>
+      public override string ToString()
+      {
+         StringBuilder responseBuilder = new StringBuilder();
+
+         foreach (string key in Headers.Keys)
+         {
+            string value = Headers[key];
+            responseBuilder.AppendLine(String.Format("{0}: {1}", key, value));
+         }
+
+         responseBuilder.AppendLine();
+         responseBuilder.Append(Body);
+
+         return responseBuilder.ToString();
+      }
+
+
+      /// <summary>
       /// Gets the response string.
       /// </summary>
       /// <param name="response">The response.</param>
@@ -85,7 +119,9 @@ namespace Arana.Core
          using (Stream stream = response.GetResponseStream())
          {
             if (!stream.CanRead)
+            {
                return null;
+            }
 
             using (StreamReader streamReader = new StreamReader(stream))
             {
@@ -107,7 +143,9 @@ namespace Arana.Core
       private static Cookie ParseCookie(string cookieString, Uri uri)
       {
          if (String.IsNullOrEmpty(cookieString))
+         {
             return null;
+         }
 
          Cookie cookie = new Cookie();
 
@@ -115,19 +153,27 @@ namespace Arana.Core
          string[] cookieParts = cookieString.Split(';');
 
          if (cookieParts.Length == 0)
+         {
             SplitAndSet(cookie, cookieString);
+         }
          else
+         {
             foreach (string cookiePart in cookieParts)
+            {
                SplitAndSet(cookie, cookiePart);
+            }
+         }
 
          if (String.IsNullOrEmpty(cookie.Domain))
          {
             // If both the domain part on the cookie and the 'uri' argument is null, throw an
             // exception as the Domain property of the cookie is required.
             if (uri == null)
+            {
                throw new ArgumentNullException(
                   "uri",
                   "The URI can't be null when the cookie has no 'domain' parameter available.");
+            }
 
             cookie.Domain = uri.Authority;
          }
@@ -145,13 +191,17 @@ namespace Arana.Core
       {
          // Do nothing if the part doesn't contain an equals sign.
          if (!cookiePart.Contains("="))
+         {
             return;
+         }
 
          string[] keyValue = cookiePart.Split('=');
 
          // Do nothing the key/value if its length is less than 2.
          if (keyValue.Length < 2)
+         {
             return;
+         }
 
          // Set the key and value on the cookie
          cookie.Set(keyValue[0], keyValue[1]);

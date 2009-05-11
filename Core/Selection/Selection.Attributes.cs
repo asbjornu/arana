@@ -110,18 +110,24 @@ namespace Arana.Core
          this.Each(node =>
          {
             if (!node.NameIsEqualTo(FormElements))
+            {
                throw new InvalidOperationException(
                   String.Format("Can't set the 'value' of element '{0}'.",
                                 node.Name));
+            }
 
             if (node.NameIsEqualTo("select"))
+            {
                throw new InvalidOperationException(
                   "Can't set the 'value' on a 'select' element. Use Choose() instead.");
+            }
 
             if (node.NameIsEqualTo("input") &&
                 node.Attributes.Get("type").IsEqualTo("radio"))
+            {
                throw new InvalidOperationException(
                   "Can't set the 'value' on a radio button. Use Check() instead.");
+            }
          });
 
          return Attribute("value", value);
@@ -167,12 +173,18 @@ namespace Arana.Core
       private Selection Attribute(string name, string value)
       {
          foreach (HtmlNode node in this)
+         {
             // If we're trying to set the 'value' on 'textarea';
             if (name.IsEqualTo("value") && node.NameIsEqualTo("textarea"))
+            {
                // set the textarea's inner HTML instead.
                node.InnerHtml = value;
+            }
             else
+            {
                (node.Attributes[name] ?? node.Attributes.Append(name)).Value = value;
+            }
+         }
 
          return this;
       }
@@ -187,8 +199,12 @@ namespace Arana.Core
       private IEnumerable<HtmlAttribute> Attributes()
       {
          foreach (HtmlNode htmlNode in this)
+         {
             foreach (HtmlAttribute attribute in htmlNode.Attributes)
+            {
                yield return attribute;
+            }
+         }
       }
    }
 }

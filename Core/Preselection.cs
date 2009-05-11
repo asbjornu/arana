@@ -60,9 +60,11 @@ namespace Arana.Core
             Selection selection = engine.Select(cssSelector);
 
             if ((selection == null) || (selection.Count == 0))
+            {
                throw new InvalidOperationException(
                   String.Format("The CSS selector '{0}' returned nothing.",
                                 cssSelector));
+            }
 
             Func<Selection, Selection> selectionFunc = this[cssSelector];
 
@@ -70,10 +72,12 @@ namespace Arana.Core
             selection = selectionFunc.Invoke(selection);
 
             if ((selection == null) || (selection.Count == 0))
+            {
                throw new InvalidOperationException(
                   String.Format("After invoking the function corresponding to the " +
                                 "CSS selector '{0}', an empty selection was returned.",
                                 cssSelector));
+            }
 
             // Get the name of the invoked selection
             string name = selection.Name();
@@ -100,6 +104,7 @@ namespace Arana.Core
          }
       }
 
+
       /// <summary>
       /// Validates the specified CSS selector and selection function.
       /// </summary>
@@ -109,12 +114,16 @@ namespace Arana.Core
                                    Func<Selection, Selection> selectionFunc)
       {
          if (String.IsNullOrEmpty(cssSelector))
+         {
             throw new InvalidOperationException(
                "The CSS selector provided to Preselection can't be null or empty.");
+         }
 
          if (selectionFunc == null)
+         {
             throw new InvalidOperationException(
                "The Selection function (lambda) provided to Preselection can't be null.");
+         }
       }
    }
 }

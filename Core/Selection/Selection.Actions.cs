@@ -16,9 +16,15 @@ namespace Arana.Core
          string value = input.Value();
 
          if (String.IsNullOrEmpty(value))
+         {
             value = "on";
+         }
 
-         return Attribute("value", value);
+         return
+            // Set the "checked" attribute
+            Attribute("checked", "checked")
+               // Set the value
+               .Attribute("value", value);
       }
 
 
