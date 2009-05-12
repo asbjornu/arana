@@ -22,7 +22,7 @@ namespace Arana.Core
 
          return
             // Set the "checked" attribute
-            Attribute("checked", "checked")
+            input.Attribute("checked", "checked")
                // Set the value
                .Attribute("value", value);
       }
@@ -35,8 +35,7 @@ namespace Arana.Core
       /// <returns>The list of currently selected elements.</returns>
       public Selection Choose(int index)
       {
-         Selection selects = Get("select");
-         selects.Each(select => select.SetSelectedIndex(index));
+         Get("select").Each(select => select.SetSelectedIndex(index));
          return this;
       }
    }

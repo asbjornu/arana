@@ -36,22 +36,13 @@ namespace Arana.Test.ConsoleApplication
 
          engine.Select("li#simple-post-test a").Follow();
 
-         engine.Select("form").Submit();
-         /*new Preselection
+         engine.Select("form").Submit(new Preselection
          {
-            { "p.textbox input", input => input.Value("Textbox1") },
-            { "p.radio input", radio => radio.Check() },
-            { "p.checkbox input", checkbox => checkbox.Check() },
-            { "p.textarea textarea", textarea => textarea.Value("Textarea1") },
-            { "p.select select", select => select.Choose(3) },
-         });*/
+            { "p.radio1 input", radio => radio.Check() },
+         });
 
-         Console.WriteLine(engine.Select("p.textbox span.value").InnerText);
-         Console.WriteLine(engine.Select("p.radio span.value").InnerText);
-         Console.WriteLine(engine.Select("p.checkbox-with-value span.value").InnerText);
-         Console.WriteLine(engine.Select("p.textarea span.value").InnerText);
-         Console.WriteLine(engine.Select("p.select span.value").InnerText);
-         Console.WriteLine(engine.Select("p.submit span.value").InnerText);
+         Console.WriteLine(engine.Select("p.radio1 span.value").InnerText);
+         Console.WriteLine(engine.Select("p.radio2 span.value").InnerText);
       }
    }
 }
