@@ -261,11 +261,11 @@ namespace Arana.Core
             // If the node is a checkbox or radio button,
             if (type.IsEqualTo("checkbox", "radio"))
             {
-               // Only set its value if the input is 'checked'
-               if (check != null)
-               {
-                  value = requestValues.Get(name, valueFromAttribute);
-               }
+               // If the checkbox/radio button isn't checked, continue
+               if (check == null)
+                  continue;
+
+               value = requestValues.Get(name, valueFromAttribute);
             }
             else
             {

@@ -44,6 +44,8 @@ namespace Arana.Core.Test
          string submittedTextAreaValue = engine.Select("p.textarea span.value").InnerText;
          string submittedRadioButtonValue = engine.Select("p.radio span.value").InnerText;
          string submittedCheckBoxValue = engine.Select("p.checkbox span.value").InnerText;
+         string submittedCheckBoxWithValueValue =
+            engine.Select("p.checkbox-with-value span.value").InnerText;
          string submittedSelectValue = engine.Select("p.select span.value").InnerText;
          string submittedSubmitValue = engine.Select("p.submit span.value").InnerText;
 
@@ -59,6 +61,9 @@ namespace Arana.Core.Test
          Assert.IsEmpty(submittedCheckBoxValue,
                         "The checkbox should not have submitted any value.");
 
+         Assert.IsEmpty(submittedCheckBoxWithValueValue,
+                        "The checkbox should not have submitted any value.");
+
          Assert.IsEmpty(submittedSelectValue,
                         "The 'select' element should not have submitted any value.");
 
@@ -66,6 +71,7 @@ namespace Arana.Core.Test
                          submittedSubmitValue,
                          "The submitted value of the submit button is invalid.");
       }
+
 
       [Test]
       public void SimpleSubmit()
@@ -82,14 +88,12 @@ namespace Arana.Core.Test
          engine.Select("form").Submit(new Preselection
          {
             { "p.textbox input", input => input.Value(textBoxValue) },
-            { "p.radio input", radio => radio.Check() },
+            { "p.radio1 input", radio => radio.Check() },
             { "p.checkbox input", checkbox => checkbox.Check() },
             { "p.checkbox-with-value input", checkbox => checkbox.Check() },
             { "p.textarea textarea", textarea => textarea.Value(textAreaValue) },
             { "p.select select", select => select.Choose(3) },
          });
-
-         Console.WriteLine(engine.Response);
 
          Assert.AreEqual(200,
                          engine.Response.StatusBase,
@@ -97,7 +101,7 @@ namespace Arana.Core.Test
 
          string submittedTextBoxValue = engine.Select("p.textbox span.value").InnerText;
          string submittedTextAreaValue = engine.Select("p.textarea span.value").InnerText;
-         string submittedRadioButtonValue = engine.Select("p.radio span.value").InnerText;
+         string submittedRadioButtonValue = engine.Select("p.radio1 span.value").InnerText;
          string submittedCheckBoxValue = engine.Select("p.checkbox span.value").InnerText;
          string submittedCheckBoxWithValueValue =
             engine.Select("p.checkbox-with-value span.value").InnerText;
