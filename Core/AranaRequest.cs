@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Cache;
 using System.Reflection;
 using System.Text;
 using Arana.Core.Extensions;
@@ -34,6 +35,11 @@ namespace Arana.Core
       private readonly ICredentials requestCredentials;
 
       /// <summary>
+      /// The proxy server to use on requests.
+      /// </summary>
+      private readonly IWebProxy requestProxy;
+
+      /// <summary>
       /// Contains the Araña Engine's User Agent string as used when performing HTTP web requests.
       /// </summary>
       private static readonly string UserAgentString = GetUserAgentString();
@@ -48,6 +54,11 @@ namespace Arana.Core
       /// </summary>
       private CookieCollection cookies;
 
+      /// <summary>
+      /// The string to put into the request
+      /// </summary>
+      private string requestString;
+
 
       /// <summary>
       /// Initializes a new instance of the <see cref="AranaRequest"/> class.
@@ -58,20 +69,23 @@ namespace Arana.Core
       /// <param name="uri">The URI.</param>
       /// <param name="method">The HTTP method to use for the request.</param>
       /// <param name="credentials">The credentials.</param>
+      /// <param name="proxy">The proxy.</param>
       /// <param name="requestValues">The request values.</param>
       internal AranaRequest(AranaRequest previousRequest,
                             string uri,
                             string method,
                             ICredentials credentials,
+                            IWebProxy proxy,
                             RequestDictionary requestValues)
       {
          this.requestCredentials = GetCredentials(previousRequest, credentials);
+         this.requestProxy = GetProxy(previousRequest, proxy);
          this.method = (method ?? HttpMethod.Get).ToUpperInvariant();
 
          // Throw an exception if the HTTP method used is invalid.
          if (!this.method.IsEqualTo(false, HttpMethod.All))
          {
-            throw new InvalidOperationException(
+            throw new NotSupportedException(
                String.Format("The method '{0}' is invalid.", this.method));
          }
 
@@ -95,6 +109,55 @@ namespace Arana.Core
       internal Uri Uri
       {
          get { return this.currentWebRequest.RequestUri; }
+      }
+
+
+      /// <summary>
+      /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </summary>
+      /// <returns>
+      /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+      /// </returns>
+      public override string ToString()
+      {
+         StringBuilder stringBuilder = new StringBuilder();
+         StringBuilder cookieBuilder = new StringBuilder();
+
+         foreach (string key in this.currentWebRequest.Headers.AllKeys)
+         {
+            string value = this.currentWebRequest.Headers[key];
+            stringBuilder.AppendLine(String.Format("{0}: {1}", key, value));
+         }
+
+         if (this.currentWebRequest.ContentLength > 0)
+            stringBuilder.AppendLine("Content-Length: " + this.currentWebRequest.ContentLength);
+
+         int i = 0;
+
+         if (this.cookies != null && this.cookies.Count > 0)
+         {
+            foreach (Cookie cookie in this.cookies)
+            {
+               cookieBuilder.AppendFormat("{0}={1}",
+                                          cookie.Name,
+                                          cookie.Value);
+
+               if (i++ < (this.cookies.Count - 1))
+               {
+                  cookieBuilder.Append('&');
+               }
+            }
+         }
+
+         if (cookieBuilder.Length > 0)
+         {
+            stringBuilder.AppendLine("Cookie: " + cookieBuilder);
+         }
+
+         stringBuilder.AppendLine();
+         stringBuilder.Append(this.requestString);
+
+         return stringBuilder.ToString();
       }
 
 
@@ -186,16 +249,19 @@ namespace Arana.Core
          // Set the HTTP method
          request.Method = this.method;
 
+         // Set the Proxy
+         request.Proxy = this.requestProxy;
+
          // Add the request values if we have any
          if ((requestValues != null) && (requestValues.Count > 0))
          {
-            string requestString = requestValues.GetRequestString(methodIsGet);
+            this.requestString = requestValues.ToString();
 
             // If the HTTP method is GET, recreate the request with
             // the values in the query string
             if (methodIsGet)
             {
-               return CreateRequest(String.Concat(uri + requestString), null);
+               return CreateRequest(String.Concat(uri, '?', this.requestString), null);
             }
 
             using (Stream stream = request.GetRequestStream())
@@ -203,7 +269,7 @@ namespace Arana.Core
                using (StreamWriter streamWriter =
                   new StreamWriter(stream, Encoding.ASCII))
                {
-                  streamWriter.Write(requestString);
+                  streamWriter.Write(this.requestString);
                }
             }
          }
@@ -224,6 +290,9 @@ namespace Arana.Core
          request.Accept =
             "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
          request.Credentials = this.requestCredentials;
+
+         // TODO: Add support for different types of cache policies
+         request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
          // TODO: Set more accepted charsets and handle decoding of them
          request.Headers.Add("Accept-Charset", "utf-8");
@@ -273,6 +342,21 @@ namespace Arana.Core
          return credentials ??
                 ((request != null) && (request.requestCredentials != null)
                     ? request.requestCredentials
+                    : null);
+      }
+
+
+      /// <summary>
+      /// Gets the <see cref="IWebProxy" /> to use for the request.
+      /// </summary>
+      /// <param name="request">The request.</param>
+      /// <param name="proxy">The proxy.</param>
+      /// <returns>The <see cref="IWebProxy" /> to use for the request.</returns>
+      private static IWebProxy GetProxy(AranaRequest request, IWebProxy proxy)
+      {
+         return proxy ??
+                ((request != null) && (request.requestProxy != null)
+                    ? request.requestProxy
                     : null);
       }
 

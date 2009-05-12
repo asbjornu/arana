@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Arana.Core.Extensions;
 
@@ -19,29 +20,27 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets the request string.
+      /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
       /// </summary>
-      /// <param name="getRequest">if set to <c>true</c> create a query string for an HTTP GET request.</param>
       /// <returns>
-      /// The request string.
+      /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
       /// </returns>
-      public string GetRequestString(bool getRequest)
+      public override string ToString()
       {
          StringBuilder stringBuilder = new StringBuilder();
-
-         if (getRequest)
-         {
-            stringBuilder.Append('?');
-         }
 
          int i = 0;
 
          foreach (string key in Keys)
          {
-            string value = this[key].UriEncode();
+            string encodedKey = key.UriEncode();
+            string encodedValue = this[key].UriEncode();
 
-            stringBuilder.AppendFormat("{0}={1}", key, value);
-
+            stringBuilder.AppendFormat("{0}={1}",
+                                       encodedKey,
+                                       encodedValue);
+            
+            // Don't append '&' at the end of the request string
             if (i++ < (Count - 1))
             {
                stringBuilder.Append('&');
