@@ -14,6 +14,11 @@ namespace Arana.Core
    internal class AranaRequest
    {
       /// <summary>
+      /// The request/response number. Starts on 0 and increases with each new request.
+      /// </summary>
+      internal int Number { get; private set; }
+
+      /// <summary>
       /// The underlying <see cref="HttpWebRequest" /> object used to perform the HTTP requests.
       /// </summary>
       private readonly HttpWebRequest currentWebRequest;
@@ -78,6 +83,7 @@ namespace Arana.Core
                             IWebProxy proxy,
                             RequestDictionary requestValues)
       {
+         Number = (previousRequest != null) ? (previousRequest.Number + 1) : 0;
          this.requestCredentials = GetCredentials(previousRequest, credentials);
          this.requestProxy = GetProxy(previousRequest, proxy);
          this.method = (method ?? HttpMethod.Get).ToUpperInvariant();
@@ -123,6 +129,10 @@ namespace Arana.Core
          StringBuilder stringBuilder = new StringBuilder();
          StringBuilder cookieBuilder = new StringBuilder();
 
+         stringBuilder.AppendLine(String.Format("{0} {1} HTTP/1.1",
+                                                this.method,
+                                                Uri.PathAndQuery));
+
          foreach (string key in this.currentWebRequest.Headers.AllKeys)
          {
             string value = this.currentWebRequest.Headers[key];
@@ -130,7 +140,10 @@ namespace Arana.Core
          }
 
          if (this.currentWebRequest.ContentLength > 0)
-            stringBuilder.AppendLine("Content-Length: " + this.currentWebRequest.ContentLength);
+         {
+            stringBuilder.AppendLine("Content-Length: " +
+                                     this.currentWebRequest.ContentLength);
+         }
 
          int i = 0;
 

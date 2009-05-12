@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using Arana.Core.Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
@@ -11,6 +12,8 @@ namespace Arana.Core
    /// </summary>
    public class AranaEngine
    {
+      private TextWriter output;
+
       /// <summary>
       /// A local field used to preserve the last request made for reference
       /// to future requests (to preserve the base URI as a way to resolve
@@ -60,6 +63,16 @@ namespace Arana.Core
       public AranaEngine(string uri, ICredentials credentials, IWebProxy proxy)
       {
          NavigateTo(uri, true, credentials, proxy);
+      }
+
+
+      /// <summary>
+      /// Sets the <see cref="TextWriter" /> to write debug information to.
+      /// </summary>
+      /// <value>The <see cref="TextWriter" /> to write debug information to.</value>
+      public TextWriter Output
+      {
+         set { this.output = value; }
       }
 
 
@@ -161,6 +174,29 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Writes the <paramref name="value"/> to the <see cref="Output" />.
+      /// </summary>
+      /// <param name="value">The value.</param>
+      /// <param name="section">The section.</param>
+      private void Write(object value, string section)
+      {
+         if (this.output == null)
+         {
+            return;
+         }
+
+         string divider = String.Format("{0,80}",
+            String.Format("_{0}_#{1}_{2}", section, request.Number, new String('-', 40)))
+            .Replace(' ', '-')
+            .Replace('_', ' ');
+
+         this.output.WriteLine(divider);
+         this.output.WriteLine(value);
+         this.output.WriteLine();
+      }
+
+
+      /// <summary>
       /// Gets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
@@ -190,7 +226,7 @@ namespace Arana.Core
                                          proxy,
                                          requestValues);
 
-         Console.WriteLine(request);
+         Write(this.request, "Request");
 
          using (AranaResponse response = this.request.GetResponse())
          {
@@ -200,6 +236,8 @@ namespace Arana.Core
             }
 
             Response = response.Data;
+
+            Write(Response, "Response");
 
             // Set the cookie from the response
             this.request.SetCookie(Response);
