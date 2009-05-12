@@ -32,7 +32,10 @@ namespace Arana.Test.ConsoleApplication
 
       private static void TestArana()
       {
-         AranaEngine engine = new AranaEngine("http://localhost:9999/");
+         AranaEngine engine = new AranaEngine("http://localhost:9999/")
+         {
+            Output = Console.Out
+         };
 
          engine.Select("li#simple-post-test a").Follow();
 
