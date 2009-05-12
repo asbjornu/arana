@@ -24,7 +24,7 @@ namespace Arana.Core
       /// </summary>
       /// <param name="uri">The application URI.</param>
       public AranaEngine(string uri)
-         : this(uri, null)
+         : this(uri, null, null)
       {
       }
 
@@ -36,7 +36,30 @@ namespace Arana.Core
       /// <param name="credentials">The credentials.</param>
       public AranaEngine(string uri, ICredentials credentials)
       {
-         NavigateTo(uri, true, credentials);
+         NavigateTo(uri, true, credentials, null);
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AranaEngine"/> class.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="proxy">The proxy.</param>
+      public AranaEngine(string uri, IWebProxy proxy)
+      {
+         NavigateTo(uri, true, null, proxy);
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AranaEngine"/> class.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="credentials">The credentials.</param>
+      /// <param name="proxy">The proxy.</param>
+      public AranaEngine(string uri, ICredentials credentials, IWebProxy proxy)
+      {
+         NavigateTo(uri, true, credentials, proxy);
       }
 
 
@@ -87,20 +110,7 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       internal void NavigateTo(string uri, bool followRedirect)
       {
-         SetCurrentDocument(uri, followRedirect, null, null, null);
-      }
-
-
-      /// <summary>
-      /// Navigates to the specified <paramref name="uri"/>.
-      /// </summary>
-      /// <param name="uri">The URI.</param>
-      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
-      /// <param name="credentials">The credentials.</param>
-      internal void NavigateTo(string uri, bool followRedirect, ICredentials credentials)
-      {
-         SetCurrentDocument(uri, followRedirect, null, credentials, null);
+         SetCurrentDocument(uri, followRedirect, null, null, null, null);
       }
 
 
@@ -117,7 +127,7 @@ namespace Arana.Core
                                string httpMethod,
                                RequestDictionary requestValues)
       {
-         SetCurrentDocument(uri, followRedirect, httpMethod, null, requestValues);
+         SetCurrentDocument(uri, followRedirect, httpMethod, null, null, requestValues);
       }
 
 
@@ -158,6 +168,7 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="credentials">The credentials.</param>
+      /// <param name="proxy">The proxy.</param>
       /// <param name="requestValues">The request values.</param>
       /// <returns>
       /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
@@ -169,13 +180,17 @@ namespace Arana.Core
                                        bool followRedirect,
                                        string httpMethod,
                                        ICredentials credentials,
+                                       IWebProxy proxy,
                                        RequestDictionary requestValues)
       {
          this.request = new AranaRequest(this.request,
                                          uri,
                                          httpMethod,
                                          credentials,
+                                         proxy,
                                          requestValues);
+
+         Console.WriteLine(request);
 
          using (AranaResponse response = this.request.GetResponse())
          {
@@ -197,6 +212,7 @@ namespace Arana.Core
                                   true,
                                   HttpMethod.Get,
                                   credentials,
+                                  proxy,
                                   null);
             }
 
@@ -208,6 +224,23 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Navigates to the specified <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
+      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
+      /// <param name="credentials">The credentials.</param>
+      /// <param name="proxy">The proxy.</param>
+      private void NavigateTo(string uri,
+                              bool followRedirect,
+                              ICredentials credentials,
+                              IWebProxy proxy)
+      {
+         SetCurrentDocument(uri, followRedirect, null, credentials, proxy, null);
+      }
+
+
+      /// <summary>
       /// Sets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
@@ -215,10 +248,8 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="credentials">The credentials.</param>
+      /// <param name="proxy">The proxy.</param>
       /// <param name="requestValues">The request values.</param>
-      /// <returns>
-      /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
-      /// </returns>
       /// <exception cref="InvalidUriException">
       /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
       /// </exception>
@@ -226,12 +257,14 @@ namespace Arana.Core
                                       bool followRedirect,
                                       string httpMethod,
                                       ICredentials credentials,
+                                      IWebProxy proxy,
                                       RequestDictionary requestValues)
       {
          Document = GetDocument(uri,
                                 followRedirect,
                                 httpMethod,
                                 credentials,
+                                proxy,
                                 requestValues);
       }
 

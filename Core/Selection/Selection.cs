@@ -256,7 +256,7 @@ namespace Arana.Core
             string type = node.Attributes.Get("type");
             string check = node.Attributes.Get("checked");
             string valueFromAttribute = node.Attributes.Get("value");
-            string value = null;
+            string value;
 
             // If the node is a checkbox or radio button,
             if (type.IsEqualTo("checkbox", "radio"))
