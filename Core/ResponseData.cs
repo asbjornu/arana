@@ -59,9 +59,13 @@ namespace Arana.Core
       public Dictionary<string, string> Headers { get; private set; }
 
       /// <summary>
-      /// Gets the "Location" HTTP header from the response.
+      /// Gets the value of the "Location" or "Content-Location" HTTP headers from the response.
       /// </summary>
-      /// <value>The "Location" HTTP header from the response..</value>
+      /// <remarks>
+      /// Returns null if neither of these headers are set. To know the URI of the current
+      /// response, use <see cref="AranaEngine.Uri" />.
+      /// </remarks>
+      /// <value>The value of the "Location" or "Content-Location" HTTP header from the response.</value>
       public string Location { get; private set; }
 
       /// <summary>
