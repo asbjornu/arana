@@ -1,20 +1,18 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Arana.Core.Test
 {
    [TestFixture]
-   public class PostTest
+   public class SimplePostTest
    {
       /// <summary>
-      /// Initializes the engine and follows the anchor found with the given <paramref name="anchorSelector"/>
+      /// Initializes the engine and follows the "simple post test" anchor.
       /// </summary>
-      /// <param name="anchorSelector">The anchor selector.</param>
       /// <returns></returns>
-      private static AranaEngine Initialize(string anchorSelector)
+      private static AranaEngine Initialize()
       {
          AranaEngine engine = new AranaEngine("http://test.aranalib.net/")
-            .Select(anchorSelector)
+            .Select("li#simple-post-test a")
             .Follow();
 
          Assert.AreEqual(200,
@@ -26,9 +24,50 @@ namespace Arana.Core.Test
 
 
       [Test]
+      public void CheckAndUncheck()
+      {
+         AranaEngine engine = Initialize();
+
+         Assert.AreEqual("/simple_post_test/",
+                         engine.Uri.PathAndQuery,
+                         "The URI is incorrect.");
+
+         engine.Select("form").Submit(new Preselection
+         {
+            { "p.radio1 input", radio => radio.Check() },
+            { "p.checkbox input", checkbox => checkbox.Check() },
+         });
+
+         Assert.AreEqual(200,
+                         engine.Response.StatusBase,
+                         "The HTTP status code is invalid.");
+
+         Assert.AreEqual("on",
+                         engine.Select("p.radio1 span.value").InnerText,
+                         "The submitted value of the radio button is invalid.");
+
+         Assert.AreEqual("on",
+                         engine.Select("p.checkbox span.value").InnerText,
+                         "The submitted value of the checkbox is invalid.");
+
+         engine.Select("form").Submit(new Preselection
+         {
+            { "p.radio1 input", radio => radio.Uncheck() },
+            { "p.checkbox input", checkbox => checkbox.Uncheck() },
+         });
+
+         Assert.IsEmpty(engine.Select("p.radio1 span.value").InnerText,
+                        "The radio button should not have submitted any value.");
+
+         Assert.IsEmpty(engine.Select("p.checkbox span.value").InnerText,
+                        "The checkbox should not have submitted any value.");
+      }
+
+
+      [Test]
       public void EmptySubmit()
       {
-         AranaEngine engine = Initialize("li#simple-post-test a");
+         AranaEngine engine = Initialize();
 
          Assert.AreEqual("/simple_post_test/",
                          engine.Uri.PathAndQuery,
@@ -47,7 +86,10 @@ namespace Arana.Core.Test
          string submittedCheckBoxWithValueValue =
             engine.Select("p.checkbox-with-value span.value").InnerText;
          string submittedSelectValue = engine.Select("p.select span.value").InnerText;
-         string submittedSubmitValue = engine.Select("p.submit span.value").InnerText;
+         string submittedFirstSubmitValue =
+            engine.Select("p.first-submit span.value").InnerText;
+         string submittedSecondSubmitValue =
+            engine.Select("p.second-submit span.value").InnerText;
 
          Assert.IsEmpty(submittedTextBoxValue,
                         "The textbox should not have submitted any value.");
@@ -67,16 +109,55 @@ namespace Arana.Core.Test
          Assert.IsEmpty(submittedSelectValue,
                         "The 'select' element should not have submitted any value.");
 
-         Assert.AreEqual("Submit",
-                         submittedSubmitValue,
-                         "The submitted value of the submit button is invalid.");
+         Assert.IsEmpty(submittedFirstSubmitValue,
+                        "The first submit button should not have submitted any value.");
+
+         Assert.IsEmpty(submittedSecondSubmitValue,
+                        "The second submit button should not have submitted any value.");
+      }
+
+
+      [Test]
+      public void MultiButtonSubmit()
+      {
+         AranaEngine engine = Initialize();
+
+         Assert.AreEqual("/simple_post_test/",
+                         engine.Uri.PathAndQuery,
+                         "The URI is incorrect.");
+
+         engine.Select("form").Submit("input#first-submit");
+
+         Assert.AreEqual(200,
+                         engine.Response.StatusBase,
+                         "The HTTP status code is invalid.");
+
+         string submittedFirstSubmitValue =
+            engine.Select("p.first-submit span.value").InnerText;
+
+         Assert.AreEqual("First submit",
+                         submittedFirstSubmitValue,
+                         "The submitted value of the first submit button is invalid.");
+
+         engine.Select("form").Submit("input#second-submit");
+
+         Assert.AreEqual(200,
+                         engine.Response.StatusBase,
+                         "The HTTP status code is invalid.");
+
+         string submittedSecondSubmitValue =
+            engine.Select("p.second-submit span.value").InnerText;
+
+         Assert.AreEqual("Second submit",
+                         submittedSecondSubmitValue,
+                         "The submitted value of the second submit button is invalid.");
       }
 
 
       [Test]
       public void SimpleSubmit()
       {
-         AranaEngine engine = Initialize("li#simple-post-test a");
+         AranaEngine engine = Initialize();
 
          Assert.AreEqual("/simple_post_test/",
                          engine.Uri.PathAndQuery,
@@ -106,7 +187,9 @@ namespace Arana.Core.Test
          string submittedCheckBoxWithValueValue =
             engine.Select("p.checkbox-with-value span.value").InnerText;
          string submittedSelectValue = engine.Select("p.select span.value").InnerText;
-         string submittedSubmitValue = engine.Select("p.submit span.value").InnerText;
+         string submittedFirstSubmitValue = engine.Select("p.submit span.value").InnerText;
+         string submittedSecondSubmitValue =
+            engine.Select("p.second-submit span.value").InnerText;
 
          Assert.AreEqual(textBoxValue,
                          submittedTextBoxValue,
@@ -131,9 +214,11 @@ namespace Arana.Core.Test
                          submittedSelectValue,
                          "The submitted value of the 'select' element is invalid.");
 
-         Assert.AreEqual("Submit",
-                         submittedSubmitValue,
-                         "The submitted value of the submit button is invalid.");
+         Assert.IsEmpty(submittedFirstSubmitValue,
+                        "The first submit button should not have submitted any value.");
+
+         Assert.IsEmpty(submittedSecondSubmitValue,
+                        "The second submit button should not have submitted any value.");
       }
    }
 }

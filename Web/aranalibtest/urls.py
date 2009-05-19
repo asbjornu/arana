@@ -15,6 +15,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('app.views',
-  (r'^$', 'index'),  
+  (r'^$',                   'index'),  
   (r'^simple_post_test.*$', 'simple_post_test'),
+  (r'^login_test.*$',       'login_test'),
 )

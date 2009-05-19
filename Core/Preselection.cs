@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace Arana.Core
 {
@@ -31,6 +30,16 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Initializes a new instance of the <see cref="Preselection"/> class.
+      /// </summary>
+      /// <param name="capacity">The capacity.</param>
+      internal Preselection(int capacity)
+         : base(capacity)
+      {
+      }
+
+
+      /// <summary>
       /// Adds the specified CSS selector and selection function to the dictionary.
       /// </summary>
       /// <param name="cssSelector">The CSS selector.</param>
@@ -50,9 +59,14 @@ namespace Arana.Core
       /// </summary>
       /// <param name="engine">The engine.</param>
       /// <returns></returns>
-      internal NameValueCollection Invoke(AranaEngine engine)
+      internal RequestDictionary Invoke(AranaEngine engine)
       {
-         NameValueCollection result = new NameValueCollection(Count);
+         if (engine == null)
+         {
+            throw new ArgumentNullException("engine");
+         }
+
+         RequestDictionary result = new RequestDictionary(Count);
 
          foreach (string cssSelector in Keys)
          {

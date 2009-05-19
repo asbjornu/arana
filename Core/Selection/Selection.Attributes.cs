@@ -107,28 +107,28 @@ namespace Arana.Core
       /// </exception>
       public Selection Value(string value)
       {
-         this.Each(node =>
+         foreach (HtmlNode node in this)
          {
-            if (!node.NameIsEqualTo(FormElements))
+            if (!node.Name.IsEqualTo(FormElements))
             {
                throw new InvalidOperationException(
                   String.Format("Can't set the 'value' of element '{0}'.",
                                 node.Name));
             }
 
-            if (node.NameIsEqualTo("select"))
+            if (node.Name.IsEqualTo("select"))
             {
                throw new InvalidOperationException(
                   "Can't set the 'value' on a 'select' element. Use Choose() instead.");
             }
 
-            if (node.NameIsEqualTo("input") &&
+            if (node.Name.IsEqualTo("input") &&
                 node.Attributes.Get("type").IsEqualTo("radio"))
             {
                throw new InvalidOperationException(
                   "Can't set the 'value' on a radio button. Use Check() instead.");
             }
-         });
+         }
 
          return Attribute("value", value);
       }
@@ -175,14 +175,24 @@ namespace Arana.Core
          foreach (HtmlNode node in this)
          {
             // If we're trying to set the 'value' on 'textarea';
-            if (name.IsEqualTo("value") && node.NameIsEqualTo("textarea"))
+            if (name.IsEqualTo("value") && node.Name.IsEqualTo("textarea"))
             {
                // set the textarea's inner HTML instead.
                node.InnerHtml = value;
             }
             else
             {
-               (node.Attributes[name] ?? node.Attributes.Append(name)).Value = value;
+               HtmlAttribute attribute = node.Attributes[name];
+
+               // If the attribute exists and its value is to be set to null,
+               // remove it and continue
+               if ((attribute != null) && (value == null))
+               {
+                  node.Attributes.Remove(attribute);
+                  continue;
+               }
+
+               node.SetAttributeValue(name, value);
             }
          }
 

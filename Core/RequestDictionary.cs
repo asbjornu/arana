@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using Arana.Core.Extensions;
 
@@ -39,7 +38,7 @@ namespace Arana.Core
             stringBuilder.AppendFormat("{0}={1}",
                                        encodedKey,
                                        encodedValue);
-            
+
             // Don't append '&' at the end of the request string
             if (i++ < (Count - 1))
             {
@@ -48,6 +47,27 @@ namespace Arana.Core
          }
 
          return stringBuilder.ToString();
+      }
+
+
+      /// <summary>
+      /// Gets the value for the specified <paramref name="name"/> from the
+      /// dictionary.
+      /// </summary>
+      /// <param name="name">The name.</param>
+      /// <param name="defaultValue">The default value.</param>
+      /// <returns>
+      /// The value for the specified <paramref name="name"/>.
+      /// </returns>
+      public string Get(string name,
+                        string defaultValue)
+      {
+         if ((Count == 0) || !ContainsKey(name))
+         {
+            return defaultValue;
+         }
+
+         return this[name] ?? defaultValue;
       }
 
 

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Login Test{% endblock %}
+
+{% block content %}
+
+<h2>Login test</h2>
+
+<form action="/login_test/" method="post">
+  <fieldset>
+    <legend>Login form</legend>
+    
+    <p class="username">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" value="{{ username }}">
+      <span class="value">{{ username }}</span>
+    </p>
+    
+    <p class="password">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" value="{{ password }}">
+      <span class="value">{{ password }}</span>
+    </p>
+    
+    <p class="submit">
+      <input type="submit" name="submit" value="Submit">
+      <span class="value">{{ submit }}</span>
+    </p>
+  </fieldset>
+</form>
+
+{% endblock %}

@@ -14,10 +14,13 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
    internal static class HtmlNodeSelection
    {
       /// <summary>
-      /// Retrieves all element nodes from descendants of the starting 
-      /// element node that match any selector within the supplied 
-      /// selector strings. 
+      /// Retrieves all element nodes from descendants of the starting
+      /// element node that match any selector within the supplied
+      /// selector strings.
       /// </summary>
+      /// <param name="node">The node.</param>
+      /// <param name="selector">The selector.</param>
+      /// <returns></returns>
       public static IEnumerable<HtmlNode> QuerySelectorAll(this HtmlNode node, string selector)
       {
          var generator = new SelectorGenerator<HtmlNode>(new HtmlNodeOps());
