@@ -11,50 +11,53 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
    /// </summary>
    internal class HtmlNodeOps : IElementOps<HtmlNode>
    {
-      #region IElementOps<HtmlNode> Members
-
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#type-selectors">type selector</a>,
-      /// which represents an instance of the element type in the document tree. 
+      /// which represents an instance of the element type in the document tree.
       /// </summary>
-      public Selector<HtmlNode> Type(string type)
+      /// <param name="type"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Type(string type)
       {
          return nodes => nodes.Elements().Where(n => n.Name == type);
       }
 
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a>,
-      /// any single element in the document tree in any namespace 
-      /// (including those without a namespace) if no default namespace 
-      /// has been specified for selectors. 
+      /// any single element in the document tree in any namespace
+      /// (including those without a namespace) if no default namespace
+      /// has been specified for selectors.
       /// </summary>
-      public Selector<HtmlNode> Universal()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Universal()
       {
          return nodes => nodes.Elements();
       }
 
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#Id-selectors">ID selector</a>,
-      /// which represents an element instance that has an identifier that 
+      /// which represents an element instance that has an identifier that
       /// matches the identifier in the ID selector.
       /// </summary>
-      public Selector<HtmlNode> Id(string id)
+      /// <param name="id"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Id(string id)
       {
          return nodes => nodes.Elements().Where(n => n.Id == id);
       }
 
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#class-html">class selector</a>,
-      /// which is an alternative <see cref="IElementOps{TElement}.AttributeIncludes"/> when 
-      /// representing the <c>class</c> attribute. 
+      /// which is an alternative <see cref="IElementOps{TElement}.AttributeIncludes"/> when
+      /// representing the <c>class</c> attribute.
       /// </summary>
-      public Selector<HtmlNode> Class(string clazz)
+      /// <param name="clazz"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Class(string clazz)
       {
-         return
-            nodes =>
-            nodes.Elements().Where(n => n.GetAttributeValue("class", string.Empty)
-                                           .Split(' ')
-                                           .Contains(clazz));
+         return nodes => nodes.Elements().Where(n => n.GetAttributeValue("class", string.Empty)
+                                                        .Split(' ')
+                                                        .Contains(clazz));
       }
 
       /// <summary>
@@ -62,7 +65,9 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// that represents an element with the given attribute <paramref name="name"/>
       /// whatever the values of the attribute.
       /// </summary>
-      public Selector<HtmlNode> AttributeExists(string name)
+      /// <param name="name"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> AttributeExists(string name)
       {
          return nodes => nodes.Elements().Where(n => n.Attributes[name] != null);
       }
@@ -72,7 +77,10 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// that represents an element with the given attribute <paramref name="name"/>
       /// and whose value is exactly <paramref name="value"/>.
       /// </summary>
-      public Selector<HtmlNode> AttributeExact(string name, string value)
+      /// <param name="name"></param>
+      /// <param name="value"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> AttributeExact(string name, string value)
       {
          return nodes => from n in nodes.Elements()
                          let a = n.Attributes[name]
@@ -83,10 +91,13 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// <summary>
       /// Generates an <a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector</a>
       /// that represents an element with the given attribute <paramref name="name"/>
-      /// and whose value is a whitespace-separated list of words, one of 
+      /// and whose value is a whitespace-separated list of words, one of
       /// which is exactly <paramref name="value"/>.
       /// </summary>
-      public Selector<HtmlNode> AttributeIncludes(string name, string value)
+      /// <param name="name"></param>
+      /// <param name="value"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> AttributeIncludes(string name, string value)
       {
          return nodes => from n in nodes.Elements()
                          let a = n.Attributes[name]
@@ -97,14 +108,17 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// <summary>
       /// Generates an <a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector</a>
       /// that represents an element with the given attribute <paramref name="name"/>,
-      /// its value either being exactly <paramref name="value"/> or beginning 
+      /// its value either being exactly <paramref name="value"/> or beginning
       /// with <paramref name="value"/> immediately followed by "-" (U+002D).
       /// </summary>
-      public Selector<HtmlNode> AttributeDashMatch(string name, string value)
+      /// <param name="name"></param>
+      /// <param name="value"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> AttributeDashMatch(string name, string value)
       {
          return string.IsNullOrEmpty(value)
-                   ? (Selector<HtmlNode>) (nodes => Enumerable.Empty<HtmlNode>())
-                   : (nodes => from n in nodes.Elements()
+                   ? (Selector<HtmlNode>) (nodes => Enumerable.Empty<HtmlNode>()) 
+                   : (nodes => from n in nodes.Elements()                            
                                let a = n.Attributes[name]
                                where a != null && a.Value.Split('-').Contains(value)
                                select n);
@@ -112,13 +126,16 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
 
       /// <summary>
       /// Generates an <a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector</a>
-      /// that represents an element with the attribute <paramref name="name"/> 
+      /// that represents an element with the attribute <paramref name="name"/>
       /// whose value begins with the prefix <paramref name="value"/>.
       /// </summary>
+      /// <param name="name"></param>
+      /// <param name="value"></param>
+      /// <returns></returns>
       public Selector<HtmlNode> AttributePrefixMatch(string name, string value)
       {
-         return string.IsNullOrEmpty(value)
-                   ? (Selector<HtmlNode>) (nodes => Enumerable.Empty<HtmlNode>())
+         return string.IsNullOrEmpty(value) 
+                   ? (Selector<HtmlNode>) (nodes => Enumerable.Empty<HtmlNode>()) 
                    : (nodes => from n in nodes.Elements()
                                let a = n.Attributes[name]
                                where a != null && a.Value.StartsWith(value)
@@ -127,13 +144,16 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
 
       /// <summary>
       /// Generates an <a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector</a>
-      /// that represents an element with the attribute <paramref name="name"/> 
+      /// that represents an element with the attribute <paramref name="name"/>
       /// whose value ends with the suffix <paramref name="value"/>.
       /// </summary>
+      /// <param name="name"></param>
+      /// <param name="value"></param>
+      /// <returns></returns>
       public Selector<HtmlNode> AttributeSuffixMatch(string name, string value)
       {
          return string.IsNullOrEmpty(value)
-                   ? (Selector<HtmlNode>) (nodes => Enumerable.Empty<HtmlNode>())
+                   ? (Selector<HtmlNode>)(nodes => Enumerable.Empty<HtmlNode>())
                    : (nodes => from n in nodes.Elements()
                                let a = n.Attributes[name]
                                where a != null && a.Value.EndsWith(value)
@@ -142,13 +162,16 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
 
       /// <summary>
       /// Generates an <a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector</a>
-      /// that represents an element with the attribute <paramref name="name"/> 
+      /// that represents an element with the attribute <paramref name="name"/>
       /// whose value contains at least one instance of the substring <paramref name="value"/>.
       /// </summary>
+      /// <param name="name"></param>
+      /// <param name="value"></param>
+      /// <returns></returns>
       public Selector<HtmlNode> AttributeSubstring(string name, string value)
       {
          return string.IsNullOrEmpty(value)
-                   ? (Selector<HtmlNode>) (nodes => Enumerable.Empty<HtmlNode>())
+                   ? (Selector<HtmlNode>)(nodes => Enumerable.Empty<HtmlNode>())
                    : (nodes => from n in nodes.Elements()
                                let a = n.Attributes[name]
                                where a != null && a.Value.Contains(value)
@@ -159,7 +182,8 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector</a>,
       /// which represents an element that is the first child of some other element.
       /// </summary>
-      public Selector<HtmlNode> FirstChild()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> FirstChild()
       {
          return nodes => nodes.Where(n => !n.ElementsBeforeSelf().Any());
       }
@@ -168,9 +192,10 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector</a>,
       /// which represents an element that is the last child of some other element.
       /// </summary>
-      public Selector<HtmlNode> LastChild()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> LastChild()
       {
-         return nodes => nodes.Where(n => n.ParentNode.NodeType != HtmlNodeType.Document
+         return nodes => nodes.Where(n => n.ParentNode.NodeType != HtmlNodeType.Document 
                                           && !n.ElementsAfterSelf().Any());
       }
 
@@ -178,11 +203,13 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector</a>,
       /// which represents an element that is the N-th child of some other element.
       /// </summary>
-      public Selector<HtmlNode> NthChild(int a, int b)
+      /// <param name="a"></param>
+      /// <param name="b"></param>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> NthChild(int a, int b)
       {
          if (a != 1)
-            throw new NotSupportedException(
-               "The nth-child(an+b) selector where a in is not 1 are not supported.");
+            throw new NotSupportedException("The nth-child(an+b) selector where a in is not 1 are not supported.");
 
          return nodes => from n in nodes
                          let elements = n.ParentNode.Elements().Take(b).ToArray()
@@ -192,22 +219,22 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
 
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector</a>,
-      /// which represents an element that has a parent element and whose parent 
+      /// which represents an element that has a parent element and whose parent
       /// element has no other element children.
       /// </summary>
-      public Selector<HtmlNode> OnlyChild()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> OnlyChild()
       {
          return nodes => nodes.Where(n => n.ParentNode.NodeType != HtmlNodeType.Document
-                                          &&
-                                          !n.ElementsAfterSelf().Concat(
-                                              n.ElementsBeforeSelf()).Any());
+                                          && !n.ElementsAfterSelf().Concat(n.ElementsBeforeSelf()).Any());
       }
 
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector</a>,
       /// which represents an element that has no children at all.
       /// </summary>
-      public Selector<HtmlNode> Empty()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Empty()
       {
          return nodes => nodes.Elements().Where(n => n.ChildNodes.Count == 0);
       }
@@ -216,31 +243,45 @@ namespace Arana.Core.Fizzler.Systems.HtmlAgilityPack
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#combinators">combinator</a>,
       /// which represents a childhood relationship between two elements.
       /// </summary>
-      public Selector<HtmlNode> Child()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Child()
       {
          return nodes => nodes.SelectMany(n => n.Elements());
       }
 
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#combinators">combinator</a>,
-      /// which represents a relationship between two elements where one element is an 
+      /// which represents a relationship between two elements where one element is an
       /// arbitrary descendant of some ancestor element.
       /// </summary>
-      public Selector<HtmlNode> Descendant()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Descendant()
       {
          return nodes => nodes.SelectMany(n => n.Descendants().Elements());
       }
 
       /// <summary>
       /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#combinators">combinator</a>,
-      /// which represents elements that share the same parent in the document tree and 
+      /// which represents elements that share the same parent in the document tree and
       /// where the first element immediately precedes the second element.
       /// </summary>
-      public Selector<HtmlNode> Adjacent()
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> Adjacent()
       {
          return nodes => nodes.SelectMany(n => n.ElementsAfterSelf().Take(1));
       }
 
-      #endregion
+      /// <summary>
+      /// Generates a <a href="http://www.w3.org/TR/css3-selectors/#combinators">combinator</a>,
+      /// which separates two sequences of simple selectors. The elements represented
+      /// by the two sequences share the same parent in the document tree and the
+      /// element represented by the first sequence precedes (not necessarily
+      /// immediately) the element represented by the second one.
+      /// </summary>
+      /// <returns></returns>
+      public virtual Selector<HtmlNode> GeneralSibling()
+      {
+         return nodes => nodes.SelectMany(n => n.ElementsAfterSelf());
+      }
    }
 }

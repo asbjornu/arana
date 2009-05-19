@@ -19,7 +19,7 @@ namespace Arana.Core
       /// to future requests (to preserve the base URI as a way to resolve
       /// relative URI's, etc).
       /// </summary>
-      private AranaRequest request;
+      private Request request;
 
 
       /// <summary>
@@ -99,7 +99,7 @@ namespace Arana.Core
       /// Gets or sets the document.
       /// </summary>
       /// <value>The document.</value>
-      internal HtmlDocument Document { get; private set; }
+      private HtmlDocument Document { get; set; }
 
 
       /// <summary>
@@ -174,29 +174,6 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Writes the <paramref name="value"/> to the <see cref="Output" />.
-      /// </summary>
-      /// <param name="value">The value.</param>
-      /// <param name="section">The section.</param>
-      private void Write(object value, string section)
-      {
-         if (this.output == null)
-         {
-            return;
-         }
-
-         string divider = String.Format("{0,80}",
-            String.Format("_{0}_#{1}_{2}", section, request.Number, new String('-', 40)))
-            .Replace(' ', '-')
-            .Replace('_', ' ');
-
-         this.output.WriteLine(divider);
-         this.output.WriteLine(value);
-         this.output.WriteLine();
-      }
-
-
-      /// <summary>
       /// Gets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
@@ -210,7 +187,7 @@ namespace Arana.Core
       /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </returns>
       /// <exception cref="InvalidUriException">
-      /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
+      /// If <paramref name="uri"/> doesn't yield a valid <see cref="Core.Response"/>.
       /// </exception>
       private HtmlDocument GetDocument(string uri,
                                        bool followRedirect,
@@ -219,16 +196,16 @@ namespace Arana.Core
                                        IWebProxy proxy,
                                        RequestDictionary requestValues)
       {
-         this.request = new AranaRequest(this.request,
-                                         uri,
-                                         httpMethod,
-                                         credentials,
-                                         proxy,
-                                         requestValues);
+         this.request = new Request(this.request,
+                                    uri,
+                                    httpMethod,
+                                    credentials,
+                                    proxy,
+                                    requestValues);
 
          Write(this.request, "Request");
 
-         using (AranaResponse response = this.request.GetResponse())
+         using (Response response = this.request.GetResponse())
          {
             if (response == null)
             {
@@ -289,7 +266,7 @@ namespace Arana.Core
       /// <param name="proxy">The proxy.</param>
       /// <param name="requestValues">The request values.</param>
       /// <exception cref="InvalidUriException">
-      /// If <paramref name="uri"/> doesn't yield a valid <see cref="AranaResponse"/>.
+      /// If <paramref name="uri"/> doesn't yield a valid <see cref="Core.Response"/>.
       /// </exception>
       private void SetCurrentDocument(string uri,
                                       bool followRedirect,
@@ -304,6 +281,32 @@ namespace Arana.Core
                                 credentials,
                                 proxy,
                                 requestValues);
+      }
+
+
+      /// <summary>
+      /// Writes the <paramref name="value"/> to the <see cref="Output" />.
+      /// </summary>
+      /// <param name="value">The value.</param>
+      /// <param name="section">The section.</param>
+      private void Write(object value, string section)
+      {
+         if (this.output == null)
+         {
+            return;
+         }
+
+         string divider = String.Format("{0,80}",
+                                        String.Format("_{0}_#{1}_{2}",
+                                                      section,
+                                                      this.request.Number,
+                                                      new String('-', 40)))
+            .Replace(' ', '-')
+            .Replace('_', ' ');
+
+         this.output.WriteLine(divider);
+         this.output.WriteLine(value);
+         this.output.WriteLine();
       }
 
 

@@ -23,7 +23,9 @@ namespace Arana.Core.Extensions
       public static string GetCssSelector(this HtmlNode @node)
       {
          if (node == null)
+         {
             throw new ArgumentNullException("node");
+         }
 
          StringBuilder selectorBuilder = new StringBuilder();
 
@@ -60,7 +62,9 @@ namespace Arana.Core.Extensions
 
          // If we're to carry on, prepend the selector of the parent element
          if (carryOn)
+         {
             selectorBuilder.Insert(0, node.ParentNode.GetCssSelector());
+         }
 
          return selectorBuilder.ToString().Trim();
       }
@@ -77,7 +81,9 @@ namespace Arana.Core.Extensions
       public static string GetValue(this HtmlNode @node)
       {
          if (node == null)
+         {
             throw new ArgumentNullException("node");
+         }
 
          switch (node.Name.ToLowerInvariant())
          {
@@ -91,29 +97,77 @@ namespace Arana.Core.Extensions
          return node.Attributes.Get("value");
       }
 
+
       /// <summary>
-      /// Determines whether the <paramref name="node"/>'s tag name is equal to
-      /// the specified <paramref name="tagNames"/>, in a case insensitive match.
+      /// Determines whether the node is set for submission.
       /// </summary>
       /// <param name="node">The node.</param>
-      /// <param name="tagNames">The names of the tag.</param>
       /// <returns>
-      /// 	<c>true</c> if the <paramref name="node"/>'s tag name is equal to
-      /// the specified <paramref name="tagNames"/>; otherwise, <c>false</c>.
+      /// 	<c>true</c> if the node is set for submission; otherwise, <c>false</c>.
       /// </returns>
-      public static bool NameIsEqualTo(this HtmlNode @node, params string[] tagNames)
+      public static bool IsSetForSubmission(this HtmlNode @node)
       {
          if (node == null)
+         {
             throw new ArgumentNullException("node");
+         }
 
-         if (tagNames == null || tagNames.Length == 0)
-            throw new ArgumentNullException("tagNames");
+         return node.Attributes.Get(Selection.SetForSubmissionAttribute)
+                == Selection.SetForSubmissionAttribute;
+      }
 
-         foreach (string tagName in tagNames)
-            if (String.Compare(node.Name, tagName, true) == 0)
-               return true;
 
-         return false;
+      /// <summary>
+      /// Determines whether the specified node is a button.
+      /// </summary>
+      /// <param name="node">The node.</param>
+      /// <returns>
+      /// 	<c>true</c> if the specified node is a button; otherwise, <c>false</c>.
+      /// </returns>
+      public static bool IsButton(this HtmlNode @node)
+      {
+         if (node == null)
+         {
+            throw new ArgumentNullException("node");
+         }
+
+         return node.Attributes.Get("type").IsEqualTo("button", "submit")
+            || node.Name.IsEqualTo("button");
+      }
+
+
+      /// <summary>
+      /// Determines whether the node is a radio button or a checkbox.
+      /// </summary>
+      /// <param name="node">The node.</param>
+      /// <returns>
+      /// 	<c>true</c> if the node is a radio button or a checkbox; otherwise, <c>false</c>.
+      /// </returns>
+      public static bool IsRadioOrCheckbox(this HtmlNode @node)
+      {
+         if (node == null)
+         {
+            throw new ArgumentNullException("node");
+         }
+
+         return node.Attributes.Get("type").IsEqualTo("checkbox", "radio");
+      }
+
+      /// <summary>
+      /// Determines whether the node is checked or not.
+      /// </summary>
+      /// <param name="node">The node.</param>
+      /// <returns>
+      /// 	<c>true</c> if the node is checked; otherwise, <c>false</c>.
+      /// </returns>
+      public static bool IsChecked(this HtmlNode @node)
+      {
+         if (node == null)
+         {
+            throw new ArgumentNullException("node");
+         }
+
+         return node.Attributes.Get("checked") != null;
       }
 
       /// <summary>
@@ -125,20 +179,26 @@ namespace Arana.Core.Extensions
       public static void SetSelectedIndex(this HtmlNode @node, int index)
       {
          if (node == null)
+         {
             throw new ArgumentNullException("node");
+         }
 
-         if (!node.NameIsEqualTo("select"))
+         if (!node.Name.IsEqualTo("select"))
+         {
             throw new InvalidOperationException(
                String.Format(
                   "Can't set the selected value to '{0}' since it's not a 'select' element.",
                   node.Name));
+         }
 
          if (!node.HasChildNodes)
+         {
             throw new InvalidOperationException(
                "The 'select' element does not have any child nodes.");
+         }
 
          IEnumerable<HtmlNode> children = node.Elements().SkipWhile(
-            child => !child.NameIsEqualTo("option"));
+            child => !child.Name.IsEqualTo("option"));
 
          int childCount = children.Count();
          int optionIndex = 0;
@@ -155,22 +215,29 @@ namespace Arana.Core.Extensions
          foreach (HtmlNode childNode in children)
          {
             // If the node's name isn't 'option', skip it
-            if (!childNode.NameIsEqualTo("option"))
+            if (!childNode.Name.IsEqualTo("option"))
+            {
                continue;
+            }
 
             HtmlAttribute selectedAttribute = childNode.Attributes["selected"];
 
             // Remove any existing 'selected' attributes.
             if (selectedAttribute != null)
+            {
                childNode.Attributes.Remove(selectedAttribute);
+            }
 
             // Set the 'selected' attribute if the indices match
             if (optionIndex == index)
+            {
                childNode.Attributes.Append("selected", "selected");
+            }
 
             optionIndex++;
          }
       }
+
 
       /// <summary>
       /// Gets the value of the 'value' attribute from the selected (or first)
@@ -181,13 +248,17 @@ namespace Arana.Core.Extensions
       private static string GetSelectedValue(this HtmlNode @node)
       {
          if (node == null)
+         {
             throw new ArgumentNullException("node");
+         }
 
-         if (!node.NameIsEqualTo("select"))
+         if (!node.Name.IsEqualTo("select"))
+         {
             throw new InvalidOperationException(
                String.Format(
                   "Can't get the selected value from '{0}' since it's not a 'select' element.",
                   node.Name));
+         }
 
          string selectedValue = null;
 
@@ -198,14 +269,18 @@ namespace Arana.Core.Extensions
                HtmlNode childNode = node.ChildNodes[i];
 
                // If the node's name isn't 'option', skip it
-               if (!childNode.NameIsEqualTo("option"))
+               if (!childNode.Name.IsEqualTo("option"))
+               {
                   continue;
+               }
 
                string value = childNode.Attributes.Get("value");
 
                // If we're not on the first 'option' element, or it isn't 'selected', skip
                if ((i != 0) && !childNode.Attributes.Contains("selected"))
+               {
                   continue;
+               }
 
                // Set the selected value to that of the first or 'selected' 'option' element.
                selectedValue = value;

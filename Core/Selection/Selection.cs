@@ -86,7 +86,7 @@ namespace Arana.Core
             }
 
             IEnumerable<HtmlNode> v = from htmlNode in this
-                                      where htmlNode.NameIsEqualTo(tagNames)
+                                      where htmlNode.Name.IsEqualTo(tagNames)
                                       select htmlNode;
 
             return new Selection(v, this.engine);
@@ -230,18 +230,22 @@ namespace Arana.Core
       /// Gets a <see cref="RequestDictionary"/> containing the names of all
       /// the form elements within the collection, with either the current values
       /// of the elements or with the value provided in the specified
-      /// <paramref name="requestValues"/>, matched by the key.
+      /// <paramref name="formElementsSelection"/>, matched by the key.
       /// </summary>
-      /// <param name="requestValues">The request values.
+      /// <param name="formElementsSelection">The request values.
       /// A <see cref="NameValueCollection"/> containing the names of all the
       /// elements that should have the corresponding value set.</param>
       /// <returns>
       /// The merged <see cref="RequestDictionary"/> with the values from
-      /// <paramref name="requestValues"/> applied.
+      /// <paramref name="formElementsSelection"/> applied.
       /// </returns>
-      private RequestDictionary GetRequestCollection(NameValueCollection requestValues)
+      private RequestDictionary MergeRequestDictionary(Preselection formElementsSelection)
       {
          RequestDictionary requestDictionary = new RequestDictionary(Count);
+         RequestDictionary formValueDictionary =
+            (formElementsSelection != null)
+               ? formElementsSelection.Invoke(this.engine)
+               : null;
 
          foreach (HtmlNode node in this)
          {
@@ -253,24 +257,22 @@ namespace Arana.Core
                continue;
             }
 
-            string type = node.Attributes.Get("type");
-            string check = node.Attributes.Get("checked");
+            // If the node is a checkbox or radio button that isn't checked, skip it
+            if (node.IsRadioOrCheckbox() && !node.IsChecked())
+            {
+               continue;
+            }
+
+            // If the node is a button and isn't set for submission, skip it
+            if (node.IsButton() && !node.IsSetForSubmission())
+            {
+               continue;
+            }
+
             string valueFromAttribute = node.Attributes.Get("value");
-            string value;
-
-            // If the node is a checkbox or radio button,
-            if (type.IsEqualTo("checkbox", "radio"))
-            {
-               // If the checkbox/radio button isn't checked, continue
-               if (check == null)
-                  continue;
-
-               value = requestValues.Get(name, valueFromAttribute);
-            }
-            else
-            {
-               value = requestValues.Get(name, valueFromAttribute);
-            }
+            string value = (formValueDictionary != null)
+                              ? formValueDictionary.Get(name, valueFromAttribute)
+                              : valueFromAttribute;
 
             requestDictionary.Set(name, value);
          }

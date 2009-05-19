@@ -11,7 +11,7 @@ namespace Arana.Core
    /// <summary>
    /// Provides a specialized and simplified wrapper around <see cref="HttpWebRequest" />.
    /// </summary>
-   internal class AranaRequest
+   internal class Request
    {
       /// <summary>
       /// The request/response number. Starts on 0 and increases with each new request.
@@ -32,7 +32,7 @@ namespace Arana.Core
       /// <summary>
       /// Contains a reference to the previous request made. Null if this is the first request.
       /// </summary>
-      private readonly AranaRequest previousRequest;
+      private readonly Request previousRequest;
 
       /// <summary>
       /// The credentials to use on requests.
@@ -66,7 +66,7 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="AranaRequest"/> class.
+      /// Initializes a new instance of the <see cref="Request"/> class.
       /// </summary>
       /// <param name="previousRequest">The previous request, used to preserve the base
       /// URI from different requests to the same domain, to be able to resolve relative
@@ -76,7 +76,7 @@ namespace Arana.Core
       /// <param name="credentials">The credentials.</param>
       /// <param name="proxy">The proxy.</param>
       /// <param name="requestValues">The request values.</param>
-      internal AranaRequest(AranaRequest previousRequest,
+      internal Request(Request previousRequest,
                             string uri,
                             string method,
                             ICredentials credentials,
@@ -175,14 +175,14 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets the <see cref="AranaResponse"/> for the current <see cref="AranaRequest"/>.
+      /// Gets the <see cref="Response"/> for the current <see cref="Request"/>.
       /// </summary>
       /// <returns>
-      /// The <see cref="AranaResponse"/> for the current <see cref="AranaRequest"/>.
+      /// The <see cref="Response"/> for the current <see cref="Request"/>.
       /// </returns>
-      internal AranaResponse GetResponse()
+      internal Response GetResponse()
       {
-         return new AranaResponse(
+         return new Response(
             this,
             () =>
             {
@@ -339,7 +339,7 @@ namespace Arana.Core
       /// </summary>
       /// <param name="request">The request.</param>
       /// <returns>The base URI of <paramref name="request"/>, if it's not null.</returns>
-      private static Uri GetBaseUri(AranaRequest request)
+      private static Uri GetBaseUri(Request request)
       {
          return (request != null) ? request.baseUri : null;
       }
@@ -349,7 +349,7 @@ namespace Arana.Core
       /// Gets the <see cref="ICredentials" /> to use for the request.
       /// </summary>
       /// <returns>The <see cref="ICredentials" /> to use for the request.</returns>
-      private static ICredentials GetCredentials(AranaRequest request,
+      private static ICredentials GetCredentials(Request request,
                                                  ICredentials credentials)
       {
          return credentials ??
@@ -365,7 +365,7 @@ namespace Arana.Core
       /// <param name="request">The request.</param>
       /// <param name="proxy">The proxy.</param>
       /// <returns>The <see cref="IWebProxy" /> to use for the request.</returns>
-      private static IWebProxy GetProxy(AranaRequest request, IWebProxy proxy)
+      private static IWebProxy GetProxy(Request request, IWebProxy proxy)
       {
          return proxy ??
                 ((request != null) && (request.requestProxy != null)
@@ -380,7 +380,7 @@ namespace Arana.Core
       /// <returns>The user agent string.</returns>
       private static string GetUserAgentString()
       {
-         Assembly assembly = Assembly.GetAssembly(typeof(AranaRequest));
+         Assembly assembly = Assembly.GetAssembly(typeof(Request));
 
          return String.Format("Arana/{0} ({1} {2}; N; .NET CLR {3}; {4})",
                               assembly.GetName().Version,

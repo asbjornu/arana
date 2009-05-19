@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using Arana.Core.Extensions;
 
 namespace Arana.Core
@@ -17,10 +16,7 @@ namespace Arana.Core
       /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
       /// </exception>
       /// <exception cref="ArgumentNullException">
-      /// 	<paramref name="formElementsSelection"/> is null.
-      /// </exception>
-      /// <exception cref="ArgumentException">
-      /// 	<paramref name="formElementsSelection"/> is empty.
+      /// 	<paramref name="formElementsSelection"/> is null or empty.
       /// </exception>
       /// <example>
       /// 	<code>
@@ -33,7 +29,12 @@ namespace Arana.Core
       /// </example>
       public AranaEngine Submit(Preselection formElementsSelection)
       {
-         return Submit(true, formElementsSelection);
+         if ((formElementsSelection == null) || (formElementsSelection.Count == 0))
+         {
+            throw new ArgumentNullException("formElementsSelection");
+         }
+
+         return Submit(true, null, formElementsSelection);
       }
 
 
@@ -50,10 +51,7 @@ namespace Arana.Core
       /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
       /// </exception>
       /// <exception cref="ArgumentNullException">
-      /// 	<paramref name="formElementsSelection"/> is null.
-      /// </exception>
-      /// <exception cref="ArgumentException">
-      /// 	<paramref name="formElementsSelection"/> is empty.
+      /// 	<paramref name="formElementsSelection"/> is null or empty.
       /// </exception>
       /// <example>
       /// 	<code>
@@ -66,7 +64,7 @@ namespace Arana.Core
       /// </example>
       public AranaEngine Submit(bool followRedirect, Preselection formElementsSelection)
       {
-         if (formElementsSelection == null)
+         if ((formElementsSelection == null) || (formElementsSelection.Count == 0))
          {
             throw new ArgumentNullException("formElementsSelection");
          }
@@ -77,7 +75,7 @@ namespace Arana.Core
                                         "formElementsSelection");
          }
 
-         return Submit(true, formElementsSelection.Invoke(this.engine));
+         return Submit(followRedirect, null, formElementsSelection);
       }
 
 
@@ -92,7 +90,76 @@ namespace Arana.Core
       /// </exception>
       public AranaEngine Submit()
       {
-         return Submit(true, (NameValueCollection) null);
+         return Submit(true, null, null);
+      }
+
+
+      /// <summary>
+      /// Submits the selected 'form' element, given its 'action' attribute.
+      /// </summary>
+      /// <param name="submitButtonCssSelector">The submit button CSS selector.</param>
+      /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain a 'form' element.
+      /// 2. If a currently selected 'form' element doesn't have any attributes.
+      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
+      /// </exception>
+      /// <example>
+      /// 	<code>
+      /// selection.Submit("input#submit"));
+      /// </code>
+      /// </example>
+      public AranaEngine Submit(string submitButtonCssSelector)
+      {
+         if (String.IsNullOrEmpty(submitButtonCssSelector))
+         {
+            throw new ArgumentNullException("submitButtonCssSelector");
+         }
+
+         return Submit(true, submitButtonCssSelector, null);
+      }
+
+
+      /// <summary>
+      /// Submits the selected 'form' element, given its 'action' attribute.
+      /// </summary>
+      /// <param name="submitButtonCssSelector">The submit button CSS selector.</param>
+      /// <param name="formElementsSelection">The form elements selection.</param>
+      /// <returns>An updated <see cref="AranaEngine"/>.</returns>
+      /// <exception cref="InvalidOperationException">
+      /// 1. If the currently selected elements doesn't contain a 'form' element.
+      /// 2. If a currently selected 'form' element doesn't have any attributes.
+      /// 3. If a currently selected 'form' element has an empty or non-existent 'action' attribute.
+      /// </exception>
+      /// <exception cref="ArgumentNullException">
+      /// 	<paramref name="formElementsSelection"/> is null or empty.
+      /// </exception>
+      /// <exception cref="ArgumentNullException">
+      /// 	<paramref name="submitButtonCssSelector"/> is null or empty.
+      /// </exception>
+      /// <example>
+      /// 	<code>
+      /// selection.Submit("input#submit", new Preselection
+      /// {
+      /// { "input[name='product']", input =&gt; input.Value("NewProduct") },
+      /// { "input[name='type']", input =&gt; input.Value("NewType") },
+      /// });
+      /// </code>
+      /// </example>
+      public AranaEngine Submit(string submitButtonCssSelector,
+                                Preselection formElementsSelection)
+      {
+         if (String.IsNullOrEmpty(submitButtonCssSelector))
+         {
+            throw new ArgumentNullException("submitButtonCssSelector");
+         }
+
+         if ((formElementsSelection == null) || (formElementsSelection.Count == 0))
+         {
+            throw new ArgumentNullException("formElementsSelection");
+         }
+
+         return Submit(true, submitButtonCssSelector, formElementsSelection);
       }
 
 
@@ -101,20 +168,23 @@ namespace Arana.Core
       /// </summary>
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow
       /// redirection responses from the Internet resource; otherwise, <c>false</c>.</param>
-      /// <param name="requestValues">The request values.</param>
+      /// <param name="submitButtonCssSelector">The submit button CSS selector.</param>
+      /// <param name="formElementsSelection">The form elements selection.</param>
       /// <returns>An updated <see cref="AranaEngine"/>.</returns>
       /// <exception cref="InvalidOperationException">
       /// 	<list type="number">
       /// 		<item>If the currently selected elements doesn't contain a 'form' element.</item>
       /// 		<item>If a currently selected 'form' element has an empty or non-existent 'action'
-      /// attribute and an action URI can't be deduced from a previous <see cref="AranaRequest"/>.</item>
+      /// attribute and an action URI can't be deduced from a previous <see cref="Request"/>.</item>
       /// 	</list>
       /// </exception>
-      private AranaEngine Submit(bool followRedirect, NameValueCollection requestValues)
+      public AranaEngine Submit(bool followRedirect,
+                                string submitButtonCssSelector,
+                                Preselection formElementsSelection)
       {
          Selection form = Get("form");
-
          string method = form.Attribute("method");
+
          // Set the URI to post the form to. Default to the current URI.
          string action = form.Attribute("action").NullWhenEmpty() ??
                          this.engine.Uri.ToString();
@@ -136,9 +206,21 @@ namespace Arana.Core
          // TODO: Use this node-context based select when Fizzler/HtmlAgilityPack doesn't bug on it
          // Selection formElements = form.Select(FormElementsSelector);
 
-         if (formElements.Count > 0)
+         // If the submit button's CSS selector is set, add it to the form elements selection
+         if (!String.IsNullOrEmpty(submitButtonCssSelector))
          {
-            requestDictionary = formElements.GetRequestCollection(requestValues);
+            if (formElementsSelection == null)
+            {
+               formElementsSelection = new Preselection(1);
+            }
+
+            formElementsSelection.Add(submitButtonCssSelector,
+                                      submit => submit.SetForSubmission());
+         }
+
+         if ((formElements.Count > 0) || (formElementsSelection.Count > 0))
+         {
+            requestDictionary = formElements.MergeRequestDictionary(formElementsSelection);
          }
 
          this.engine.NavigateTo(action, followRedirect, method, requestDictionary);

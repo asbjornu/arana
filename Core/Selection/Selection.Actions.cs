@@ -1,15 +1,21 @@
 ﻿using System;
 using Arana.Core.Extensions;
+using HtmlAgilityPack;
 
 namespace Arana.Core
 {
    public partial class Selection
    {
+      internal const string SetForSubmissionAttribute = "arana-set-for-submission";
+
+
       /// <summary>
       /// Checks a selected radio button or checkbox to be submitted with
-      /// <see cref="Submit()" />.
+      /// <see cref="Submit()"/>.
       /// </summary>
-      /// <returns>The value of the radio button or checkbox' 'value' attribute.</returns>
+      /// <returns>
+      /// The list of currently selected elements.
+      /// </returns>
       public Selection Check()
       {
          Selection input = Get("input");
@@ -35,7 +41,46 @@ namespace Arana.Core
       /// <returns>The list of currently selected elements.</returns>
       public Selection Choose(int index)
       {
-         Get("select").Each(select => select.SetSelectedIndex(index));
+         foreach (HtmlNode select in Get("select"))
+         {
+            select.SetSelectedIndex(index);
+         }
+
+         return this;
+      }
+
+
+      /// <summary>
+      /// Unchecks a selected radio button or checkbox to be submitted with
+      /// <see cref="Submit()"/>.
+      /// </summary>
+      /// <returns>
+      /// The list of currently selected elements.
+      /// </returns>
+      public Selection Uncheck()
+      {
+         Selection input = Get("input");
+
+         return
+            // Set the "checked" attribute to null
+            input.Attribute("checked", null)
+               // Set the value to null
+               .Attribute("value", null);
+      }
+
+
+      /// <summary>
+      /// Sets the selected submit button to be used to submit the form.
+      /// </summary>
+      /// <returns>The selected submit button.</returns>
+      internal Selection SetForSubmission()
+      {
+         foreach (HtmlNode button in Get("input", "button"))
+         {
+            button.SetAttributeValue(SetForSubmissionAttribute,
+                                     SetForSubmissionAttribute);
+         }
+
          return this;
       }
    }

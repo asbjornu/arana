@@ -5,12 +5,10 @@ using System.Net;
 using System.Text;
 using Arana.Core.Extensions;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace Arana.Core
 {
    /// <summary>
-   /// Contains data from a given <see cref="AranaResponse" />.
+   /// Contains data from a given <see cref="Response" />.
    /// </summary>
    public class ResponseData
    {
@@ -19,7 +17,7 @@ namespace Arana.Core
       /// </summary>
       /// <param name="response">The response.</param>
       /// <param name="requestUri">The request URI.</param>
-      public ResponseData(HttpWebResponse response, Uri requestUri)
+      internal ResponseData(HttpWebResponse response, Uri requestUri)
       {
          Status = response.StatusCode;
          Body = GetResponseBody(response);

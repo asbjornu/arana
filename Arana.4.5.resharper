@@ -74,7 +74,6 @@
       </Naming2>
       <CustomMemberReorderingPatterns><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
 <Patterns xmlns="urn:shemas-jetbrains-com:member-reordering-patterns">
-
   <!--Do not reorder COM interfaces-->
   <Pattern>
     <Match>
@@ -397,7 +396,6 @@
       </Group>
     </Entry>
   </Pattern>
-
 </Patterns>]]></CustomMemberReorderingPatterns>
     </CSharp>
     <VB>
