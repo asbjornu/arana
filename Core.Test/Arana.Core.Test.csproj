@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoginTest.cs" />
+    <Compile Include="NavigationTest.cs" />
     <Compile Include="PostTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

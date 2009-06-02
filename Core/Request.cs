@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Cache;
 using System.Reflection;
 using System.Text;
+
 using Arana.Core.Extensions;
 
 namespace Arana.Core
@@ -14,9 +15,15 @@ namespace Arana.Core
    internal class Request
    {
       /// <summary>
-      /// The request/response number. Starts on 0 and increases with each new request.
+      /// "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
       /// </summary>
-      internal int Number { get; private set; }
+      private static readonly AcceptDictionary Accept = new AcceptDictionary
+      {
+         "text/html",
+         "application/xhtml+xml",
+         { "application/xml", 0.9 },
+         { "*/*", 0.8 },
+      };
 
       /// <summary>
       /// The underlying <see cref="HttpWebRequest" /> object used to perform the HTTP requests.
@@ -24,15 +31,15 @@ namespace Arana.Core
       private readonly HttpWebRequest currentWebRequest;
 
       /// <summary>
+      /// The engine used to handle the request.
+      /// </summary>
+      private readonly AranaEngine engine;
+
+      /// <summary>
       /// Gets the HTTP method for the request.
       /// </summary>
       /// <value>The HTTP method for the request.</value>
       private readonly string method;
-
-      /// <summary>
-      /// Contains a reference to the previous request made. Null if this is the first request.
-      /// </summary>
-      private readonly Request previousRequest;
 
       /// <summary>
       /// The credentials to use on requests.
@@ -68,25 +75,30 @@ namespace Arana.Core
       /// <summary>
       /// Initializes a new instance of the <see cref="Request"/> class.
       /// </summary>
-      /// <param name="previousRequest">The previous request, used to preserve the base
-      /// URI from different requests to the same domain, to be able to resolve relative
-      /// URI's.</param>
+      /// <param name="engine">The engine.</param>
       /// <param name="uri">The URI.</param>
       /// <param name="method">The HTTP method to use for the request.</param>
       /// <param name="credentials">The credentials.</param>
       /// <param name="proxy">The proxy.</param>
       /// <param name="requestValues">The request values.</param>
-      internal Request(Request previousRequest,
-                            string uri,
-                            string method,
-                            ICredentials credentials,
-                            IWebProxy proxy,
-                            RequestDictionary requestValues)
+      public Request(AranaEngine engine,
+                     string uri,
+                     string method,
+                     ICredentials credentials,
+                     IWebProxy proxy,
+                     RequestDictionary requestValues)
       {
-         Number = (previousRequest != null) ? (previousRequest.Number + 1) : 0;
-         this.requestCredentials = GetCredentials(previousRequest, credentials);
-         this.requestProxy = GetProxy(previousRequest, proxy);
+         if (engine == null)
+         {
+            throw new ArgumentNullException("engine");
+         }
+
+         this.engine = engine;
+         this.requestCredentials = GetCredentials(credentials);
+         this.requestProxy = GetProxy(proxy);
          this.method = (method ?? HttpMethod.Get).ToUpperInvariant();
+
+         Request previousRequest = GetPreviousRequest();
 
          // Throw an exception if the HTTP method used is invalid.
          if (!this.method.IsEqualTo(false, HttpMethod.All))
@@ -103,7 +115,6 @@ namespace Arana.Core
             this.cookies.Add(previousRequest.cookies);
          }
 
-         this.previousRequest = previousRequest;
          this.currentWebRequest = CreateRequest(uri, requestValues);
       }
 
@@ -112,7 +123,7 @@ namespace Arana.Core
       /// Gets the Uniform Resource Identifier (<see cref="T:System.Uri" />) of the request.
       /// </summary>
       /// <value>The Uniform Resource Identifier (<see cref="T:System.Uri" />) of the request.</value>
-      internal Uri Uri
+      public Uri Uri
       {
          get { return this.currentWebRequest.RequestUri; }
       }
@@ -182,36 +193,41 @@ namespace Arana.Core
       /// </returns>
       internal Response GetResponse()
       {
-         return new Response(
-            this,
-            () =>
+         Func<HttpWebResponse> getHttpWebResponse = () =>
+         {
+            HttpWebResponse response = null;
+            Exception exception = null;
+
+            try
             {
-               HttpWebResponse response;
+               this.currentWebRequest.AllowAutoRedirect = false;
+               response = this.currentWebRequest.GetResponse() as
+                          HttpWebResponse;
+            }
+            catch (WebException webException)
+            {
+               response = webException.Response as HttpWebResponse;
+               exception = webException;
+            }
+            catch (Exception ex)
+            {
+               exception = ex;
+            }
 
-               try
+            if (response == null)
+            {
+               if (exception != null)
                {
-                  this.currentWebRequest.AllowAutoRedirect = false;
-                  response =
-                     this.currentWebRequest.GetResponse() as
-                     HttpWebResponse;
-               }
-               catch (WebException ex)
-               {
-                  response = ex.Response as HttpWebResponse;
-
-                  if (response == null)
-                  {
-                     throw new InvalidUriException(Uri, ex);
-                  }
-               }
-
-               if (response == null)
-               {
-                  throw new InvalidUriException(Uri);
+                  throw new InvalidUriException(Uri, exception);
                }
 
-               return response;
-            });
+               throw new InvalidUriException(Uri);
+            }
+
+            return response;
+         };
+
+         return new Response(this, getHttpWebResponse);
       }
 
 
@@ -243,7 +259,7 @@ namespace Arana.Core
                                            RequestDictionary requestValues)
       {
          bool methodIsGet = (this.method == HttpMethod.Get);
-         Uri createdUri = uri.ToUri(GetBaseUri(this.previousRequest));
+         Uri createdUri = uri.ToUri(GetBaseUri());
 
          this.baseUri = new Uri(createdUri.GetLeftPart(UriPartial.Authority));
          HttpWebRequest request = WebRequest.Create(createdUri) as HttpWebRequest;
@@ -279,10 +295,9 @@ namespace Arana.Core
 
             using (Stream stream = request.GetRequestStream())
             {
-               using (StreamWriter streamWriter =
-                  new StreamWriter(stream, Encoding.ASCII))
+               using (StreamWriter writer = new StreamWriter(stream, Encoding.ASCII))
                {
-                  streamWriter.Write(this.requestString);
+                  writer.Write(this.requestString);
                }
             }
          }
@@ -294,14 +309,67 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Gets the base URI of the request, if it's not null.
+      /// </summary>
+      /// <returns>
+      /// The base URI of the request, if it's not null.
+      /// </returns>
+      private Uri GetBaseUri()
+      {
+         Request request = GetPreviousRequest();
+         return (request != null) ? request.baseUri : null;
+      }
+
+
+      /// <summary>
+      /// Gets the <see cref="ICredentials"/> to use for the request.
+      /// </summary>
+      /// <param name="credentials">The credentials.</param>
+      /// <returns>
+      /// The <see cref="ICredentials"/> to use for the request.
+      /// </returns>
+      private ICredentials GetCredentials(ICredentials credentials)
+      {
+         Request r = GetPreviousRequest();
+         return credentials ?? ((r != null) ? r.requestCredentials : null);
+      }
+
+
+      /// <summary>
+      /// Contains a reference to the previous request made. Null if this is the first request.
+      /// </summary>
+      private Request GetPreviousRequest()
+      {
+         return (this.engine.Requests.Count > 0)
+                   ? this.engine.Requests[0]
+                   : null;
+      }
+
+
+      /// <summary>
+      /// Gets the <see cref="IWebProxy"/> to use for the request.
+      /// </summary>
+      /// <param name="proxy">The proxy.</param>
+      /// <returns>
+      /// The <see cref="IWebProxy"/> to use for the request.
+      /// </returns>
+      private IWebProxy GetProxy(IWebProxy proxy)
+      {
+         Request r = GetPreviousRequest();
+         return proxy ?? ((r != null) ? r.requestProxy : null);
+      }
+
+
+      /// <summary>
       /// Sets the various properties on the given <paramref name="request"/>.
       /// </summary>
       /// <param name="request">The request on which to set the properties.</param>
       private void SetRequestProperties(HttpWebRequest request)
       {
+         Request previousRequest = GetPreviousRequest();
+
          request.UserAgent = UserAgentString;
-         request.Accept =
-            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+         request.Accept = Accept.ToString();
          request.Credentials = this.requestCredentials;
 
          // TODO: Add support for different types of cache policies
@@ -318,9 +386,9 @@ namespace Arana.Core
          }
 
          // Set the "Referer" header
-         if (this.previousRequest != null)
+         if (previousRequest != null)
          {
-            request.Referer = this.previousRequest.Uri.ToString();
+            request.Referer = previousRequest.Uri.ToString();
          }
 
          // If there's any cookies to add to the request, do it
@@ -331,46 +399,6 @@ namespace Arana.Core
 
          request.CookieContainer = new CookieContainer(this.cookies.Count);
          request.CookieContainer.Add(this.cookies);
-      }
-
-
-      /// <summary>
-      /// Gets the base URI of <paramref name="request"/>, if it's not null.
-      /// </summary>
-      /// <param name="request">The request.</param>
-      /// <returns>The base URI of <paramref name="request"/>, if it's not null.</returns>
-      private static Uri GetBaseUri(Request request)
-      {
-         return (request != null) ? request.baseUri : null;
-      }
-
-
-      /// <summary>
-      /// Gets the <see cref="ICredentials" /> to use for the request.
-      /// </summary>
-      /// <returns>The <see cref="ICredentials" /> to use for the request.</returns>
-      private static ICredentials GetCredentials(Request request,
-                                                 ICredentials credentials)
-      {
-         return credentials ??
-                ((request != null) && (request.requestCredentials != null)
-                    ? request.requestCredentials
-                    : null);
-      }
-
-
-      /// <summary>
-      /// Gets the <see cref="IWebProxy" /> to use for the request.
-      /// </summary>
-      /// <param name="request">The request.</param>
-      /// <param name="proxy">The proxy.</param>
-      /// <returns>The <see cref="IWebProxy" /> to use for the request.</returns>
-      private static IWebProxy GetProxy(Request request, IWebProxy proxy)
-      {
-         return proxy ??
-                ((request != null) && (request.requestProxy != null)
-                    ? request.requestProxy
-                    : null);
       }
 
 

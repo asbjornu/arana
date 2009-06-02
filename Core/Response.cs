@@ -14,8 +14,10 @@ namespace Arana.Core
       /// <summary>
       /// Initializes a new instance of the <see cref="Response"/> class.
       /// </summary>
-      /// <param name="request">The request, used to retrieve the URI of the requested resource, and such.</param>
-      /// <param name="getHttpWebResponse">A function reference used to get the <see cref="HttpWebResponse"/>.</param>
+      /// <param name="request">The request, used to retrieve the URI of the
+      /// requested resource, and such.</param>
+      /// <param name="getHttpWebResponse">A function reference used to get the
+      /// <see cref="HttpWebResponse"/> from the <paramref name="request"/>.</param>
       internal Response(Request request,
                              Func<HttpWebResponse> getHttpWebResponse)
       {

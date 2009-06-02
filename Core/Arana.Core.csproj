@@ -72,7 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Arana.Core.snk" />
+    <Compile Include="AcceptDictionary.cs" />
     <Compile Include="Request.cs" />
+    <Compile Include="RequestList.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="Selection\Selection.Actions.cs" />
     <Compile Include="Selection\Selection.Follow.cs" />

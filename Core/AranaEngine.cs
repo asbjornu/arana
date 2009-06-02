@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+
+using Arana.Core.Extensions;
 using Arana.Core.Fizzler.Systems.HtmlAgilityPack;
+
 using HtmlAgilityPack;
 
 namespace Arana.Core
@@ -12,14 +15,11 @@ namespace Arana.Core
    /// </summary>
    public class AranaEngine
    {
-      private TextWriter output;
-
       /// <summary>
-      /// A local field used to preserve the last request made for reference
-      /// to future requests (to preserve the base URI as a way to resolve
-      /// relative URI's, etc).
+      /// Gets or sets the document.
       /// </summary>
-      private Request request;
+      /// <value>The document.</value>
+      private HtmlDocument document;
 
 
       /// <summary>
@@ -38,8 +38,8 @@ namespace Arana.Core
       /// <param name="uri">The URI.</param>
       /// <param name="credentials">The credentials.</param>
       public AranaEngine(string uri, ICredentials credentials)
+         : this(uri, credentials, null)
       {
-         NavigateTo(uri, true, credentials, null);
       }
 
 
@@ -49,8 +49,8 @@ namespace Arana.Core
       /// <param name="uri">The URI.</param>
       /// <param name="proxy">The proxy.</param>
       public AranaEngine(string uri, IWebProxy proxy)
+         : this(uri, null, proxy)
       {
-         NavigateTo(uri, true, null, proxy);
       }
 
 
@@ -62,7 +62,8 @@ namespace Arana.Core
       /// <param name="proxy">The proxy.</param>
       public AranaEngine(string uri, ICredentials credentials, IWebProxy proxy)
       {
-         NavigateTo(uri, true, credentials, proxy);
+         Requests = new RequestList(this);
+         Navigate(uri, true, null, credentials, proxy, null);
       }
 
 
@@ -70,10 +71,7 @@ namespace Arana.Core
       /// Sets the <see cref="TextWriter" /> to write debug information to.
       /// </summary>
       /// <value>The <see cref="TextWriter" /> to write debug information to.</value>
-      public TextWriter Output
-      {
-         set { this.output = value; }
-      }
+      public TextWriter Output { private get; set; }
 
 
       /// <summary>
@@ -92,14 +90,27 @@ namespace Arana.Core
       /// </value>
       public Uri Uri
       {
-         get { return (this.request == null) ? null : this.request.Uri; }
+         get { return (Requests.Count > 0) ? Requests[Requests.Index].Uri : null; }
       }
 
+
       /// <summary>
-      /// Gets or sets the document.
+      /// Gets the list of requests.
       /// </summary>
-      /// <value>The document.</value>
-      private HtmlDocument Document { get; set; }
+      /// <value>The list of requests.</value>
+      internal RequestList Requests { get; private set; }
+
+
+      /// <summary>
+      /// Navigates the specified number of <paramref name="steps"/> within the
+      /// request history.
+      /// </summary>
+      /// <param name="steps">The number of steps steps to navigate. A positive
+      /// number navigates forward; negative backward.</param>
+      public void Navigate(int steps)
+      {
+         Requests.Navigate(steps);
+      }
 
 
       /// <summary>
@@ -121,9 +132,9 @@ namespace Arana.Core
       /// <param name="uri">The URI.</param>
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
-      internal void NavigateTo(string uri, bool followRedirect)
+      internal void Navigate(string uri, bool followRedirect)
       {
-         SetCurrentDocument(uri, followRedirect, null, null, null, null);
+         Navigate(uri, followRedirect, null, null, null, null);
       }
 
 
@@ -135,17 +146,17 @@ namespace Arana.Core
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
-      internal void NavigateTo(string uri,
-                               bool followRedirect,
-                               string httpMethod,
-                               RequestDictionary requestValues)
+      internal void Navigate(string uri,
+                             bool followRedirect,
+                             string httpMethod,
+                             RequestDictionary requestValues)
       {
-         SetCurrentDocument(uri, followRedirect, httpMethod, null, null, requestValues);
+         Navigate(uri, followRedirect, httpMethod, null, null, requestValues);
       }
 
 
       /// <summary>
-      /// Queries the current <see cref="Document"/> with the given <paramref name="cssSelector"/>
+      /// Queries the current <see cref="document"/> with the given <paramref name="cssSelector"/>
       /// and returns the matching <see cref="HtmlNode"/>s.
       /// </summary>
       /// <param name="cssSelector">The CSS selector.</param>
@@ -159,17 +170,17 @@ namespace Arana.Core
             throw new ArgumentNullException("cssSelector");
          }
 
-         if (Document == null)
+         if (this.document == null)
          {
-            throw new InvalidOperationException("The Document is null.");
+            throw new InvalidOperationException("The document is null.");
          }
 
-         if (Document.DocumentNode == null)
+         if (this.document.DocumentNode == null)
          {
-            throw new InvalidOperationException("The Document's DocumentNode is null.");
+            throw new InvalidOperationException("The document's DocumentNode is null.");
          }
 
-         return Document.DocumentNode.QuerySelectorAll(cssSelector);
+         return this.document.DocumentNode.QuerySelectorAll(cssSelector);
       }
 
 
@@ -196,16 +207,16 @@ namespace Arana.Core
                                        IWebProxy proxy,
                                        RequestDictionary requestValues)
       {
-         this.request = new Request(this.request,
-                                    uri,
-                                    httpMethod,
-                                    credentials,
-                                    proxy,
-                                    requestValues);
+         Request request = new Request(this,
+                                       uri,
+                                       httpMethod,
+                                       credentials,
+                                       proxy,
+                                       requestValues);
 
-         Write(this.request, "Request");
+         WriteToOutput(request, "Request");
 
-         using (Response response = this.request.GetResponse())
+         using (Response response = request.GetResponse())
          {
             if (response == null)
             {
@@ -214,10 +225,10 @@ namespace Arana.Core
 
             Response = response.Data;
 
-            Write(Response, "Response");
+            WriteToOutput(Response, "Response");
 
             // Set the cookie from the response
-            this.request.SetCookie(Response);
+            request.SetCookie(Response);
 
             // If we're to follow redirects and the status indicates a redirect;
             if (followRedirect && (response.Data.StatusBase == 300))
@@ -231,27 +242,12 @@ namespace Arana.Core
                                   null);
             }
 
+            Requests.Add(request);
+
             return !String.IsNullOrEmpty(Response.Body)
-                      ? GetDocument(Response.Body)
+                      ? Response.Body.ToHtmlDocument()
                       : null;
          }
-      }
-
-
-      /// <summary>
-      /// Navigates to the specified <paramref name="uri"/>.
-      /// </summary>
-      /// <param name="uri">The URI.</param>
-      /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
-      /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
-      /// <param name="credentials">The credentials.</param>
-      /// <param name="proxy">The proxy.</param>
-      private void NavigateTo(string uri,
-                              bool followRedirect,
-                              ICredentials credentials,
-                              IWebProxy proxy)
-      {
-         SetCurrentDocument(uri, followRedirect, null, credentials, proxy, null);
       }
 
 
@@ -268,20 +264,22 @@ namespace Arana.Core
       /// <exception cref="InvalidUriException">
       /// If <paramref name="uri"/> doesn't yield a valid <see cref="Core.Response"/>.
       /// </exception>
-      private void SetCurrentDocument(string uri,
-                                      bool followRedirect,
-                                      string httpMethod,
-                                      ICredentials credentials,
-                                      IWebProxy proxy,
-                                      RequestDictionary requestValues)
+      private void Navigate(string uri,
+                            bool followRedirect,
+                            string httpMethod,
+                            ICredentials credentials,
+                            IWebProxy proxy,
+                            RequestDictionary requestValues)
       {
-         Document = GetDocument(uri,
-                                followRedirect,
-                                httpMethod,
-                                credentials,
-                                proxy,
-                                requestValues);
+         this.document = GetDocument(uri,
+                                     followRedirect,
+                                     httpMethod,
+                                     credentials,
+                                     proxy,
+                                     requestValues);
       }
+
+
 
 
       /// <summary>
@@ -289,39 +287,26 @@ namespace Arana.Core
       /// </summary>
       /// <param name="value">The value.</param>
       /// <param name="section">The section.</param>
-      private void Write(object value, string section)
+      internal void WriteToOutput(object value, string section)
       {
-         if (this.output == null)
+         if (Output == null)
          {
             return;
          }
 
+         int index = Requests.Count - 1;
+
          string divider = String.Format("{0,80}",
                                         String.Format("_{0}_#{1}_{2}",
                                                       section,
-                                                      this.request.Number,
+                                                      index,
                                                       new String('-', 40)))
             .Replace(' ', '-')
             .Replace('_', ' ');
 
-         this.output.WriteLine(divider);
-         this.output.WriteLine(value);
-         this.output.WriteLine();
-      }
-
-
-      /// <summary>
-      /// Gets an <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
-      /// </summary>
-      /// <param name="html">The HTML.</param>
-      /// <returns>
-      /// An <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
-      /// </returns>
-      private static HtmlDocument GetDocument(string html)
-      {
-         HtmlDocument document = new HtmlDocument();
-         document.LoadHtml(html);
-         return document;
+         Output.WriteLine(divider);
+         Output.WriteLine(value);
+         Output.WriteLine();
       }
    }
 }
