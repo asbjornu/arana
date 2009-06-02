@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Net;
+
+using NUnit.Framework;
 
 namespace Arana.Core.Test
 {
@@ -15,9 +17,13 @@ namespace Arana.Core.Test
             .Select("li#simple-post-test a")
             .Follow();
 
-         Assert.AreEqual(200,
-                         engine.Response.StatusBase,
+         Assert.AreEqual(HttpStatusCode.OK,
+                         engine.Response.Status,
                          "The HTTP status code is invalid.");
+
+         Assert.AreEqual("/simple_post_test/",
+                         engine.Uri.PathAndQuery,
+                         "The URI is incorrect.");
 
          return engine;
       }
@@ -27,10 +33,6 @@ namespace Arana.Core.Test
       public void CheckAndUncheck()
       {
          AranaEngine engine = Initialize();
-
-         Assert.AreEqual("/simple_post_test/",
-                         engine.Uri.PathAndQuery,
-                         "The URI is incorrect.");
 
          engine.Select("form").Submit(new Preselection
          {
@@ -69,14 +71,10 @@ namespace Arana.Core.Test
       {
          AranaEngine engine = Initialize();
 
-         Assert.AreEqual("/simple_post_test/",
-                         engine.Uri.PathAndQuery,
-                         "The URI is incorrect.");
-
          engine.Select("form").Submit();
 
-         Assert.AreEqual(200,
-                         engine.Response.StatusBase,
+         Assert.AreEqual(HttpStatusCode.OK,
+                         engine.Response.Status,
                          "The HTTP status code is invalid.");
 
          string submittedTextBoxValue = engine.Select("p.textbox span.value").InnerText;
@@ -122,14 +120,10 @@ namespace Arana.Core.Test
       {
          AranaEngine engine = Initialize();
 
-         Assert.AreEqual("/simple_post_test/",
-                         engine.Uri.PathAndQuery,
-                         "The URI is incorrect.");
-
          engine.Select("form").Submit("input#first-submit");
 
-         Assert.AreEqual(200,
-                         engine.Response.StatusBase,
+         Assert.AreEqual(HttpStatusCode.OK,
+                         engine.Response.Status,
                          "The HTTP status code is invalid.");
 
          string submittedFirstSubmitValue =
@@ -141,8 +135,8 @@ namespace Arana.Core.Test
 
          engine.Select("form").Submit("input#second-submit");
 
-         Assert.AreEqual(200,
-                         engine.Response.StatusBase,
+         Assert.AreEqual(HttpStatusCode.OK,
+                         engine.Response.Status,
                          "The HTTP status code is invalid.");
 
          string submittedSecondSubmitValue =
@@ -159,10 +153,6 @@ namespace Arana.Core.Test
       {
          AranaEngine engine = Initialize();
 
-         Assert.AreEqual("/simple_post_test/",
-                         engine.Uri.PathAndQuery,
-                         "The URI is incorrect.");
-
          const string textBoxValue = "Textbox1";
          const string textAreaValue = "Textarea1";
 
@@ -176,8 +166,8 @@ namespace Arana.Core.Test
             { "p.select select", select => select.Choose(3) },
          });
 
-         Assert.AreEqual(200,
-                         engine.Response.StatusBase,
+         Assert.AreEqual(HttpStatusCode.OK,
+                         engine.Response.Status,
                          "The HTTP status code is invalid.");
 
          string submittedTextBoxValue = engine.Select("p.textbox span.value").InnerText;

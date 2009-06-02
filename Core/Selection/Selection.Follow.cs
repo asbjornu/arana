@@ -52,7 +52,7 @@ namespace Arana.Core
                "The HTML anchor has an empty 'href' attribute.");
          }
 
-         this.engine.NavigateTo(href, followRedirect);
+         this.engine.Navigate(href, followRedirect);
 
          return this.engine;
       }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using HtmlAgilityPack;
 
 namespace Arana.Core.Extensions
 {
@@ -39,14 +40,21 @@ namespace Arana.Core.Extensions
       public static bool IsEqualTo(this string @s, bool ignoreCase, params string[] values)
       {
          if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
+         {
             return false;
+         }
 
          foreach (string value in values)
+         {
             if (String.Compare(s, value, ignoreCase) == 0)
+            {
                return true;
+            }
+         }
 
          return false;
       }
+
 
       /// <summary>
       /// Returns null if the <see cref="T:System.String" /> is null or equals
@@ -94,18 +102,24 @@ namespace Arana.Core.Extensions
          {
             // If the URI is absolute and for the HTTP(S) protocol, return it
             if (uri.StartsWith("http://", "https://"))
+            {
                return new Uri(uri);
+            }
 
             // If the URI is absolute and for any of the following protocols,
             // throw an exception
             if (uri.StartsWith("ftp://", "file://", "news://", "mailto:", "javascript:"))
+            {
                throw new InvalidUriException(uri, "Unsupported protocol");
+            }
 
             // If we've got here it means the URI must be relative, so throw an exception
             // if there's no base URI to resolve the relative URI to.
             if (baseUri == null)
+            {
                throw new InvalidUriException(uri,
                                              "The base URI can't be null when the URI is relative.");
+            }
 
             return new Uri(baseUri, uri);
          }
@@ -142,13 +156,39 @@ namespace Arana.Core.Extensions
       private static bool StartsWith(this string @s, params string[] values)
       {
          if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
+         {
             return false;
+         }
 
          foreach (string value in values)
+         {
             if (s.StartsWith(value))
+            {
                return true;
+            }
+         }
 
          return false;
+      }
+
+
+      /// <summary>
+      /// Gets an <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
+      /// </summary>
+      /// <param name="html">The HTML.</param>
+      /// <returns>
+      /// An <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
+      /// </returns>
+      public static HtmlDocument ToHtmlDocument(this string @html)
+      {
+         if (String.IsNullOrEmpty(html))
+         {
+            throw new ArgumentNullException("html");
+         }
+
+         HtmlDocument document = new HtmlDocument();
+         document.LoadHtml(html);
+         return document;
       }
    }
 }

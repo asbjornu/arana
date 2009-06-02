@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Net;
+
+using NUnit.Framework;
 
 namespace Arana.Core.Test
 {
@@ -12,9 +14,13 @@ namespace Arana.Core.Test
             .Select("li#login-test a")
             .Follow();
 
-         Assert.AreEqual(200,
-                         engine.Response.StatusBase,
+         Assert.AreEqual(HttpStatusCode.OK,
+                         engine.Response.Status,
                          "The HTTP status code is invalid.");
+
+         Assert.AreEqual("/login_test/",
+                         engine.Uri.PathAndQuery,
+                         "The URI is incorrect.");
       }
    }
 }
