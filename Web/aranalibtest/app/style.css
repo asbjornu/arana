@@ -1,0 +1,94 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+html {
+  background-color: #eee;
+}
+
+body {
+  font-family: Helvetica, Arial, Sans-Serif;
+  font-size: .8em;
+	min-height: 100%;
+  width: 900px;
+  margin: 0 auto;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  background: transparent url('/static/images/body-background.png') top left repeat-y;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+h2, h3, h4, h5, h6 {
+  margin-bottom: 1em;
+}
+
+ul {
+  margin-left: 1em;
+}
+
+a:link,
+a:active {
+  color: #511;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:visited {
+  color: #000;
+}
+
+a img {
+		border: none;
+}
+
+div#header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: transparent url('/static/images/header-background.png') top left repeat-x;
+  height: 105px;
+  color: #fff;
+}
+
+div#header h1 {
+  width: 875px;
+  margin: 0 auto;
+  padding-top: 10px;
+}
+
+div#header span {
+  display: block;
+  margin-left: 130px;
+  padding-top: 50px;
+  text-transform: lowercase;
+}
+
+div#content {
+  padding: 115px 1em 1em 1em;
+}
+
+form label {
+	display: block;
+	font-weight: bold;
+}
+
+form fieldset {
+		padding: 1em;
+		border: 2px solid #511;
+}
+
+form fieldset legend {
+		padding: 0 .2em;
+}

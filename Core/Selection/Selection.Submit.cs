@@ -197,9 +197,7 @@ namespace Arana.Core
          RequestDictionary requestDictionary = null;
 
          // Set the HTTP method. Default to "GET".
-         method = String.IsNullOrEmpty(method)
-                     ? HttpMethod.Get
-                     : method.ToUpperInvariant();
+         method = (method.NullWhenEmpty() ?? HttpMethod.Get).ToUpperInvariant();
 
          Selection formElements = this.engine.Select(FormElementsSelector);
 
