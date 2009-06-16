@@ -27,7 +27,7 @@ namespace Arana.Core
       /// <value>The <see cref="Request" /> in the list at the index of <see cref="Index" />.</value>
       public Request Current
       {
-         get { return this[Index]; }
+         get { return ((Count == 0) || (Count < Index)) ? null : this[Index]; }
       }
 
 
@@ -35,7 +35,7 @@ namespace Arana.Core
       /// Gets or sets the index of the current <see cref="Request" />.
       /// </summary>
       /// <value>The index of the current <see cref="Request" />.</value>
-      public int Index { get; set; }
+      public int Index { get; private set; }
 
 
       /// <summary>

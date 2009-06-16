@@ -98,7 +98,7 @@ namespace Arana.Core
          this.requestProxy = GetProxy(proxy);
          this.method = (method ?? HttpMethod.Get).ToUpperInvariant();
 
-         Request previousRequest = GetPreviousRequest();
+         Request previousRequest = this.engine.Requests.Current;
 
          // Throw an exception if the HTTP method used is invalid.
          if (!this.method.IsEqualTo(false, HttpMethod.All))
@@ -316,7 +316,7 @@ namespace Arana.Core
       /// </returns>
       private Uri GetBaseUri()
       {
-         Request request = GetPreviousRequest();
+         Request request = this.engine.Requests.Current;
          return (request != null) ? request.baseUri : null;
       }
 
@@ -330,21 +330,9 @@ namespace Arana.Core
       /// </returns>
       private ICredentials GetCredentials(ICredentials credentials)
       {
-         Request r = GetPreviousRequest();
+         Request r = this.engine.Requests.Current;
          return credentials ?? ((r != null) ? r.requestCredentials : null);
       }
-
-
-      /// <summary>
-      /// Contains a reference to the previous request made. Null if this is the first request.
-      /// </summary>
-      private Request GetPreviousRequest()
-      {
-         return (this.engine.Requests.Count > 0)
-                   ? this.engine.Requests[0]
-                   : null;
-      }
-
 
       /// <summary>
       /// Gets the <see cref="IWebProxy"/> to use for the request.
@@ -355,7 +343,7 @@ namespace Arana.Core
       /// </returns>
       private IWebProxy GetProxy(IWebProxy proxy)
       {
-         Request r = GetPreviousRequest();
+         Request r = this.engine.Requests.Current;
          return proxy ?? ((r != null) ? r.requestProxy : null);
       }
 
@@ -366,7 +354,7 @@ namespace Arana.Core
       /// <param name="request">The request on which to set the properties.</param>
       private void SetRequestProperties(HttpWebRequest request)
       {
-         Request previousRequest = GetPreviousRequest();
+         Request previousRequest = this.engine.Requests.Current;
 
          request.UserAgent = UserAgentString;
          request.Accept = Accept.ToString();
