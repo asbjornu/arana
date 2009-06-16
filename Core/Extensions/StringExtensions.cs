@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Web;
+
 using HtmlAgilityPack;
 
 namespace Arana.Core.Extensions
@@ -7,22 +9,60 @@ namespace Arana.Core.Extensions
    /// <summary>
    /// A static class that contains extension methods for the <see cref="T:System.String" /> object.
    /// </summary>
-   internal static class StringExtensions
+   public static class StringExtensions
    {
+      /// <summary>
+      /// Converts the <see cref="T:System.String"/> to a <see cref="T:System.DateTime"/>.
+      /// If it can't be successfully converted, returns <paramref name="defaultValue"/>.
+      /// </summary>
+      /// <param name="instance">The instance.</param>
+      /// <param name="defaultValue">The default value to return if parsing fails.</param>
+      /// <returns>
+      /// The converted <see cref="T:System.DateTime"/> value or <paramref name="defaultValue"/>
+      /// if the conversion failed.
+      /// </returns>
+      public static DateTime ToDateTime(this string @instance, DateTime defaultValue)
+      {
+         DateTimeFormatInfo info = new DateTimeFormatInfo();
+
+         string[] formats = new[]
+         {
+            "ddd, dd-MMM-yy HH:mm:ss zzz",
+            "ddd, dd-MMM-yyyy HH:mm:ss zzz",
+            "ddd, dd-MMM-yyyy HH':'mm':'ss 'GMT'",
+            info.RFC1123Pattern
+         };
+
+         DateTime parsedDate;
+         bool parsed = DateTime.TryParseExact(instance,
+                                              formats,
+                                              info,
+                                              DateTimeStyles.AdjustToUniversal,
+                                              out parsedDate);
+
+         if (!parsed)
+         {
+            Console.WriteLine("Couldn't parse '{0}' into a valid date.", instance);
+         }
+
+         return parsed ? parsedDate : defaultValue;
+      }
+
+
       /// <summary>
       /// Determines whether the given <see cref="T:System.String"/> is equal
       /// to any of the values in the specified <paramref name="values"/> array,
       /// in a case insensitive way.
       /// </summary>
-      /// <param name="s">The <see cref="T:System.String"/> to compare.</param>
+      /// <param name="instance">The <see cref="T:System.String"/> to compare.</param>
       /// <param name="values">The values to compare with.</param>
       /// <returns>
       /// 	<c>true</c> if any of the specified <paramref name="values"/> are
       /// equal to the given <see cref="T:System.String"/>; otherwise, <c>false</c>.
       /// </returns>
-      public static bool IsEqualTo(this string @s, params string[] values)
+      internal static bool IsEqualTo(this string @instance, params string[] values)
       {
-         return IsEqualTo(s, true, values);
+         return IsEqualTo(instance, true, values);
       }
 
 
@@ -30,23 +70,25 @@ namespace Arana.Core.Extensions
       /// Determines whether the given <see cref="T:System.String"/> is equal
       /// to any of the values in the specified <paramref name="values"/> array.
       /// </summary>
-      /// <param name="s">The <see cref="T:System.String"/> to compare.</param>
+      /// <param name="instance">The <see cref="T:System.String"/> to compare.</param>
       /// <param name="ignoreCase">if set to <c>true</c>, a case insensitive comparison is performed.</param>
       /// <param name="values">The values to compare with.</param>
       /// <returns>
       /// 	<c>true</c> if any of the specified <paramref name="values"/> are
       /// equal to the given <see cref="T:System.String"/>; otherwise, <c>false</c>.
       /// </returns>
-      public static bool IsEqualTo(this string @s, bool ignoreCase, params string[] values)
+      internal static bool IsEqualTo(this string @instance,
+                                     bool ignoreCase,
+                                     params string[] values)
       {
-         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
+         if (String.IsNullOrEmpty(instance) || (values == null) || (values.Length == 0))
          {
             return false;
          }
 
          foreach (string value in values)
          {
-            if (String.Compare(s, value, ignoreCase) == 0)
+            if (String.Compare(instance, value, ignoreCase) == 0)
             {
                return true;
             }
@@ -65,11 +107,11 @@ namespace Arana.Core.Extensions
       /// </code>
       /// </example>
       /// </summary>
-      /// <param name="s">The <see cref="T:System.String" />.</param>
-      /// <returns>Null if <paramref name="s"/> is null or equals to <see cref="string.Empty" />.</returns>
-      public static string NullWhenEmpty(this string @s)
+      /// <param name="instance">The <see cref="T:System.String" />.</param>
+      /// <returns>Null if <paramref name="instance"/> is null or equals to <see cref="string.Empty" />.</returns>
+      internal static string NullWhenEmpty(this string @instance)
       {
-         return String.IsNullOrEmpty(s) ? null : s;
+         return String.IsNullOrEmpty(instance) ? null : instance;
       }
 
 
@@ -77,13 +119,33 @@ namespace Arana.Core.Extensions
       /// Trims the <see cref="T:System.String"/>. If it is null or empty,
       /// just returns it.
       /// </summary>
-      /// <param name="s">The <see cref="T:System.String"/> to trim.</param>
+      /// <param name="instance">The <see cref="T:System.String"/> to trim.</param>
       /// <returns>
       /// The trimmed <see cref="T:System.String"/>.
       /// </returns>
-      public static string SafeTrim(this string @s)
+      internal static string SafeTrim(this string @instance)
       {
-         return String.IsNullOrEmpty(s) ? s : s.Trim();
+         return String.IsNullOrEmpty(instance) ? instance : instance.Trim();
+      }
+
+
+      /// <summary>
+      /// Gets an <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
+      /// </summary>
+      /// <param name="html">The HTML.</param>
+      /// <returns>
+      /// An <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
+      /// </returns>
+      internal static HtmlDocument ToHtmlDocument(this string @html)
+      {
+         if (String.IsNullOrEmpty(html))
+         {
+            throw new ArgumentNullException("html");
+         }
+
+         HtmlDocument document = new HtmlDocument();
+         document.LoadHtml(html);
+         return document;
       }
 
 
@@ -96,7 +158,7 @@ namespace Arana.Core.Extensions
       /// <returns>
       /// The converted <see cref="T:System.Uri"/>.
       /// </returns>
-      public static Uri ToUri(this string uri, Uri baseUri)
+      internal static Uri ToUri(this string uri, Uri baseUri)
       {
          try
          {
@@ -133,62 +195,44 @@ namespace Arana.Core.Extensions
       /// <summary>
       /// URI encodes the given <see cref="T:System.String" />.
       /// </summary>
-      /// <param name="s">The <see cref="T:System.String" /> to URI encode.</param>
+      /// <param name="instance">The <see cref="T:System.String" /> to URI encode.</param>
       /// <returns>The URI encoded <see cref="T:System.String" />.</returns>
-      public static string UriEncode(this string @s)
+      internal static string UriEncode(this string @instance)
       {
-         return String.IsNullOrEmpty(s) ? s : HttpUtility.UrlEncode(s);
+         return String.IsNullOrEmpty(instance)
+                   ? instance
+                   : HttpUtility.UrlEncode(instance);
       }
 
 
       /// <summary>
-      /// Determines whether the beginning of <paramref name="s"/>
+      /// Determines whether the beginning of <paramref name="instance"/>
       /// matches any of the specified <see cref="T:System.String"/>s
       /// in <paramref name="values"/>.
       /// </summary>
-      /// <param name="s">The <see cref="T:System.String"/> to match.</param>
+      /// <param name="instance">The <see cref="T:System.String"/> to match.</param>
       /// <param name="values">The values to match against.</param>
       /// <returns>
-      /// 	<c>true</c> if the beginning of <paramref name="s"/>
+      /// 	<c>true</c> if the beginning of <paramref name="instance"/>
       /// matches any of the specified <see cref="T:System.String"/>s
       /// in <paramref name="values"/>; otherwise <c>false</c>.
       /// </returns>
-      private static bool StartsWith(this string @s, params string[] values)
+      private static bool StartsWith(this string @instance, params string[] values)
       {
-         if (String.IsNullOrEmpty(s) || (values == null) || (values.Length == 0))
+         if (String.IsNullOrEmpty(instance) || (values == null) || (values.Length == 0))
          {
             return false;
          }
 
          foreach (string value in values)
          {
-            if (s.StartsWith(value))
+            if (instance.StartsWith(value))
             {
                return true;
             }
          }
 
          return false;
-      }
-
-
-      /// <summary>
-      /// Gets an <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
-      /// </summary>
-      /// <param name="html">The HTML.</param>
-      /// <returns>
-      /// An <see cref="HtmlDocument"/> object from the provided <paramref name="html"/>.
-      /// </returns>
-      public static HtmlDocument ToHtmlDocument(this string @html)
-      {
-         if (String.IsNullOrEmpty(html))
-         {
-            throw new ArgumentNullException("html");
-         }
-
-         HtmlDocument document = new HtmlDocument();
-         document.LoadHtml(html);
-         return document;
       }
    }
 }

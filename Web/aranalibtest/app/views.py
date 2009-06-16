@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.template import Context, loader
 
 # Google App Engine imports.
@@ -56,5 +56,22 @@ def simple_post_test(request):
   
   # render the template
   response = template.render(context)
+  
+  return HttpResponse(response)
+  
+  
+#
+# Redirect test view
+#
+def redirect_test(request):
+  # Redirect if the "submit" button was pushed
+  if (request.POST.get('submit', None)):
+    return HttpResponsePermanentRedirect('http://code.google.com/p/arana/')
+
+  # set up the template
+  template = loader.get_template('redirect_test.html')
+  
+  # render the template
+  response = template.render(Context())
   
   return HttpResponse(response)

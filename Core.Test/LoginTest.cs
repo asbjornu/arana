@@ -5,21 +5,19 @@ using NUnit.Framework;
 namespace Arana.Core.Test
 {
    [TestFixture]
-   public class LoginTest
+   public class LoginTest : TestBase
    {
       [Test]
       public void Login()
       {
-         AranaEngine engine = new AranaEngine("http://test.aranalib.net/")
-            .Select("li#login-test a")
-            .Follow();
+         Engine.Select("li#login-test a").Follow();
 
          Assert.AreEqual(HttpStatusCode.OK,
-                         engine.Response.Status,
+                         Engine.Response.Status,
                          "The HTTP status code is invalid.");
 
          Assert.AreEqual("/login_test/",
-                         engine.Uri.PathAndQuery,
+                         Engine.Uri.PathAndQuery,
                          "The URI is incorrect.");
       }
    }

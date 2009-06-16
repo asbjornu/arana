@@ -6,50 +6,45 @@ using NUnit.Framework;
 namespace Arana.Core.Test
 {
    [TestFixture]
-   public class NavigationTest
+   public class NavigationTest : TestBase
    {
       [Test]
       public void ToLoginAndBackAndForwardAgain()
       {
-         AranaEngine engine = new AranaEngine("http://test.aranalib.net/")
-         {
-            Output = Console.Out
-         };
-
          Assert.AreEqual("/",
-                         engine.Uri.PathAndQuery,
+                         Engine.Uri.PathAndQuery,
                          "The URI is incorrect.");
 
-         engine.Select("li#login-test a").Follow();
+         Engine.Select("li#login-test a").Follow();
 
          Assert.AreEqual(HttpStatusCode.OK,
-                         engine.Response.Status,
+                         Engine.Response.Status,
                          "The HTTP status code is invalid.");
 
          Assert.AreEqual("/login_test/",
-                         engine.Uri.PathAndQuery,
+                         Engine.Uri.PathAndQuery,
                          "The URI is incorrect.");
 
          // Navigate back
-         engine.Navigate(-1);
+         Engine.Navigate(-1);
 
          Assert.AreEqual(HttpStatusCode.OK,
-                         engine.Response.Status,
+                         Engine.Response.Status,
                          "The HTTP status code is invalid.");
 
          Assert.AreEqual("/",
-                         engine.Uri.PathAndQuery,
+                         Engine.Uri.PathAndQuery,
                          "The URI is incorrect.");
 
          // Navigate forward again
-         engine.Navigate(1);
+         Engine.Navigate(1);
 
          Assert.AreEqual(HttpStatusCode.OK,
-                   engine.Response.Status,
+                   Engine.Response.Status,
                    "The HTTP status code is invalid.");
 
          Assert.AreEqual("/login_test/",
-                         engine.Uri.PathAndQuery,
+                         Engine.Uri.PathAndQuery,
                          "The URI is incorrect.");
       }
 
@@ -59,12 +54,7 @@ namespace Arana.Core.Test
          MatchType = MessageMatch.Contains)]
       public void NavigatingBackOnFreshEngineThrowsArgumentOutOfRangeException()
       {
-         AranaEngine engine = new AranaEngine("http://test.aranalib.net/")
-         {
-            Output = Console.Out
-         };
-
-         engine.Navigate(-1);
+         Engine.Navigate(-1);
       }
 
       [Test]
@@ -73,12 +63,7 @@ namespace Arana.Core.Test
          MatchType = MessageMatch.Contains)]
       public void NavigatingForwardOnFreshEngineThrowsArgumentOutOfRangeException()
       {
-         AranaEngine engine = new AranaEngine("http://test.aranalib.net/")
-         {
-            Output = Console.Out
-         };
-
-         engine.Navigate(1);
+         Engine.Navigate(1);
       }
    }
 }
