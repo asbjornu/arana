@@ -3,17 +3,19 @@ version: 1
 runtime: python
 api_version: 1
 
+default_expiration: '3650d'
+
 handlers:
-- url: /static
-  static_dir: static
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
 
-- url: /(.*\.(gif|png|jpg))
-  static_files: static/\1
-  upload: static/(.*\.(gif|png|jpg))
+- url: /media/(.*\.(gif|png|jpg|ico|css))
+  static_files: app/media/\1
+  upload: media/(.*\.(gif|png|jpg|ico|css))
 
-- url: /favicon.ico
-  static_files: static/images/favicon.png
-  upload: static/images/favicon.png
+- url: /media$
+  static_dir: _generated_media
 
 - url: /.*
-  script: main.py
+  script: common/appenginepatch/main.py
