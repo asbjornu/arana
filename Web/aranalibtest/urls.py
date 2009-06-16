@@ -18,4 +18,5 @@ urlpatterns = patterns('app.views',
   (r'^$',                   'index'),  
   (r'^simple_post_test.*$', 'simple_post_test'),
   (r'^login_test.*$',       'login_test'),
+  (r'^redirect_test.*$',    'redirect_test'),
 )

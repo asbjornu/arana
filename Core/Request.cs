@@ -158,7 +158,7 @@ namespace Arana.Core
 
          int i = 0;
 
-         if (this.cookies != null && this.cookies.Count > 0)
+         if ((this.cookies != null) && (this.cookies.Count > 0))
          {
             foreach (Cookie cookie in this.cookies)
             {

@@ -33,27 +33,14 @@ namespace Arana.Test.ConsoleApplication
 
       private static void TestArana()
       {
-         AranaEngine engine = new AranaEngine("http://test.aranalib.net/")
+         AranaEngine engine = new AranaEngine("http://localhost:9999/")
          {
             Output = Console.Out
          };
 
-         engine.Select("li#simple-post-test a").Follow();
+         engine.Select("li#redirect-test a").Follow();
 
-         Console.WriteLine();
-         Console.WriteLine(engine.Uri);
-         Console.WriteLine();
-
-         engine.Select("form").Submit(new Preselection
-         {
-            { "p.radio1 input", radio => radio.Check() },
-         });
-
-         Console.WriteLine();
-         Console.WriteLine(engine.Uri);
-         Console.WriteLine();
-         Console.WriteLine(engine.Select("p.radio1 span.value").InnerText);
-         Console.WriteLine(engine.Select("p.radio2 span.value").InnerText);
+         engine.Select("form").Submit("input[type=submit]");
       }
    }
 }

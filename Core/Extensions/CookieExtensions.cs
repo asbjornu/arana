@@ -23,10 +23,7 @@ namespace Arana.Core.Extensions
          switch (key.ToLowerInvariant())
          {
             case "expires":
-               // TODO: This is most probably going to fail in epic exceptions, so make it more sturdy
-               cookie.Expires = DateTime.ParseExact(value,
-                                                    "ddd, dd-MMM-yy HH:mm:ss zzz",
-                                                    null);
+               cookie.Expires = value.ToDateTime(DateTime.Now.AddMinutes(1));
                break;
 
             case "domain":
