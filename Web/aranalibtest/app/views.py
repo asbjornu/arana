@@ -21,7 +21,21 @@ import logging
 def index(request):
   template = loader.get_template('index.html')
   return HttpResponse(template.render(Context()))
+
+#
+# Generic test method that calls the specific
+# tests based on the 'test' string argument
+#
+def test(request, test):
+  # hack to get a reference to the xyz_test() method
+  exec('method = ' + test + '_test')
+
+  # invoke the method with the request object as argument
+  request = method(request)
   
+  # return the request
+  return request
+
 #
 # Login test view
 #
@@ -48,6 +62,7 @@ def login_test(request):
   response = template.render(context)
   
   return HttpResponse(response)
+
 
 #
 # Simple POST test view
@@ -84,6 +99,21 @@ def redirect_test(request):
   
   return HttpResponse(response)
   
+
+#
+# QueryString test view
+#
+def querystring_test(request):
+  path = request.get_full_path()
+  
+  template = loader.get_template('querystring_test.html')
+  
+  context = Context({'querystring' : path})
+  
+  response = template.render(context)
+  
+  return HttpResponse(response)
+
 
 def list_people(request):
     return object_list(request, Person.all(), paginate_by=10)

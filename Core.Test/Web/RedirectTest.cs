@@ -2,7 +2,7 @@
 
 using NUnit.Framework;
 
-namespace Arana.Core.Test
+namespace Arana.Core.Test.Web
 {
    [TestFixture]
    public class RedirectTest : TestBase
@@ -14,9 +14,9 @@ namespace Arana.Core.Test
          Engine.Select("li#redirect-test a").Follow().Select("form").Submit(
             "input[type=submit]");
 
-         Assert.AreEqual(expected,
-                         Engine.Uri,
-                         String.Format("The redirect to {0} failed.", expected));
+         Assert.That(Engine.Uri,
+                     Is.EqualTo(expected),
+                     String.Format("The redirect to {0} failed.", expected));
       }
    }
 }

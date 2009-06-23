@@ -27,7 +27,17 @@ namespace Arana.Core
       /// </summary>
       /// <param name="uri">The application URI.</param>
       public AranaEngine(string uri)
-         : this(uri, null, null)
+         : this(uri, null, null, null)
+      {
+      }
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="Arana"/> class.
+      /// </summary>
+      /// <param name="uri">The application URI.</param>
+      /// <param name="output">The <see cref="TextWriter" /> to write debug information to.</param>
+      public AranaEngine(string uri, TextWriter output)
+         : this(uri, null, null, output)
       {
       }
 
@@ -38,7 +48,7 @@ namespace Arana.Core
       /// <param name="uri">The URI.</param>
       /// <param name="credentials">The credentials.</param>
       public AranaEngine(string uri, ICredentials credentials)
-         : this(uri, credentials, null)
+         : this(uri, credentials, null, null)
       {
       }
 
@@ -49,7 +59,7 @@ namespace Arana.Core
       /// <param name="uri">The URI.</param>
       /// <param name="proxy">The proxy.</param>
       public AranaEngine(string uri, IWebProxy proxy)
-         : this(uri, null, proxy)
+         : this(uri, null, proxy, null)
       {
       }
 
@@ -60,10 +70,12 @@ namespace Arana.Core
       /// <param name="uri">The URI.</param>
       /// <param name="credentials">The credentials.</param>
       /// <param name="proxy">The proxy.</param>
-      public AranaEngine(string uri, ICredentials credentials, IWebProxy proxy)
+      /// <param name="output">The <see cref="TextWriter" /> to write debug information to.</param>
+      public AranaEngine(string uri, ICredentials credentials, IWebProxy proxy, TextWriter output)
       {
          Requests = new RequestList(this);
          Navigate(uri, true, null, credentials, proxy, null);
+         Output = output;
       }
 
 
@@ -71,14 +83,17 @@ namespace Arana.Core
       /// Sets the <see cref="TextWriter" /> to write debug information to.
       /// </summary>
       /// <value>The <see cref="TextWriter" /> to write debug information to.</value>
-      public TextWriter Output { private get; set; }
+      public TextWriter Output { get; set; }
 
 
       /// <summary>
       /// Gets the data for the last response.
       /// </summary>
       /// <value>The data for the last response.</value>
-      public ResponseData Response { get; private set; }
+      public ResponseData Response
+      { 
+         get { return Requests.Current.Response; }
+      }
 
       /// <summary>
       /// Gets the URI that is currently being manipulated by this
@@ -110,6 +125,16 @@ namespace Arana.Core
       public void Navigate(int steps)
       {
          Requests.Navigate(steps);
+      }
+
+
+      /// <summary>
+      /// Navigates to the specified uri. If 
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      public void Navigate(string uri)
+      {
+         Navigate(uri, true, null, null, null, null);
       }
 
 
@@ -223,12 +248,10 @@ namespace Arana.Core
                throw new InvalidUriException(uri);
             }
 
-            Response = response.Data;
-
-            WriteToOutput(Response, "Response");
+            WriteToOutput(response, "Response");
 
             // Set the cookie from the response
-            request.SetCookie(Response);
+            request.SetCookie(response);
 
             // If we're to follow redirects and the status indicates a redirect;
             if (followRedirect && (response.Data.StatusBase == 300))
