@@ -4,7 +4,13 @@
 
 {% block content %}
 
-<h2>Login test</h2>
+<h2>Login</h2>
+
+{% if username %}
+  <div id="logged-in">
+    <h3>Welcome back, <span class="username">{{ username }}</span></h3>
+  </div>
+{% endif %}
 
 <form action="/login_test/" method="post">
   <fieldset>
@@ -12,19 +18,16 @@
     
     <p class="username">
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username" value="{{ username }}">
-      <span class="value">{{ username }}</span>
+      <input type="text" id="username" name="username">
     </p>
     
     <p class="password">
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password" value="{{ password }}">
-      <span class="value">{{ password }}</span>
+      <input type="password" id="password" name="password">
     </p>
     
     <p class="submit">
       <input type="submit" name="submit" value="Submit">
-      <span class="value">{{ submit }}</span>
     </p>
   </fieldset>
 </form>

@@ -40,28 +40,48 @@ def test(request, test):
 # Login test view
 #
 def login_test(request):
-  """username  = request.POST.get('username', None)
+  username  = request.POST.get('username', None)
   password  = request.POST.get('password', None)
-  login     = 'Administrator' \
-              if username == 'Administrator' \
-                and password == '2fmckX32a' \
-              else None  """
+  admin     = 'Administrator'
+  login     = admin if username  == admin \
+                    and password == '2fmckX32a' \
+              else None
   
-  logging.debug('Post data:')
-  logging.debug(request.POST)
+  logging.debug('Login: %s', login)
   
-  context = Context(request.POST)
+  # Set the session variable 'username' to the validated login
+  # or the existing session variable
+  request.session['username'] = login or \
+                                request.session.get('username', None)
   
-  # Set the session variable 'username' to the POSTed username
-  # request.session['username'] = login
-  
-  # set up the template
+  if (login == admin):
+    return HttpResponsePermanentRedirect('/logged_in_test/')
+
   template = loader.get_template('login_test.html')
-  
-  # render the template
-  response = template.render(context)
-  
+  response = template.render(Context(request.session))
   return HttpResponse(response)
+
+#
+# The logged in view
+#
+def logged_in_test(request):
+  template = loader.get_template('logged_in_test.html')
+  context = Context(request.session)
+  response = template.render(context)
+  return HttpResponse(response)
+  
+  
+#
+# Logs out the user
+#
+def logout_test(request):
+  # If the view isn't POSTed to, just return the
+  # logged_in_test view.
+  if (request.method != 'POST'):
+    return logged_in_test(request)
+ 
+  request.session['username'] = None
+  return HttpResponsePermanentRedirect('/login_test/')
 
 
 #
@@ -74,12 +94,8 @@ def simple_post_test(request):
   logging.debug('Post data:')
   logging.debug(request.POST)
   
-  # set up the template
   template = loader.get_template('simple_post_test.html')
-  
-  # render the template
   response = template.render(context)
-  
   return HttpResponse(response)
   
   
@@ -93,10 +109,7 @@ def redirect_test(request):
 
   # set up the template
   template = loader.get_template('redirect_test.html')
-  
-  # render the template
   response = template.render(Context())
-  
   return HttpResponse(response)
   
 
@@ -105,13 +118,9 @@ def redirect_test(request):
 #
 def querystring_test(request):
   path = request.get_full_path()
-  
   template = loader.get_template('querystring_test.html')
-  
   context = Context({'querystring' : path})
-  
   response = template.render(context)
-  
   return HttpResponse(response)
 
 

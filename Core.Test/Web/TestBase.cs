@@ -8,14 +8,13 @@ namespace Arana.Core.Test.Web
    {
       protected AranaEngine Engine { get; set; }
 
+      protected const string Uri = "http://test.aranalib.net/";
+
 
       [SetUp]
       public virtual void SetUp()
       {
-         Engine = new AranaEngine("http://test.aranalib.net/")
-         {
-            Output = Console.Out
-         };
+         Engine = new AranaEngine(Uri, Console.Out);
       }
    }
 }

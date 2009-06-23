@@ -53,8 +53,9 @@ namespace Arana.Core
       /// Navigates the specified number of <paramref name="steps"/> within the
       /// request history by increasing <see cref="Index" /> with <paramref name="steps"/>.
       /// </summary>
-      /// <param name="steps">The number of steps steps to navigate. A positive
-      /// number navigates forward; negative backward.</param>
+      /// <param name="steps">The relative number of steps to navigate from the
+      /// current <see cref="Index"/>. A positive number navigates forward,
+      /// a negative number navigates backward.</param>
       public void Navigate(int steps)
       {
          int resultingRequestIndex = ValidateSteps(steps);
@@ -67,15 +68,56 @@ namespace Arana.Core
                                         this[resultingRequestIndex].Uri);
 
          this.engine.WriteToOutput(message, "Navigate");
+
          Index = resultingRequestIndex;
       }
 
 
       /// <summary>
-      /// Validates the steps.
+      /// Gets the index of a non-redirecting request.
       /// </summary>
-      /// <param name="steps">The steps.</param>
-      /// <returns></returns>
+      /// <param name="steps">The relative number of steps to navigate from the
+      /// current <see cref="Index"/>. A positive number navigates forward,
+      /// a negative number navigates backward.</param>
+      /// <param name="currentIndex">Index of the current.</param>
+      /// <returns>The index of a non-redirecting request.</returns>
+      private int GetIndexOfNonRedirectingRequest(int steps, int currentIndex)
+      {
+         while ((this[currentIndex].Response.StatusBase == 300)
+                // Or until we've iterated us down to the first request
+                && (currentIndex >= 0)
+                // Or we've iterated us up to the last request.
+                && (currentIndex < Count))
+         {
+            // If the given number of steps to navigate was negative, decrease the index.
+            if (steps < 0)
+            {
+               currentIndex--;
+            }
+               // If the given number of steps to navigate was positive, increase the index.
+            else
+            {
+               currentIndex++;
+            }
+         }
+
+         return currentIndex;
+      }
+
+
+      /// <summary>
+      /// Returns the index of the <see cref="Request"/> that corresponds to
+      /// the relative number of <paramref name="steps"/> to navigate from the
+      /// current <see cref="Index"/>.
+      /// </summary>
+      /// <param name="steps">The relative number of steps to navigate from the
+      /// current <see cref="Index"/>. A positive number navigates forward,
+      /// a negative number navigates backward.</param>
+      /// <returns>
+      /// The index of the <see cref="Request"/> that corresponds to the relative
+      /// number of <paramref name="steps"/> to navigate from the current
+      /// <see cref="Index"/>.
+      /// </returns>
       private int ValidateSteps(int steps)
       {
          string message;
@@ -106,6 +148,11 @@ namespace Arana.Core
 
             throw new ArgumentOutOfRangeException("steps", steps, message);
          }
+
+         // Move back or forward in the history until a request that didn't
+         // result in a redirect (HTTP Status Code 30X) is found.
+         resultingRequestIndex = GetIndexOfNonRedirectingRequest(steps,
+                                                                 resultingRequestIndex);
 
          return resultingRequestIndex;
       }

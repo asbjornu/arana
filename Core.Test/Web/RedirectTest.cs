@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace Arana.Core.Test.Web
 {
    [TestFixture]
+   [Category("Web")]
    public class RedirectTest : TestBase
    {
       [Test]
