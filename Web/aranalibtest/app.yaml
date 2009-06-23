@@ -10,11 +10,11 @@ handlers:
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
   login: admin
 
-- url: /media/(.*\.(gif|png|jpg|ico|css))
+- url: /app/media/(.*\.(gif|png|jpg|ico|css))
   static_files: app/media/\1
-  upload: media/(.*\.(gif|png|jpg|ico|css))
+  upload: app/media/(.*\.(gif|png|jpg|ico|css))
 
-- url: /media$
+- url: /media
   static_dir: _generated_media
 
 - url: /.*
