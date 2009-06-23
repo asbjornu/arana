@@ -2,11 +2,11 @@
 
 using NUnit.Framework;
 
-namespace Arana.Core.Test
+namespace Arana.Core.Test.Web
 {
    public class TestBase
    {
-      protected AranaEngine Engine { get; private set; }
+      protected AranaEngine Engine { get; set; }
 
 
       [SetUp]

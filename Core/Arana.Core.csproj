@@ -72,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Arana.Core.snk" />
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AcceptDictionary.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="RequestList.cs" />

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ragendja
 from ragendja.settings_pre import *
 
 # Increase this when you update your media on the production site, so users
@@ -24,6 +25,10 @@ LANGUAGE_CODE = 'en'
 #    ('de', 'German'),
 #    ('en', 'English'),
 #)
+
+TEMPLATE_DIRS += (
+  PROJECT_DIR + '/app/templates/tests',
+)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.auth',

@@ -119,6 +119,9 @@ namespace Arana.Core
       }
 
 
+      public ResponseData Response { get; private set; }
+
+
       /// <summary>
       /// Gets the Uniform Resource Identifier (<see cref="T:System.Uri" />) of the request.
       /// </summary>
@@ -140,9 +143,11 @@ namespace Arana.Core
          StringBuilder stringBuilder = new StringBuilder();
          StringBuilder cookieBuilder = new StringBuilder();
 
+         string relativePart = Uri.PathAndQuery + Uri.Fragment;
+
          stringBuilder.AppendLine(String.Format("{0} {1} HTTP/1.1",
                                                 this.method,
-                                                Uri.PathAndQuery));
+                                                relativePart));
 
          foreach (string key in this.currentWebRequest.Headers.AllKeys)
          {
@@ -195,18 +200,18 @@ namespace Arana.Core
       {
          Func<HttpWebResponse> getHttpWebResponse = () =>
          {
-            HttpWebResponse response = null;
+            HttpWebResponse webResponse = null;
             Exception exception = null;
 
             try
             {
                this.currentWebRequest.AllowAutoRedirect = false;
-               response = this.currentWebRequest.GetResponse() as
-                          HttpWebResponse;
+               webResponse = this.currentWebRequest.GetResponse() as
+                             HttpWebResponse;
             }
             catch (WebException webException)
             {
-               response = webException.Response as HttpWebResponse;
+               webResponse = webException.Response as HttpWebResponse;
                exception = webException;
             }
             catch (Exception ex)
@@ -214,7 +219,7 @@ namespace Arana.Core
                exception = ex;
             }
 
-            if (response == null)
+            if (webResponse == null)
             {
                if (exception != null)
                {
@@ -224,26 +229,29 @@ namespace Arana.Core
                throw new InvalidUriException(Uri);
             }
 
-            return response;
+            return webResponse;
          };
 
-         return new Response(this, getHttpWebResponse);
+         Response response = new Response(this, getHttpWebResponse);
+         Response = response.Data;
+
+         return response;
       }
 
 
       /// <summary>
       /// Sets the cookie.
       /// </summary>
-      /// <param name="responseData">The response data.</param>
-      internal void SetCookie(ResponseData responseData)
+      /// <param name="response">The response.</param>
+      internal void SetCookie(Response response)
       {
-         if (responseData.Cookie == null)
+         if (response.Data.Cookie == null)
          {
             return;
          }
 
          this.cookies = this.cookies ?? new CookieCollection();
-         this.cookies.Add(responseData.Cookie);
+         this.cookies.Add(response.Data.Cookie);
       }
 
 
@@ -333,6 +341,7 @@ namespace Arana.Core
          Request r = this.engine.Requests.Current;
          return credentials ?? ((r != null) ? r.requestCredentials : null);
       }
+
 
       /// <summary>
       /// Gets the <see cref="IWebProxy"/> to use for the request.
