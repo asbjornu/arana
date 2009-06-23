@@ -4,7 +4,8 @@ using System.IO;
 using System.Net;
 
 using Arana.Core.Extensions;
-using Arana.Core.Fizzler.Systems.HtmlAgilityPack;
+
+using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
@@ -73,9 +74,9 @@ namespace Arana.Core
       /// <param name="output">The <see cref="TextWriter" /> to write debug information to.</param>
       public AranaEngine(string uri, ICredentials credentials, IWebProxy proxy, TextWriter output)
       {
+         Output = output;
          Requests = new RequestList(this);
          Navigate(uri, true, null, credentials, proxy, null);
-         Output = output;
       }
 
 
@@ -90,7 +91,7 @@ namespace Arana.Core
       /// Gets the data for the last response.
       /// </summary>
       /// <value>The data for the last response.</value>
-      public ResponseData Response
+      public Response Response
       { 
          get { return Requests.Current.Response; }
       }
@@ -250,22 +251,20 @@ namespace Arana.Core
 
             WriteToOutput(response, "Response");
 
-            // Set the cookie from the response
-            request.SetCookie(response);
+            // Add the request to the history
+            Requests.Add(request);
 
             // If we're to follow redirects and the status indicates a redirect;
-            if (followRedirect && (response.Data.StatusBase == 300))
+            if (followRedirect && (response.StatusBase == 300))
             {
                // Get a new selector engine for the location we're being redirected to
-               return GetDocument(response.Data.Location,
+               return GetDocument(response.Location,
                                   true,
                                   HttpMethod.Get,
                                   credentials,
                                   proxy,
                                   null);
             }
-
-            Requests.Add(request);
 
             return !String.IsNullOrEmpty(Response.Body)
                       ? Response.Body.ToHtmlDocument()

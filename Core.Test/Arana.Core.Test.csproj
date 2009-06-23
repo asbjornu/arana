@@ -48,7 +48,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AranaEngineTest.cs" />
-    <Compile Include="Web\LoginTest.cs" />
+    <Compile Include="Web\SessionTest.cs" />
     <Compile Include="Web\NavigationTest.cs" />
     <Compile Include="Web\PostTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

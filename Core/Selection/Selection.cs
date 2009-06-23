@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+
 using Arana.Core.Extensions;
-using Arana.Core.Fizzler.Systems.HtmlAgilityPack;
+
+using Fizzler.Systems.HtmlAgilityPack;
+
 using HtmlAgilityPack;
 
 namespace Arana.Core

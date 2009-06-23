@@ -62,11 +62,6 @@ namespace Arana.Core
       private Uri baseUri;
 
       /// <summary>
-      /// Gets or sets the cookies that are associated with this request.
-      /// </summary>
-      private CookieCollection cookies;
-
-      /// <summary>
       /// The string to put into the request
       /// </summary>
       private string requestString;
@@ -98,8 +93,6 @@ namespace Arana.Core
          this.requestProxy = GetProxy(proxy);
          this.method = (method ?? HttpMethod.Get).ToUpperInvariant();
 
-         Request previousRequest = this.engine.Requests.Current;
-
          // Throw an exception if the HTTP method used is invalid.
          if (!this.method.IsEqualTo(false, HttpMethod.All))
          {
@@ -107,19 +100,17 @@ namespace Arana.Core
                String.Format("The method '{0}' is invalid.", this.method));
          }
 
-         if ((previousRequest != null) &&
-             (previousRequest.cookies != null) &&
-             (previousRequest.cookies.Count > 0))
-         {
-            this.cookies = this.cookies ?? new CookieCollection();
-            this.cookies.Add(previousRequest.cookies);
-         }
-
          this.currentWebRequest = CreateRequest(uri, requestValues);
       }
 
 
-      public ResponseData Response { get; private set; }
+      /// <summary>
+      /// Gets or sets the <see cref="Response"/> for the given <see cref="Request"/>.
+      /// </summary>
+      /// <value>
+      /// The <see cref="Response"/> for the given <see cref="Request"/>.
+      /// </value>
+      public Response Response { get; private set; }
 
 
       /// <summary>
@@ -140,53 +131,46 @@ namespace Arana.Core
       /// </returns>
       public override string ToString()
       {
-         StringBuilder stringBuilder = new StringBuilder();
-         StringBuilder cookieBuilder = new StringBuilder();
+         StringBuilder responseBuilder = new StringBuilder();
 
          string relativePart = Uri.PathAndQuery + Uri.Fragment;
 
-         stringBuilder.AppendLine(String.Format("{0} {1} HTTP/1.1",
-                                                this.method,
-                                                relativePart));
+         responseBuilder.AppendLine(
+            String.Format("{0} {1} HTTP/{2}",
+                          this.method,
+                          relativePart,
+                          this.currentWebRequest.ProtocolVersion.ToString(2)));
+
+         // Add the 'Host' header.
+         responseBuilder.AppendLine(String.Format("Host: {0}", Uri.Host));
 
          foreach (string key in this.currentWebRequest.Headers.AllKeys)
          {
+            // The 'Host' header is already added, so skip it
+            if (key.IsEqualTo("host"))
+               continue;
+
             string value = this.currentWebRequest.Headers[key];
-            stringBuilder.AppendLine(String.Format("{0}: {1}", key, value));
+            responseBuilder.AppendLine(String.Format("{0}: {1}", key, value));
          }
 
          if (this.currentWebRequest.ContentLength > 0)
          {
-            stringBuilder.AppendLine("Content-Length: " +
-                                     this.currentWebRequest.ContentLength);
+            responseBuilder.AppendLine("Content-Length: " +
+                                       this.currentWebRequest.ContentLength);
          }
 
-         int i = 0;
+         CookieContainer cookies = this.currentWebRequest.CookieContainer;
 
-         if ((this.cookies != null) && (this.cookies.Count > 0))
+         if ((cookies != null) && (cookies.Count > 0))
          {
-            foreach (Cookie cookie in this.cookies)
-            {
-               cookieBuilder.AppendFormat("{0}={1}",
-                                          cookie.Name,
-                                          cookie.Value);
-
-               if (i++ < (this.cookies.Count - 1))
-               {
-                  cookieBuilder.Append('&');
-               }
-            }
+            responseBuilder.AppendLine("Cookie: " + cookies.GetCookieHeader(Uri));
          }
 
-         if (cookieBuilder.Length > 0)
-         {
-            stringBuilder.AppendLine("Cookie: " + cookieBuilder);
-         }
+         responseBuilder.AppendLine();
+         responseBuilder.Append(this.requestString);
 
-         stringBuilder.AppendLine();
-         stringBuilder.Append(this.requestString);
-
-         return stringBuilder.ToString();
+         return responseBuilder.ToString();
       }
 
 
@@ -232,26 +216,7 @@ namespace Arana.Core
             return webResponse;
          };
 
-         Response response = new Response(this, getHttpWebResponse);
-         Response = response.Data;
-
-         return response;
-      }
-
-
-      /// <summary>
-      /// Sets the cookie.
-      /// </summary>
-      /// <param name="response">The response.</param>
-      internal void SetCookie(Response response)
-      {
-         if (response.Data.Cookie == null)
-         {
-            return;
-         }
-
-         this.cookies = this.cookies ?? new CookieCollection();
-         this.cookies.Add(response.Data.Cookie);
+         return (Response = new Response(this, getHttpWebResponse));
       }
 
 
@@ -330,6 +295,36 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Gets the cookie from previous requests.
+      /// </summary>
+      /// <returns></returns>
+      private CookieContainer GetCookieFromPreviousRequests()
+      {
+         Cookie cookie = null;
+
+         foreach (Request previousRequest in this.engine.Requests)
+         {
+            if (previousRequest.Response.Cookie == null)
+            {
+               continue;
+            }
+
+            cookie = previousRequest.Response.Cookie;
+         }
+
+         // If there's no cookie to set, move on.
+         if (cookie == null)
+         {
+            return null;
+         }
+
+         CookieContainer cookieContainer = new CookieContainer(1);
+         cookieContainer.Add(cookie);
+         return cookieContainer;
+      }
+
+
+      /// <summary>
       /// Gets the <see cref="ICredentials"/> to use for the request.
       /// </summary>
       /// <param name="credentials">The credentials.</param>
@@ -363,7 +358,7 @@ namespace Arana.Core
       /// <param name="request">The request on which to set the properties.</param>
       private void SetRequestProperties(HttpWebRequest request)
       {
-         Request previousRequest = this.engine.Requests.Current;
+         //Request previousRequest = this.engine.Requests.Current;
 
          request.UserAgent = UserAgentString;
          request.Accept = Accept.ToString();
@@ -383,19 +378,12 @@ namespace Arana.Core
          }
 
          // Set the "Referer" header
-         if (previousRequest != null)
+         if (this.engine.Requests.Current != null)
          {
-            request.Referer = previousRequest.Uri.ToString();
+            request.Referer = this.engine.Requests.Current.Uri.ToString();
          }
 
-         // If there's any cookies to add to the request, do it
-         if ((this.cookies == null) || (this.cookies.Count <= 0))
-         {
-            return;
-         }
-
-         request.CookieContainer = new CookieContainer(this.cookies.Count);
-         request.CookieContainer.Add(this.cookies);
+         request.CookieContainer = GetCookieFromPreviousRequests();
       }
 
 

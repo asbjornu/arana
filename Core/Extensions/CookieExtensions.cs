@@ -38,13 +38,33 @@ namespace Arana.Core.Extensions
                cookie.Secure = true;
                break;
 
+            case "max-age":
+               int secondsUntilExpiration = value.ToInt32(default(int));
+
+               if (secondsUntilExpiration != default(int))
+               {
+                  cookie.Expires = DateTime.Now.AddSeconds(secondsUntilExpiration);
+               }
+               break;
+
             case "httponly":
                cookie.HttpOnly = true;
                break;
 
             default:
-               cookie.Name = key;
-               cookie.Value = value;
+               if (String.IsNullOrEmpty(cookie.Name))
+               {
+                  cookie.Name = key;
+               }
+
+               // If the cookie's value is empty
+               if (String.IsNullOrEmpty(cookie.Value) ||
+                   // or the new cookie's name is the same as the existing one
+                   cookie.Name.IsEqualTo(key))
+               {
+                  // Set the value
+                  cookie.Value = value;
+               }
                break;
          }
       }

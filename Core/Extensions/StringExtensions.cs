@@ -15,14 +15,21 @@ namespace Arana.Core.Extensions
       /// Converts the <see cref="T:System.String"/> to a <see cref="T:System.DateTime"/>.
       /// If it can't be successfully converted, returns <paramref name="defaultValue"/>.
       /// </summary>
-      /// <param name="instance">The instance.</param>
-      /// <param name="defaultValue">The default value to return if parsing fails.</param>
+      /// <param name="instance">The <see cref="T:System.String"/> to convert.</param>
+      /// <param name="defaultValue">The default value to return if
+      /// <paramref name="instance"/> can't be converted.</param>
+      /// <returns>
       /// <returns>
       /// The converted <see cref="T:System.DateTime"/> value or <paramref name="defaultValue"/>
       /// if the conversion failed.
       /// </returns>
       public static DateTime ToDateTime(this string @instance, DateTime defaultValue)
       {
+         if (String.IsNullOrEmpty(instance))
+         {
+            throw new ArgumentNullException("instance");
+         }
+
          DateTimeFormatInfo info = new DateTimeFormatInfo();
 
          string[] formats = new[]
@@ -46,6 +53,30 @@ namespace Arana.Core.Extensions
          }
 
          return parsed ? parsedDate : defaultValue;
+      }
+
+
+      /// <summary>
+      /// Converts the <see cref="T:System.String"/> to a <see cref="T:System.Int32"/>.
+      /// If it can't be successfully converted, returns <paramref name="defaultValue"/>.
+      /// </summary>
+      /// <param name="instance">The <see cref="T:System.String"/> to convert.</param>
+      /// <param name="defaultValue">The default value to return if
+      /// <paramref name="instance"/> can't be converted.</param>
+      /// <returns>
+      /// The <see cref="T:System.String"/> to a <see cref="T:System.Int32"/>.
+      /// If it can't be successfully converted, returns <paramref name="defaultValue"/>.
+      /// </returns>
+      public static int ToInt32(this string @instance, int defaultValue)
+      {
+         if (String.IsNullOrEmpty(instance))
+         {
+            return defaultValue;
+         }
+
+         int parsed;
+
+         return Int32.TryParse(instance, out parsed) ? parsed : defaultValue;
       }
 
 

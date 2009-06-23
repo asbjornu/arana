@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Login Test{% endblock %}
+
+{% block content %}
+
+<div id="logged-in">
+  <h2>Welcome, <span class="username">{{ username }}</span>!</h2>
+  
+  <form action="/logout_test/" method="post">
+    <fieldset>
+      <legend>Log out</legend>
+      <p class="submit">
+        <input type="submit" name="submit" value="Log out">
+      </p>
+    </fieldset>
+  </form>
+</div>
+
+{% endblock %}

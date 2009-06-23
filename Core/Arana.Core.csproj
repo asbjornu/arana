@@ -52,9 +52,6 @@
     <Compile Include="Extensions\HtmlAttributeExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs" />
-    <Compile Include="Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs" />
-    <Compile Include="Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs" />
     <Compile Include="Preselection.cs" />
     <Compile Include="Selection\Selection.Attributes.cs" />
     <Compile Include="Extensions\CookieExtensions.cs" />
@@ -65,7 +62,6 @@
     <Compile Include="HttpMethod.cs" />
     <Compile Include="InvalidUriException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResponseData.cs" />
     <Compile Include="RequestDictionary.cs" />
     <Compile Include="Selection\Selection.ListImplementation.cs" />
     <Compile Include="Selection\Selection.Submit.cs" />
@@ -74,6 +70,15 @@
     <None Include="Arana.Core.snk" />
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs">
+      <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs">
+      <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs</Link>
+    </Compile>
+    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs">
+      <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs</Link>
     </Compile>
     <Compile Include="AcceptDictionary.cs" />
     <Compile Include="Request.cs" />
