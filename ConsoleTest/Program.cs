@@ -33,14 +33,7 @@ namespace Arana.Test.ConsoleApplication
 
       private static void TestArana()
       {
-         AranaEngine engine = new AranaEngine("http://localhost:9999/")
-         {
-            Output = Console.Out
-         };
-
-         engine.Select("li#redirect-test a").Follow();
-
-         engine.Select("form").Submit("input[type=submit]");
+         new AranaEngine("http://www.google.com/", Console.Out);
       }
    }
 }

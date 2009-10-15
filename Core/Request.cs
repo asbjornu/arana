@@ -105,6 +105,24 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Gets the "If-Modified-Since" HTTP header from the request.
+      /// </summary>
+      /// <value>The "If-Modified-Since" HTTP header from the request.</value>
+      public DateTime IfModifiedSince
+      {
+         get { return (Response != null) ? Response.LastModified : default(DateTime); }
+      }
+
+      /// <summary>
+      /// Gets the "If-None-Match" HTTP header from the request.
+      /// </summary>
+      /// <value>The "If-None-Match" HTTP header from the request.</value>
+      public string IfNoneMatch
+      {
+         get { return (Response != null) ? Response.ETag : null; }
+      }
+
+      /// <summary>
       /// Gets or sets the <see cref="Response"/> for the given <see cref="Request"/>.
       /// </summary>
       /// <value>
@@ -144,11 +162,24 @@ namespace Arana.Core
          // Add the 'Host' header.
          responseBuilder.AppendLine(String.Format("Host: {0}", Uri.Host));
 
+         if (IfModifiedSince != default(DateTime))
+         {
+            responseBuilder.AppendLine(String.Format("If-Modified-Since: {0}",
+                                                     IfModifiedSince));
+         }
+
+         if (!String.IsNullOrEmpty(IfNoneMatch))
+         {
+            responseBuilder.AppendLine(String.Format("If-None-Match: {0}", IfNoneMatch));
+         }
+
          foreach (string key in this.currentWebRequest.Headers.AllKeys)
          {
             // The 'Host' header is already added, so skip it
             if (key.IsEqualTo("host"))
+            {
                continue;
+            }
 
             string value = this.currentWebRequest.Headers[key];
             responseBuilder.AppendLine(String.Format("{0}: {1}", key, value));
@@ -160,11 +191,13 @@ namespace Arana.Core
                                        this.currentWebRequest.ContentLength);
          }
 
-         CookieContainer cookies = this.currentWebRequest.CookieContainer;
+         CookieContainer cookies = this.engine.CookieContainer;
+         string cookieHeader;
 
-         if ((cookies != null) && (cookies.Count > 0))
+         if ((cookies != null) && (cookies.Count > 0) &&
+             !String.IsNullOrEmpty(cookieHeader = cookies.GetCookieHeader(Uri)))
          {
-            responseBuilder.AppendLine("Cookie: " + cookies.GetCookieHeader(Uri));
+            responseBuilder.AppendLine("Cookie: " + cookieHeader);
          }
 
          responseBuilder.AppendLine();
@@ -182,7 +215,7 @@ namespace Arana.Core
       /// </returns>
       internal Response GetResponse()
       {
-         Func<HttpWebResponse> getHttpWebResponse = () =>
+         return (Response = new Response(() =>
          {
             HttpWebResponse webResponse = null;
             Exception exception = null;
@@ -214,9 +247,7 @@ namespace Arana.Core
             }
 
             return webResponse;
-         };
-
-         return (Response = new Response(this, getHttpWebResponse));
+         }));
       }
 
 
@@ -295,36 +326,6 @@ namespace Arana.Core
 
 
       /// <summary>
-      /// Gets the cookie from previous requests.
-      /// </summary>
-      /// <returns></returns>
-      private CookieContainer GetCookieFromPreviousRequests()
-      {
-         Cookie cookie = null;
-
-         foreach (Request previousRequest in this.engine.Requests)
-         {
-            if (previousRequest.Response.Cookie == null)
-            {
-               continue;
-            }
-
-            cookie = previousRequest.Response.Cookie;
-         }
-
-         // If there's no cookie to set, move on.
-         if (cookie == null)
-         {
-            return null;
-         }
-
-         CookieContainer cookieContainer = new CookieContainer(1);
-         cookieContainer.Add(cookie);
-         return cookieContainer;
-      }
-
-
-      /// <summary>
       /// Gets the <see cref="ICredentials"/> to use for the request.
       /// </summary>
       /// <param name="credentials">The credentials.</param>
@@ -358,8 +359,7 @@ namespace Arana.Core
       /// <param name="request">The request on which to set the properties.</param>
       private void SetRequestProperties(HttpWebRequest request)
       {
-         //Request previousRequest = this.engine.Requests.Current;
-
+         request.KeepAlive = true;
          request.UserAgent = UserAgentString;
          request.Accept = Accept.ToString();
          request.Credentials = this.requestCredentials;
@@ -367,10 +367,20 @@ namespace Arana.Core
          // TODO: Add support for different types of cache policies
          request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
-         // TODO: Set more accepted charsets and handle decoding of them
-         request.Headers.Add("Accept-Charset", "utf-8");
+         if (!String.IsNullOrEmpty(IfNoneMatch))
+         {
+            request.Headers.Add(HttpRequestHeader.IfNoneMatch, IfNoneMatch);
+         }
 
-         // TODO: Set Accept-Encoding and handle decoding
+         if (IfModifiedSince != default(DateTime))
+         {
+            request.IfModifiedSince = IfModifiedSince;
+         }
+
+         request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
+         request.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-us,en;q=0.5");
+         request.Headers.Add(HttpRequestHeader.AcceptCharset,
+                             "utf-8,iso-8859-1;q=0.7,*;q=0.6");
 
          if (request.Method != HttpMethod.Get)
          {
@@ -383,7 +393,7 @@ namespace Arana.Core
             request.Referer = this.engine.Requests.Current.Uri.ToString();
          }
 
-         request.CookieContainer = GetCookieFromPreviousRequests();
+         request.CookieContainer = this.engine.CookieContainer;
       }
 
 

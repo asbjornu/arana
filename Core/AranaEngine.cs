@@ -14,7 +14,7 @@ namespace Arana.Core
    /// <summary>
    /// The base testing engine of Araña.
    /// </summary>
-   public class AranaEngine
+   public class AranaEngine : IDisposable
    {
       /// <summary>
       /// Gets or sets the document.
@@ -31,6 +31,7 @@ namespace Arana.Core
          : this(uri, null, null, null)
       {
       }
+
 
       /// <summary>
       /// Initializes a new instance of the <see cref="Arana"/> class.
@@ -72,11 +73,15 @@ namespace Arana.Core
       /// <param name="credentials">The credentials.</param>
       /// <param name="proxy">The proxy.</param>
       /// <param name="output">The <see cref="TextWriter" /> to write debug information to.</param>
-      public AranaEngine(string uri, ICredentials credentials, IWebProxy proxy, TextWriter output)
+      public AranaEngine(string uri,
+                         ICredentials credentials,
+                         IWebProxy proxy,
+                         TextWriter output)
       {
          Output = output;
          Requests = new RequestList(this);
          Navigate(uri, true, null, credentials, proxy, null);
+         CookieContainer = new CookieContainer();
       }
 
 
@@ -92,7 +97,7 @@ namespace Arana.Core
       /// </summary>
       /// <value>The data for the last response.</value>
       public Response Response
-      { 
+      {
          get { return Requests.Current.Response; }
       }
 
@@ -108,6 +113,12 @@ namespace Arana.Core
       {
          get { return (Requests.Count > 0) ? Requests[Requests.Index].Uri : null; }
       }
+
+      /// <summary>
+      /// Gets the cookie container shared by all requests and responses.
+      /// </summary>
+      /// <value>The cookie container shared by all requests and responses.</value>
+      internal CookieContainer CookieContainer { get; private set; }
 
 
       /// <summary>
@@ -211,6 +222,34 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Writes the <paramref name="value"/> to the <see cref="Output" />.
+      /// </summary>
+      /// <param name="value">The value.</param>
+      /// <param name="section">The section.</param>
+      internal void WriteToOutput(object value, string section)
+      {
+         if (Output == null)
+         {
+            return;
+         }
+
+         int index = Requests.Count - 1;
+
+         string divider = String.Format("{0,80}",
+                                        String.Format("_{0}_#{1}_{2}",
+                                                      section,
+                                                      index,
+                                                      new String('-', 40)))
+            .Replace(' ', '-')
+            .Replace('_', ' ');
+
+         Output.WriteLine(divider);
+         Output.WriteLine(value);
+         Output.WriteLine();
+      }
+
+
+      /// <summary>
       /// Gets a new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </summary>
       /// <param name="uri">The URI.</param>
@@ -302,33 +341,12 @@ namespace Arana.Core
       }
 
 
-
-
       /// <summary>
-      /// Writes the <paramref name="value"/> to the <see cref="Output" />.
+      /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
       /// </summary>
-      /// <param name="value">The value.</param>
-      /// <param name="section">The section.</param>
-      internal void WriteToOutput(object value, string section)
+      public void Dispose()
       {
-         if (Output == null)
-         {
-            return;
-         }
-
-         int index = Requests.Count - 1;
-
-         string divider = String.Format("{0,80}",
-                                        String.Format("_{0}_#{1}_{2}",
-                                                      section,
-                                                      index,
-                                                      new String('-', 40)))
-            .Replace(' ', '-')
-            .Replace('_', ' ');
-
-         Output.WriteLine(divider);
-         Output.WriteLine(value);
-         Output.WriteLine();
+         this.document = null;
       }
    }
 }

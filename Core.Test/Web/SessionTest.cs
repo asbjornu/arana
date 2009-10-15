@@ -6,6 +6,7 @@ using NUnit.Framework;
 namespace Arana.Core.Test.Web
 {
    [TestFixture]
+   [Ignore("Run this explicitly after the GAE app is running.")]
    public class SessionTest : TestBase
    {
       private const string Administrator = "Administrator";
@@ -78,7 +79,7 @@ namespace Arana.Core.Test.Web
 
          Assert.That(Engine.Uri.PathAndQuery,
                      Is.EqualTo(LoggedInPath),
-                     "Navigating fprward from the login form resulted in a wrong path.");
+                     "Navigating forward from the login form resulted in a wrong path.");
 
          AssertUserNameFromSpan(Administrator);
       }

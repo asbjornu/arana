@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
-
-using Arana.Core.Extensions;
 
 namespace Arana.Core
 {
@@ -19,27 +18,29 @@ namespace Arana.Core
       /// <summary>
       /// Initializes a new instance of the <see cref="Response"/> class.
       /// </summary>
-      /// <param name="request">The request, used to retrieve the URI of the
-      /// requested resource, and such.</param>
       /// <param name="getHttpWebResponse">A function reference used to get the
-      /// <see cref="HttpWebResponse"/> from the <paramref name="request"/>.</param>
-      internal Response(Request request,
-                        Func<HttpWebResponse> getHttpWebResponse)
+      /// <see cref="HttpWebResponse"/>.</param>
+      internal Response(Func<HttpWebResponse> getHttpWebResponse)
       {
          if (getHttpWebResponse == null)
          {
             throw new ArgumentNullException("getHttpWebResponse");
          }
 
-         this.webResponse = getHttpWebResponse();
+         this.webResponse = getHttpWebResponse.Invoke();
 
          Status = this.webResponse.StatusCode;
-         Body = GetResponseBody(this.webResponse);
          Location = this.webResponse.GetResponseHeader("Location")
                     ?? this.webResponse.GetResponseHeader("Content-Location");
 
-         string cookie = this.webResponse.GetResponseHeader("Set-Cookie");
-         Cookie = ParseCookie(cookie, request.Uri);
+         LastModified = this.webResponse.LastModified;
+         ETag = this.webResponse.GetResponseHeader("ETag");
+
+         if (!String.IsNullOrEmpty(this.webResponse.CharacterSet))
+         {
+            Encoding = Encoding.GetEncoding(this.webResponse.CharacterSet);
+         }
+
          Headers = new Dictionary<string, string>(this.webResponse.Headers.Count);
 
          foreach (string key in this.webResponse.Headers.AllKeys)
@@ -47,6 +48,8 @@ namespace Arana.Core
             string value = this.webResponse.Headers[key];
             Headers.Add(key, value);
          }
+
+         Body = GetResponseBody();
       }
 
 
@@ -55,6 +58,19 @@ namespace Arana.Core
       /// </summary>
       /// <returns></returns>
       public string Body { get; private set; }
+
+
+      /// <summary>
+      /// Gets the encoding of the response.
+      /// </summary>
+      /// <value>The encoding of the response.</value>
+      public Encoding Encoding { get; private set; }
+
+      /// <summary>
+      /// Gets the value of the "ETag" HTTP header from the response.
+      /// </summary>
+      /// <value>The value of the "ETag" HTTP header from the response.</value>
+      public string ETag { get; private set; }
 
       /// <summary>
       /// Gets the <see cref="Dictionary{TKey,TValue}"/> of headers from the response.
@@ -101,11 +117,12 @@ namespace Arana.Core
          get { return (int) Math.Floor((double) Status / 100) * 100; }
       }
 
+
       /// <summary>
-      /// Gets the "Set-Cookie" HTTP header from the resposne.
+      /// Gets or the "Last-Modified" HTTP header from the response.
       /// </summary>
-      /// <value>The "Set-Cookie" HTTP header from the resposne..</value>
-      internal Cookie Cookie { get; private set; }
+      /// <value>The "Last-Modified" HTTP header from the response.</value>
+      internal DateTime LastModified { get; private set; }
 
 
       /// <summary>
@@ -139,110 +156,50 @@ namespace Arana.Core
 
 
       /// <summary>
+      /// Gets the content of the HTTP body as a <see cref="T:System.String"/>.
+      /// </summary>
+      /// <returns>The content of the HTTP body as a <see cref="T:System.String"/>.</returns>
+      private string GetResponseBody()
+      {
+         using (Stream responseStream = this.webResponse.GetResponseStream())
+         {
+            if (!responseStream.CanRead)
+            {
+               return null;
+            }
+
+            string contentEncodig = this.webResponse.ContentEncoding;
+            Stream stream = responseStream;
+
+            if (contentEncodig.Contains("gzip"))
+            {
+               stream = new GZipStream(responseStream, CompressionMode.Decompress, true);
+            }
+            else if (contentEncodig.Contains("deflate"))
+            {
+               stream = new DeflateStream(responseStream, CompressionMode.Decompress, true);
+            }
+
+            using (stream)
+            {
+               StreamReader streamReader = Encoding != null
+                                              ? new StreamReader(stream, Encoding)
+                                              : new StreamReader(stream);
+               using (streamReader)
+               {
+                  return streamReader.ReadToEnd();
+               }
+            }
+         }
+      }
+
+
+      /// <summary>
       /// Disposes the underlying <see cref="HttpWebResponse" />.
       /// </summary>
       public void Dispose()
       {
          ((IDisposable) this.webResponse).Dispose();
-      }
-
-
-      /// <summary>
-      /// Gets the response string.
-      /// </summary>
-      /// <param name="response">The response.</param>
-      /// <returns></returns>
-      private static string GetResponseBody(WebResponse response)
-      {
-         using (Stream stream = response.GetResponseStream())
-         {
-            if (!stream.CanRead)
-            {
-               return null;
-            }
-
-            using (StreamReader streamReader = new StreamReader(stream))
-            {
-               return streamReader.ReadToEnd();
-            }
-         }
-      }
-
-
-      /// <summary>
-      /// Parses the cookie.
-      /// </summary>
-      /// <param name="cookieString">The cookie string.</param>
-      /// <param name="uri">The URI to use for the domain part of the cookie
-      /// if the cookie itself doesn't include the information.</param>
-      /// <returns>
-      /// The parsed and constructed <see cref="Cookie"/>.
-      /// </returns>
-      private static Cookie ParseCookie(string cookieString, Uri uri)
-      {
-         if (String.IsNullOrEmpty(cookieString))
-         {
-            return null;
-         }
-
-         Cookie cookie = new Cookie();
-
-         // Split the cookie into parts:
-         string[] cookieParts = cookieString.Split(';');
-
-         if (cookieParts.Length == 0)
-         {
-            SplitAndSet(cookie, cookieString);
-         }
-         else
-         {
-            foreach (string cookiePart in cookieParts)
-            {
-               SplitAndSet(cookie, cookiePart);
-            }
-         }
-
-         if (String.IsNullOrEmpty(cookie.Domain))
-         {
-            // If both the domain part on the cookie and the 'uri' argument is null, throw an
-            // exception as the Domain property of the cookie is required.
-            if (uri == null)
-            {
-               throw new ArgumentNullException(
-                  "uri",
-                  "The URI can't be null when the cookie has no 'domain' parameter available.");
-            }
-
-            cookie.Domain = uri.Authority;
-         }
-
-         return cookie;
-      }
-
-
-      /// <summary>
-      /// Splits the and sets the values on the <paramref name="cookie"/>.
-      /// </summary>
-      /// <param name="cookie">The cookie.</param>
-      /// <param name="cookiePart">The cookie part.</param>
-      private static void SplitAndSet(Cookie cookie, string cookiePart)
-      {
-         // Do nothing if the part doesn't contain an equals sign.
-         if (!cookiePart.Contains("="))
-         {
-            return;
-         }
-
-         string[] keyValue = cookiePart.Split('=');
-
-         // Do nothing the key/value if its length is less than 2.
-         if (keyValue.Length < 2)
-         {
-            return;
-         }
-
-         // Set the key and value on the cookie
-         cookie.Set(keyValue[0], keyValue[1]);
       }
    }
 }
