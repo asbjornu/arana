@@ -54,7 +54,6 @@
     </Compile>
     <Compile Include="Preselection.cs" />
     <Compile Include="Selection\Selection.Attributes.cs" />
-    <Compile Include="Extensions\CookieExtensions.cs" />
     <Compile Include="Extensions\HtmlNodeExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="AranaEngine.cs" />
@@ -70,6 +69,9 @@
     <None Include="Arana.Core.snk" />
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlDocumentExtensions.cs">
+      <Link>Fizzler.Systems.HtmlAgilityPack\HtmlDocumentExtensions.cs</Link>
     </Compile>
     <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs">
       <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs</Link>
@@ -93,6 +95,9 @@
       <Project>{939036D6-29FD-46E4-B6CD-52618F51081B}</Project>
       <Name>Fizzler</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Web;
 
+using Fizzler.Systems.HtmlAgilityPack;
+
 using HtmlAgilityPack;
 
 namespace Arana.Core.Extensions
@@ -175,7 +177,7 @@ namespace Arana.Core.Extensions
          }
 
          HtmlDocument document = new HtmlDocument();
-         document.LoadHtml(html);
+         document.LoadHtml2(html);
          return document;
       }
 
