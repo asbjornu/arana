@@ -73,26 +73,22 @@ namespace Arana.Core.Test.Web
 
 
       [Test]
-      [ExpectedException(typeof(ArgumentOutOfRangeException),
-         ExpectedMessage =
-            "Can't navigate back 1 step, as there's only 0 \"historical\" requests to navigate to."
-         ,
-         MatchType = MessageMatch.Contains)]
       public void NavigatingBackOnFreshEngineThrowsArgumentOutOfRangeException()
       {
-         Engine.Navigate(-1);
+         Assert.That(() => Engine.Navigate(-1),
+                     Throws.TypeOf<ArgumentOutOfRangeException>()
+                        .With.Message.ContainsSubstring(
+                        "Can't navigate back 1 step, as there's only 0 \"historical\" requests to navigate to."));
       }
 
 
       [Test]
-      [ExpectedException(typeof(ArgumentOutOfRangeException),
-         ExpectedMessage =
-            "Can't navigate forward 1 step, as there's only 0 \"future\" requests to navigate to."
-         ,
-         MatchType = MessageMatch.Contains)]
       public void NavigatingForwardOnFreshEngineThrowsArgumentOutOfRangeException()
       {
-         Engine.Navigate(1);
+         Assert.That(() => Engine.Navigate(1),
+                     Throws.TypeOf<ArgumentOutOfRangeException>()
+                        .With.Message.ContainsSubstring(
+                        "Can't navigate forward 1 step, as there's only 0 \"future\" requests to navigate to."));
       }
 
 
