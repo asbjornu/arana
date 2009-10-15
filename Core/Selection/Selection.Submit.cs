@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Arana.Core.Extensions;
 
 namespace Arana.Core
@@ -199,10 +200,7 @@ namespace Arana.Core
          // Set the HTTP method. Default to "GET".
          method = (method.NullWhenEmpty() ?? HttpMethod.Get).ToUpperInvariant();
 
-         Selection formElements = this.engine.Select(FormElementsSelector);
-
-         // TODO: Use this node-context based select when Fizzler/HtmlAgilityPack doesn't bug on it
-         // Selection formElements = form.Select(FormElementsSelector);
+         Selection formElements = form.Select(FormElementsSelector);
 
          // If the submit button's CSS selector is set, add it to the form elements selection
          if (!String.IsNullOrEmpty(submitButtonCssSelector))
