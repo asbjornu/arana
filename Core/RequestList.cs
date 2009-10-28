@@ -126,7 +126,7 @@ namespace Arana.Core
          if (resultingRequestIndex < 0)
          {
             message = String.Format(
-               "Can't navigate back {0} step{1}, as there's only {2} \"historical\" requests to navigate to.",
+               "Can't navigate back {0} step{1}, as there's only {2} 'historical' requests to navigate to.",
                steps * -1,
                steps > 1 ? "s" : String.Empty,
                ((Count - 1) - Index));
@@ -139,7 +139,7 @@ namespace Arana.Core
          if (resultingRequestIndex > (Count - 1))
          {
             message = String.Format(
-               "Can't navigate forward {0} step{1}, as there's only {2} \"future\" requests to navigate to.",
+               "Can't navigate forward {0} step{1}, as there's only {2} 'future' requests to navigate to.",
                steps,
                steps > 1 ? "s" : String.Empty,
                ((Count - 1) - Index));
