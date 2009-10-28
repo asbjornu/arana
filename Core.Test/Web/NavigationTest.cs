@@ -78,7 +78,7 @@ namespace Arana.Core.Test.Web
          Assert.That(() => Engine.Navigate(-1),
                      Throws.TypeOf<ArgumentOutOfRangeException>()
                         .With.Message.ContainsSubstring(
-                        "Can't navigate back 1 step, as there's only 0 \"historical\" requests to navigate to."));
+                        "Can't navigate back 1 step"));
       }
 
 
@@ -88,7 +88,7 @@ namespace Arana.Core.Test.Web
          Assert.That(() => Engine.Navigate(1),
                      Throws.TypeOf<ArgumentOutOfRangeException>()
                         .With.Message.ContainsSubstring(
-                        "Can't navigate forward 1 step, as there's only 0 \"future\" requests to navigate to."));
+                        "Can't navigate forward 1 step"));
       }
 
 

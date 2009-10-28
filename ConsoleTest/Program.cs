@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 using Arana.Core;
 
@@ -33,7 +34,8 @@ namespace Arana.Test.ConsoleApplication
 
       private static void TestArana()
       {
-         new AranaEngine("http://www.google.com/", Console.Out);
+         AranaEngine engine = new AranaEngine("http://www.google.com/", Console.Out);
+         engine.Select("form").Submit();
       }
    }
 }

@@ -16,6 +16,8 @@ namespace Arana.Core
    /// </summary>
    public class AranaEngine : IDisposable
    {
+      private CookieContainer cookieContainer;
+
       /// <summary>
       /// Gets or sets the document.
       /// </summary>
@@ -81,7 +83,7 @@ namespace Arana.Core
          Output = output;
          Requests = new RequestList(this);
          Navigate(uri, true, null, credentials, proxy, null);
-         CookieContainer = new CookieContainer();
+         this.cookieContainer = new CookieContainer();
       }
 
 
@@ -118,7 +120,10 @@ namespace Arana.Core
       /// Gets the cookie container shared by all requests and responses.
       /// </summary>
       /// <value>The cookie container shared by all requests and responses.</value>
-      internal CookieContainer CookieContainer { get; private set; }
+      internal CookieContainer CookieContainer
+      {
+         get { return this.cookieContainer.FixDomains(); }
+      }
 
 
       /// <summary>

@@ -83,6 +83,9 @@
       <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs</Link>
     </Compile>
     <Compile Include="AcceptDictionary.cs" />
+    <Compile Include="Extensions\CookieContainerExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Request.cs" />
     <Compile Include="RequestList.cs" />
     <Compile Include="Response.cs" />
