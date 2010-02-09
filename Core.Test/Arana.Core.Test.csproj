@@ -49,6 +49,7 @@
     </Compile>
     <Compile Include="AranaEngineTest.cs" />
     <Compile Include="Web\EncodingTest.cs" />
+    <Compile Include="Web\InternalLinkTest.cs" />
     <Compile Include="Web\SessionTest.cs" />
     <Compile Include="Web\NavigationTest.cs" />
     <Compile Include="Web\PostTest.cs" />
@@ -57,12 +58,16 @@
     <Compile Include="Web\RedirectTest.cs" />
     <Compile Include="StringExtensionsTest.cs" />
     <Compile Include="Web\TestBase.cs" />
+    <Compile Include="Web\TestWebServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Arana.Core.csproj">
       <Project>{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}</Project>
       <Name>Arana.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\TestData\internalLink.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
