@@ -33,12 +33,12 @@ namespace Arana.Core.Test.Web
         [Test]
         public void FollowInternalLinkTest()
         {
-            Engine.Navigate(Uri + "internalLink.html");
+            const string fileName = "internalLink.html";
+            Engine.Navigate(Uri + fileName);
             Selection selection = Engine.Select("div.content a");
             selection.Follow();
             string actual = Engine.Uri.PathAndQuery;
-            StringAssert.EndsWith("link.html#selflink", actual);
-            // or should we expect it to end with just "link.html"?
+            StringAssert.EndsWith(fileName, actual);           
         }
     }
 }

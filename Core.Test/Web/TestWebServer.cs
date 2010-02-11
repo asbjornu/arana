@@ -8,6 +8,7 @@ namespace Arana.Core.Test.Web
 {
     class TestWebServer
     {
+        protected Boolean Started = false;
         protected String ResourcePrefix;
         protected HttpListener Listener;
 
@@ -24,22 +25,31 @@ namespace Arana.Core.Test.Web
         {
 
             if (this.Listener == null)
-                return;            
-            HttpListenerContext context = this.Listener.EndGetContext(result);
-            this.Listener.BeginGetContext(new AsyncCallback(WebRequestCallback), this.Listener);          
-            this.ProcessRequest(context);
+                return;
+            try
+            {
+                HttpListenerContext context = this.Listener.EndGetContext(result);
+                this.Listener.BeginGetContext(new AsyncCallback(WebRequestCallback), this.Listener);
+                this.ProcessRequest(context);
+            } catch( HttpListenerException  e )
+            {
+                // ignore exception if we have been stopped
+                if (Started)
+                    throw;
+            }
+            
         }
 
-        protected void ProcessRequest(HttpListenerContext Context)
+        protected void ProcessRequest(HttpListenerContext context)
         {
-            Uri uri = Context.Request.Url;
+            Uri uri = context.Request.Url;
             String path = uri.LocalPath;
             if( "/".Equals(path))
             {
-                ReturnIndex(Context);
+                ReturnIndex(context);
             } else
             {
-                ReturnResource(Context);
+                ReturnResource(context);
                 
             }
         }
@@ -116,6 +126,7 @@ namespace Arana.Core.Test.Web
 
         public void Stop()
         {
+            Started = false;
             if (Listener != null)
             {
                 this.Listener.Close();
