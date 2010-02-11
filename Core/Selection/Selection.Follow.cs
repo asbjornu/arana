@@ -45,6 +45,12 @@ namespace Arana.Core
          }
 
          string href = anchors.Attribute("href");
+          if( href.StartsWith("#"))
+          {             
+              // its a fragment URL, and it's referring to the current document              
+              href = this.engine.Requests.Current.Uri.AbsolutePath;
+          }
+
 
          if (String.IsNullOrEmpty(href))
          {
