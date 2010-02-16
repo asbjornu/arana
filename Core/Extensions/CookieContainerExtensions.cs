@@ -17,6 +17,12 @@ namespace Arana.Core.Extensions
       // See http://channel9.msdn.com/forums/TechOff/260235-Bug-in-CookieContainer-where-do-I-report/
       public static CookieContainer FixDomains(this CookieContainer cookieContainer)
       {
+			
+         // TODO: fix does not run on mono, find out if it is actually needed there
+         int p = (int) Environment.OSVersion.Platform;
+         if ((p == 4) || (p == 6) || (p == 128)) 
+            return cookieContainer;
+
          if (cookieContainer != null)
          {
             Type type = typeof(CookieContainer);

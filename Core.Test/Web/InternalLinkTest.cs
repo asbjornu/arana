@@ -6,9 +6,9 @@ namespace Arana.Core.Test.Web
 {
     [TestFixture]
     [Category("Web")]
-    internal class InternalLinkTest
+    public class InternalLinkTest
     {
-        protected TestWebServer WebServer;
+        private TestWebServer WebServer;
         protected AranaEngine Engine { get; set; }
         protected const string Uri = "http://localhost:8080/";
 
