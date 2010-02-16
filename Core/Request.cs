@@ -266,7 +266,7 @@ namespace Arana.Core
          Uri createdUri = uri.ToUri(GetBaseUri());
 
          this.baseUri = new Uri(createdUri.GetLeftPart(UriPartial.Authority));
-         HttpWebRequest request = WebRequest.Create(createdUri) as HttpWebRequest;
+         HttpWebRequest request = WebRequest.Create(createdUri) as HttpWebRequest;		 
 
          if (request == null)
          {
@@ -296,7 +296,7 @@ namespace Arana.Core
             {
                return CreateRequest(String.Concat(uri, '?', this.requestString), null);
             }
-
+            SetRequestProperties(request);	
             using (Stream stream = request.GetRequestStream())
             {
                using (StreamWriter writer = new StreamWriter(stream, Encoding.ASCII))
@@ -305,8 +305,7 @@ namespace Arana.Core
                }
             }
          }
-
-         SetRequestProperties(request);
+         
 
          return request;
       }
