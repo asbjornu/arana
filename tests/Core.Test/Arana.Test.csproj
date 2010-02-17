@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E93219F7-DBBE-4EC0-BAC8-D47DADDCDD08}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{C63CBD11-6964-43DC-A56B-21544A86958A}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Arana.Release</RootNamespace>
-    <AssemblyName>Arana.Release</AssemblyName>
+    <RootNamespace>Arana.Test</RootNamespace>
+    <AssemblyName>Arana.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,36 +31,46 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ILMerge, Version=2.9.210.0, Culture=neutral, PublicKeyToken=736440c9b414ea16, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ThirdParty\ILMerge.exe</HintPath>
-    </Reference>
-    <Reference Include="SevenZipSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ThirdParty\SevenZipSharp.dll</HintPath>
+      <HintPath>..\ThirdParty\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="PathHelper.cs" />
-    <Compile Include="ReleaseApplication.cs" />
+    <Compile Include="AranaEngineTest.cs" />
+    <Compile Include="Web\EncodingTest.cs" />
+    <Compile Include="Web\InternalLinkTest.cs" />
+    <Compile Include="Web\SessionTest.cs" />
+    <Compile Include="Web\NavigationTest.cs" />
+    <Compile Include="Web\PostTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringExtensions.cs" />
+    <Compile Include="Web\QueryStringTest.cs" />
+    <Compile Include="Web\RedirectTest.cs" />
+    <Compile Include="StringExtensionsTest.cs" />
+    <Compile Include="Web\TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Arana.Core.csproj">
+    <ProjectReference Include="..\..\app\Core\Arana.Core.csproj">
       <Project>{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}</Project>
       <Name>Arana.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\app\Web.Server\Arana.Web.Server.csproj">
+      <Project>{47B90D2A-A907-481E-9C21-9FDBFED74A6E}</Project>
+      <Name>Arana.Web.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <EmbeddedResource Include="Web\Data\internal-link.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -70,7 +80,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>if "$(ConfigurationName)"=="Release" "$(TargetPath)" "$(SolutionDir)"</PostBuildEvent>
-  </PropertyGroup>
 </Project>
