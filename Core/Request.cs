@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
 using System.Reflection;
 using System.Text;
 
-using Arana.Core.Extensions;
+using Arana.Extensions;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// Provides a specialized and simplified wrapper around <see cref="HttpWebRequest" />.
@@ -260,7 +261,7 @@ namespace Arana.Core
       /// The created <see cref="HttpWebRequest"/>.
       /// </returns>
       private HttpWebRequest CreateRequest(string uri,
-                                           RequestDictionary requestValues)
+                                           ICollection requestValues)
       {
          bool methodIsGet = (this.method == HttpMethod.Get);
          Uri createdUri = uri.ToUri(GetBaseUri());

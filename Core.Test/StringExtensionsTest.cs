@@ -1,10 +1,10 @@
 ﻿using System;
 
+using Arana.Extensions;
+
 using NUnit.Framework;
 
-using Arana.Core.Extensions;
-
-namespace Arana.Core.Test
+namespace Arana.Test
 {
    [TestFixture]
    public class StringExtensionsTest

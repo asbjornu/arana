@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// An implementation of <see cref="List{Request}" />.

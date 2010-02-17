@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Text;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// Provides a specialized and simplified wrapper around <see cref="HttpWebResponse" />.

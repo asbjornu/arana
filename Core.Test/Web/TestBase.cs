@@ -2,7 +2,7 @@
 
 using NUnit.Framework;
 
-namespace Arana.Core.Test.Web
+namespace Arana.Test.Web
 {
    public class TestBase
    {

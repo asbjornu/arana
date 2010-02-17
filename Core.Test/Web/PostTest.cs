@@ -2,7 +2,7 @@
 
 using NUnit.Framework;
 
-namespace Arana.Core.Test.Web
+namespace Arana.Test.Web
 {
    [TestFixture]
    [Category("Web")]
@@ -43,12 +43,12 @@ namespace Arana.Core.Test.Web
                      "The HTTP status code is invalid.");
 
          Assert.That(Engine.Select("p.radio1 span.value").InnerText,
-                         Is.EqualTo("on"),
-                         "The submitted value of the radio button is invalid.");
+                     Is.EqualTo("on"),
+                     "The submitted value of the radio button is invalid.");
 
          Assert.That(Engine.Select("p.checkbox span.value").InnerText,
-                         Is.EqualTo("on"),
-                         "The submitted value of the checkbox is invalid.");
+                     Is.EqualTo("on"),
+                     "The submitted value of the checkbox is invalid.");
 
          Engine.Select("form").Submit(new Preselection
          {

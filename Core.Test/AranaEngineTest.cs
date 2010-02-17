@@ -3,7 +3,7 @@ using System.Net;
 
 using NUnit.Framework;
 
-namespace Arana.Core.Test
+namespace Arana.Test
 {
    [TestFixture]
    public class AranaEngineTest
@@ -31,7 +31,8 @@ namespace Arana.Core.Test
       }
 
 
-      private const string Uri = "http://test.aranalib.net/";
+      private const string UriString = "http://test.aranalib.net/";
+      private static readonly Uri Uri = new Uri(UriString);
       private NetworkCredential credential;
       private WebProxy proxy;
       private HttpListener listener;
@@ -42,7 +43,7 @@ namespace Arana.Core.Test
       {
          AranaEngine engine = new AranaEngine(Uri);
          Assert.That(engine.Uri.ToString(),
-                     Is.EqualTo(Uri),
+                     Is.EqualTo(UriString),
                      "The URI isn't correct.");
       }
 
@@ -54,6 +55,9 @@ namespace Arana.Core.Test
          Assert.That(engine.Response.Body,
                      Is.Not.Null,
                      "The response body is null.");
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
       }
 
 
@@ -68,6 +72,10 @@ namespace Arana.Core.Test
          Assert.That(engine.Output,
                      Is.EqualTo(Console.Out),
                      "The engine's output isn't equal to the one set in the constructor.");
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
       }
 
 
@@ -75,9 +83,88 @@ namespace Arana.Core.Test
       public void UriProxyConstructor()
       {
          AranaEngine engine = new AranaEngine(Uri, this.proxy);
+
          Assert.That(engine.Response.Body,
                      Is.Not.Null,
                      "The response body is null.");
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
+      }
+
+
+      [Test]
+      public void UriStringConstructor()
+      {
+         AranaEngine engine = new AranaEngine(UriString);
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
+      }
+
+
+      [Test]
+      public void UriStringCredentialConstructor()
+      {
+         AranaEngine engine = new AranaEngine(UriString, this.credential);
+
+         Assert.That(engine.Response.Body,
+                     Is.Not.Null,
+                     "The response body is null.");
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
+      }
+
+
+      [Test]
+      public void UriStringCredentialProxyTextWriterConstructor()
+      {
+         AranaEngine engine = new AranaEngine(UriString,
+                                              this.credential,
+                                              this.proxy,
+                                              Console.Out);
+
+         Assert.That(engine.Output,
+                     Is.EqualTo(Console.Out),
+                     "The engine's output isn't equal to the one set in the constructor.");
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
+      }
+
+
+      [Test]
+      public void UriStringProxyConstructor()
+      {
+         AranaEngine engine = new AranaEngine(UriString, this.proxy);
+
+         Assert.That(engine.Response.Body,
+                     Is.Not.Null,
+                     "The response body is null.");
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
+      }
+
+
+      [Test]
+      public void UriStringTextWriterConstructor()
+      {
+         AranaEngine engine = new AranaEngine(UriString, Console.Out);
+
+         Assert.That(engine.Output,
+                     Is.EqualTo(Console.Out),
+                     "The engine's output isn't equal to the one set in the constructor.");
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
       }
 
 
@@ -85,9 +172,14 @@ namespace Arana.Core.Test
       public void UriTextWriterConstructor()
       {
          AranaEngine engine = new AranaEngine(Uri, Console.Out);
+
          Assert.That(engine.Output,
                      Is.EqualTo(Console.Out),
                      "The engine's output isn't equal to the one set in the constructor.");
+
+         Assert.That(engine.Uri.ToString(),
+                     Is.EqualTo(UriString),
+                     "The URI isn't correct.");
       }
    }
 }

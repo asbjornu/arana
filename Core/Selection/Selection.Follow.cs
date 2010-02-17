@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Arana.Core
+namespace Arana
 {
    public partial class Selection
    {
@@ -45,11 +45,11 @@ namespace Arana.Core
          }
 
          string href = anchors.Attribute("href");
-          if( href.StartsWith("#"))
-          {             
-              // its a fragment URL, and it's referring to the current document              
-              href = this.engine.Requests.Current.Uri.AbsolutePath;
-          }
+         if( href.StartsWith("#"))
+         {             
+            // its a fragment URL, and it's referring to the current document              
+            href = this.engine.Requests.Current.Uri.AbsolutePath;
+         }
 
 
          if (String.IsNullOrEmpty(href))

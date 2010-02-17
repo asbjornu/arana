@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// Dictionary used to connect CSS selectors and actions to perform on
    /// the <see cref="Selection" />s returned from them, typically in the
-   /// <see cref="Selection.Submit(Arana.Core.Preselection)" /> method.
+   /// <see cref="Selection.Submit(Arana.Preselection)" /> method.
    /// </summary>
    public class Preselection : Dictionary<string, Func<Selection, Selection>>
    {

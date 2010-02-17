@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Arana.Core.Extensions;
+
+using Arana.Extensions;
+
 using HtmlAgilityPack;
 
-namespace Arana.Core
+namespace Arana
 {
    public partial class Selection
    {

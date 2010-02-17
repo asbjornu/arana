@@ -1,7 +1,8 @@
 ﻿using System;
+
 using HtmlAgilityPack;
 
-namespace Arana.Core.Extensions
+namespace Arana.Extensions
 {
    /// <summary>
    /// Contains extension methods for the <see cref="HtmlAttribute"/>

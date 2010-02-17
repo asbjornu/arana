@@ -8,8 +8,8 @@
     <ProjectGuid>{C63CBD11-6964-43DC-A56B-21544A86958A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Arana.Core.Test</RootNamespace>
-    <AssemblyName>Arana.Core.Test</AssemblyName>
+    <RootNamespace>Arana.Test</RootNamespace>
+    <AssemblyName>Arana.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -58,16 +58,19 @@
     <Compile Include="Web\RedirectTest.cs" />
     <Compile Include="StringExtensionsTest.cs" />
     <Compile Include="Web\TestBase.cs" />
-    <Compile Include="Web\TestWebServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Arana.Core.csproj">
       <Project>{5CEF73E5-A0F0-4273-AC1E-C9CCBD8F10A7}</Project>
       <Name>Arana.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Web.Server\Arana.Web.Server.csproj">
+      <Project>{47B90D2A-A907-481E-9C21-9FDBFED74A6E}</Project>
+      <Name>Arana.Web.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Web\TestData\internalLink.html" />
+    <EmbeddedResource Include="Web\Data\internal-link.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

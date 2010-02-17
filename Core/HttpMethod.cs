@@ -1,4 +1,4 @@
-﻿namespace Arana.Core
+﻿namespace Arana
 {
    /// <summary>
    /// Contains the different HTTP methods supported by Araña.

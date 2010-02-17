@@ -4,13 +4,13 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 
-using Arana.Core.Extensions;
+using Arana.Extensions;
 
 using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// A list of HTML elements selected with <see cref="AranaEngine.Select(System.String)" />.
