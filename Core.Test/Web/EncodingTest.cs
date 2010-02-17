@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Arana.Core.Test.Web
+namespace Arana.Test.Web
 {
    [TestFixture]
    public class EncodingTest

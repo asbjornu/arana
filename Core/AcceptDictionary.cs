@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Net.Mime;
 using System.Text;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// 

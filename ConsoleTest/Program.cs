@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Net;
-
-using Arana.Core;
 
 namespace Arana.Test.ConsoleApplication
 {

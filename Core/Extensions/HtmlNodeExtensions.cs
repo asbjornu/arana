@@ -7,7 +7,7 @@ using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-namespace Arana.Core.Extensions
+namespace Arana.Extensions
 {
    /// <summary>
    /// Contains extension methods for the <see cref="HtmlNode"/> 
@@ -134,7 +134,7 @@ namespace Arana.Core.Extensions
          }
 
          return node.Attributes.Get("type").IsEqualTo("button", "submit")
-            || node.Name.IsEqualTo("button");
+                || node.Name.IsEqualTo("button");
       }
 
 

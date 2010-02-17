@@ -3,7 +3,7 @@ using System.Collections;
 using System.Net;
 using System.Reflection;
 
-namespace Arana.Core.Extensions
+namespace Arana.Extensions
 {
    /// <summary>
    /// Contains extension methods for the <see cref="CookieContainer" /> class.

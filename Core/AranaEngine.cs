@@ -3,25 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
-using Arana.Core.Extensions;
+using Arana.Extensions;
 
 using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// The base testing engine of Araña.
    /// </summary>
    public class AranaEngine : IDisposable
    {
-      private CookieContainer cookieContainer;
-
-      /// <summary>
-      /// Gets or sets the document.
-      /// </summary>
-      /// <value>The document.</value>
+      private readonly CookieContainer cookieContainer;
       private HtmlDocument document;
 
 
@@ -32,6 +27,68 @@ namespace Arana.Core
       public AranaEngine(string uri)
          : this(uri, null, null, null)
       {
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="Arana"/> class.
+      /// </summary>
+      /// <param name="uri">The application URI.</param>
+      public AranaEngine(Uri uri)
+         : this(uri, null, null, null)
+      {
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="Arana"/> class.
+      /// </summary>
+      /// <param name="uri">The application URI.</param>
+      /// <param name="output">The <see cref="TextWriter" /> to write debug information to.</param>
+      public AranaEngine(Uri uri, TextWriter output)
+         : this(uri, null, null, output)
+      {
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AranaEngine"/> class.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="credentials">The credentials.</param>
+      public AranaEngine(Uri uri, ICredentials credentials)
+         : this(uri, credentials, null, null)
+      {
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AranaEngine"/> class.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="proxy">The proxy.</param>
+      public AranaEngine(Uri uri, IWebProxy proxy)
+         : this(uri, null, proxy, null)
+      {
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AranaEngine"/> class.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <param name="credentials">The credentials.</param>
+      /// <param name="proxy">The proxy.</param>
+      /// <param name="output">The <see cref="TextWriter" /> to write debug information to.</param>
+      public AranaEngine(Uri uri,
+                         ICredentials credentials,
+                         IWebProxy proxy,
+                         TextWriter output)
+      {
+         Output = output;
+         Requests = new RequestList(this);
+         Navigate(ToString(uri), true, null, credentials, proxy, null);
+         this.cookieContainer = new CookieContainer();
       }
 
 
@@ -268,7 +325,7 @@ namespace Arana.Core
       /// A new <see cref="HtmlDocument"/> for the given <paramref name="uri"/>.
       /// </returns>
       /// <exception cref="InvalidUriException">
-      /// If <paramref name="uri"/> doesn't yield a valid <see cref="Core.Response"/>.
+      /// If <paramref name="uri"/> doesn't yield a valid <see cref="Arana.Response"/>.
       /// </exception>
       private HtmlDocument GetDocument(string uri,
                                        bool followRedirect,
@@ -328,7 +385,7 @@ namespace Arana.Core
       /// <param name="proxy">The proxy.</param>
       /// <param name="requestValues">The request values.</param>
       /// <exception cref="InvalidUriException">
-      /// If <paramref name="uri"/> doesn't yield a valid <see cref="Core.Response"/>.
+      /// If <paramref name="uri"/> doesn't yield a valid <see cref="Arana.Response"/>.
       /// </exception>
       private void Navigate(string uri,
                             bool followRedirect,
@@ -352,6 +409,24 @@ namespace Arana.Core
       public void Dispose()
       {
          this.document = null;
+      }
+
+
+      /// <summary>
+      /// Returns a <see cref="System.String"/> that represents the <paramref name="uri"/>.
+      /// </summary>
+      /// <param name="uri">The URI.</param>
+      /// <returns>
+      /// A <see cref="System.String"/> that represents the <paramref name="uri"/>.
+      /// </returns>
+      private static string ToString(Uri uri)
+      {
+         if (uri == null)
+         {
+            throw new ArgumentNullException("uri");
+         }
+
+         return uri.ToString();
       }
    }
 }

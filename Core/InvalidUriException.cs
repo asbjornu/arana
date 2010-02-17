@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Arana.Core
+namespace Arana
 {
    /// <summary>
    /// The exception that is thrown when an URI is constructed from an invalid string.

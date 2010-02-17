@@ -3,7 +3,7 @@ using System.Net;
 
 using NUnit.Framework;
 
-namespace Arana.Core.Test.Web
+namespace Arana.Test.Web
 {
    [TestFixture]
    [Ignore("Run this explicitly after the GAE app is running.")]

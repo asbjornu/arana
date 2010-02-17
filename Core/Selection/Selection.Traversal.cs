@@ -5,7 +5,7 @@ using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-namespace Arana.Core
+namespace Arana
 {
    public partial class Selection
    {

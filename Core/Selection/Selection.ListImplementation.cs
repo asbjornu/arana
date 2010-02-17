@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using HtmlAgilityPack;
 
-namespace Arana.Core
+namespace Arana
 {
    public partial class Selection : IList<HtmlNode>
    {

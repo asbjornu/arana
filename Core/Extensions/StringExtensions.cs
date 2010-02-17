@@ -6,7 +6,7 @@ using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-namespace Arana.Core.Extensions
+namespace Arana.Extensions
 {
    /// <summary>
    /// A static class that contains extension methods for the <see cref="T:System.String" /> object.
@@ -20,7 +20,6 @@ namespace Arana.Core.Extensions
       /// <param name="instance">The <see cref="T:System.String"/> to convert.</param>
       /// <param name="defaultValue">The default value to return if
       /// <paramref name="instance"/> can't be converted.</param>
-      /// <returns>
       /// <returns>
       /// The converted <see cref="T:System.DateTime"/> value or <paramref name="defaultValue"/>
       /// if the conversion failed.

@@ -3,7 +3,7 @@ using System.Net;
 
 using NUnit.Framework;
 
-namespace Arana.Core.Test.Web
+namespace Arana.Test.Web
 {
    [TestFixture]
    [Category("Web")]
@@ -78,7 +78,7 @@ namespace Arana.Core.Test.Web
          Assert.That(() => Engine.Navigate(-1),
                      Throws.TypeOf<ArgumentOutOfRangeException>()
                         .With.Message.ContainsSubstring(
-                        "Can't navigate back 1 step"));
+                           "Can't navigate back 1 step"));
       }
 
 
@@ -88,7 +88,7 @@ namespace Arana.Core.Test.Web
          Assert.That(() => Engine.Navigate(1),
                      Throws.TypeOf<ArgumentOutOfRangeException>()
                         .With.Message.ContainsSubstring(
-                        "Can't navigate forward 1 step"));
+                           "Can't navigate forward 1 step"));
       }
 
 

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using Arana.Core.Extensions;
 
-namespace Arana.Core
+using Arana.Extensions;
+
+namespace Arana
 {
    /// <summary>
    /// A convenient implementation of <see cref="Dictionary{String,String}" />.
