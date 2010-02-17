@@ -12,6 +12,15 @@ namespace Arana.Release
       /// <summary>
       /// Initializes a new instance of the <see cref="PathHelper"/> class.
       /// </summary>
+      public PathHelper()
+         : this(null)
+      {
+      }
+
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="PathHelper"/> class.
+      /// </summary>
       /// <param name="solutionDirectory">The solution directory.</param>
       public PathHelper(string solutionDirectory)
       {
@@ -24,22 +33,23 @@ namespace Arana.Release
 
          Solution = solutionDirectory ?? solutionFolder;
 
-         string thirdParty = Solution.CombineWith("ThirdParty");
+         string tools = Solution.CombineWith("tools");
+         string lib = Solution.CombineWith("lib");
 
-         Core = Solution.CombineWith("Core");
+         Core = Solution.CombineWith("app", "Core");
          KeyFile = Core.CombineWith(coreAssemblyName.ConcatWith(".snk"));
 
          string coreReleaseBin = Core.CombineWith("bin", "Release");
 
          ReleaseOutputBin = releaseBinFolder.CombineWith("Output");
          Arana = coreReleaseBin.CombineWith(coreAssemblyName.ConcatWith(".dll"));
-         Fizzler = thirdParty.CombineWith("Fizzler", "bin", "Release", "Fizzler.dll");
-         HtmlAgilityPack = thirdParty.CombineWith("HtmlAgilityPack.dll");
+         Fizzler = lib.CombineWith("Fizzler", "bin", "Release", "Fizzler.dll");
+         HtmlAgilityPack = lib.CombineWith("HtmlAgilityPack.dll");
          InputDocumentation = coreReleaseBin.CombineWith(
             coreAssemblyName.ConcatWith(".xml"));
          OutputDocumentation = ReleaseOutputBin.CombineWith("Arana.xml");
          OutputFile = ReleaseOutputBin.CombineWith("Arana.dll");
-         SevenZip = thirdParty.CombineWith("7z.dll");
+         SevenZip = tools.CombineWith("7z.dll");
          Archive = releaseBinFolder.CombineWith("Archive");
          OutputArchiveName = Archive.CombineWith(String.Format("Arana-{0}", version));
 
@@ -136,6 +146,67 @@ namespace Arana.Release
 
 
       /// <summary>
+      /// Validates the existance of all the paths.
+      /// </summary>
+      private void ValidateExistance()
+      {
+         if (!Directory.Exists(Solution))
+         {
+            throw new FileNotFoundException("Solution directory not found.", Solution);
+         }
+
+         if (!Directory.Exists(Core))
+         {
+            throw new FileNotFoundException("Core directory not found.", Core);
+         }
+
+         if (!File.Exists(Arana))
+         {
+            throw new FileNotFoundException("Arana assembly not found.", Arana);
+         }
+
+         if (!File.Exists(KeyFile))
+         {
+            throw new FileNotFoundException("Key file not found.", KeyFile);
+         }
+
+         if (!File.Exists(InputDocumentation))
+         {
+            throw new FileNotFoundException("Input documentation file not found.",
+                                            InputDocumentation);
+         }
+
+         if (!File.Exists(SevenZip))
+         {
+            throw new FileNotFoundException("7-Zip assembly not found.", SevenZip);
+         }
+
+         if (!File.Exists(Fizzler))
+         {
+            throw new FileNotFoundException("Fizzler assembly not found.", Fizzler);
+         }
+
+         if (!File.Exists(HtmlAgilityPack))
+         {
+            throw new FileNotFoundException("HtmlAgilityPack assembly not found.",
+                                            HtmlAgilityPack);
+         }
+
+         // Create the "Output" directory if it doesn't exist
+         if (!Directory.Exists(ReleaseOutputBin))
+         {
+            Directory.CreateDirectory(ReleaseOutputBin);
+         }
+
+         // Create the "Archive" directory if it doesn't exist
+         if (!Directory.Exists(Archive))
+         {
+            Directory.CreateDirectory(Archive);
+         }
+      }
+
+
+      /// <summary>
       /// Gets the assembly info.
       /// </summary>
       /// <param name="coreAssemblyName">Name of the core assembly.</param>
@@ -151,12 +222,16 @@ namespace Arana.Release
          Assembly releaseAssembly = Assembly.GetAssembly(typeof(PathHelper));
 
          if ((releaseAssembly == null) || String.IsNullOrEmpty(releaseAssembly.Location))
+         {
             throw new InvalidOperationException(
                "The 'Release' Assembly is null or has no location.");
+         }
 
          if (coreAssembly == null)
+         {
             throw new InvalidOperationException(
                "The 'Araña.Core' Assembly is null.");
+         }
 
          FileInfo releaseAssemblyInfo = new FileInfo(releaseAssembly.Location);
 
@@ -164,57 +239,19 @@ namespace Arana.Release
              (releaseAssemblyInfo.Directory.Parent == null) ||
              (releaseAssemblyInfo.Directory.Parent.Parent == null) ||
              (releaseAssemblyInfo.Directory.Parent.Parent.Parent == null) ||
-             (releaseAssemblyInfo.Directory.Parent == null))
+             (releaseAssemblyInfo.Directory.Parent.Parent.Parent.Parent == null))
+         {
             throw new InvalidOperationException(
                "The 'Release' Assembly has an invalid directory structure.");
+         }
 
          AssemblyName coreName = coreAssembly.GetName();
 
          coreAssemblyName = coreName.Name;
          releaseBinFolder = releaseAssemblyInfo.Directory.Parent.FullName;
-         solutionFolder = releaseAssemblyInfo.Directory.Parent.Parent.Parent.FullName;
+         solutionFolder =
+            releaseAssemblyInfo.Directory.Parent.Parent.Parent.Parent.FullName;
          version = coreName.Version.ToString();
-      }
-
-
-      /// <summary>
-      /// Validates the existance of all the paths.
-      /// </summary>
-      private void ValidateExistance()
-      {
-         if (!Directory.Exists(Solution))
-            throw new FileNotFoundException("Solution directory not found.", Solution);
-
-         if (!Directory.Exists(Core))
-            throw new FileNotFoundException("Core directory not found.", Core);
-
-         if (!File.Exists(Arana))
-            throw new FileNotFoundException("Arana assembly not found.", Arana);
-
-         if (!File.Exists(KeyFile))
-            throw new FileNotFoundException("Key file not found.", KeyFile);
-
-         if (!File.Exists(InputDocumentation))
-            throw new FileNotFoundException("Input documentation file not found.",
-                                            InputDocumentation);
-
-         if (!File.Exists(SevenZip))
-            throw new FileNotFoundException("7-Zip assembly not found.", SevenZip);
-
-         if (!File.Exists(Fizzler))
-            throw new FileNotFoundException("Fizzler assembly not found.", Fizzler);
-
-         if (!File.Exists(HtmlAgilityPack))
-            throw new FileNotFoundException("HtmlAgilityPack assembly not found.",
-                                            HtmlAgilityPack);
-
-         // Create the "Output" directory if it doesn't exist
-         if (!Directory.Exists(ReleaseOutputBin))
-            Directory.CreateDirectory(ReleaseOutputBin);
-
-         // Create the "Archive" directory if it doesn't exist
-         if (!Directory.Exists(Archive))
-            Directory.CreateDirectory(Archive);
       }
    }
 }
