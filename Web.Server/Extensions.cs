@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Xml;
 
 namespace Arana.Web.Server
 {
@@ -42,85 +41,12 @@ namespace Arana.Web.Server
                                       Assembly assembly,
                                       string resourcePrefix)
       {
-         XmlWriterSettings settings = new XmlWriterSettings
-         {
-            Indent = true,
-            OmitXmlDeclaration = true
-         };
-
-         IEnumerable<string> relativeNames =
+         IEnumerable<string> relativeFileNames =
             assembly.GetManifestResourceNames().Select(
                n => n.Substring(resourcePrefix.Length + 1));
 
-         using (StringWriter stringWriter = new StringWriter())
-         {
-            using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))
-            {
-               if (xmlWriter == null)
-               {
-                  throw new InvalidOperationException("Couldn't create XML writer.");
-               }
-
-               // <!DOCTYPE>
-               xmlWriter.WriteDocType("html",
-                                      Xhtml.DocType.PublicIdentifier,
-                                      Xhtml.DocType.SystemIdentifier,
-                                      null);
-
-               // <html xml:lang="en">
-               xmlWriter.WriteStartElement("html", Xhtml.Namespace);
-               xmlWriter.WriteAttributeString("lang", Xml.Namespace, "en");
-
-               // <head>
-               xmlWriter.WriteStartElement("head", Xhtml.Namespace);
-
-               // <title>Index</title>
-               xmlWriter.WriteElementString("title", Xhtml.Namespace, "Index");
-
-               // <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-               xmlWriter.WriteStartElement("meta");
-               xmlWriter.WriteAttributeString("http-equiv", "Content-Type");
-               xmlWriter.WriteAttributeString("content",
-                                              "application/xhtml+xml; charset=utf-8");
-               xmlWriter.WriteEndElement();
-
-               // </head>
-               xmlWriter.WriteEndElement();
-
-               // <body>
-               xmlWriter.WriteStartElement("body", Xhtml.Namespace);
-
-               // <ul>
-               xmlWriter.WriteStartElement("ul", Xhtml.Namespace);
-
-               foreach (string relativeName in relativeNames)
-               {
-                  // <li>
-                  xmlWriter.WriteStartElement("li", Xhtml.Namespace);
-
-                  // <a id="relativeName" href="#relativeName">relativeName</a>
-                  xmlWriter.WriteStartElement("a", Xhtml.Namespace);
-                  xmlWriter.WriteAttributeString("id", relativeName);
-                  xmlWriter.WriteAttributeString("href", String.Concat('#', relativeName));
-                  xmlWriter.WriteString(relativeName);
-                  xmlWriter.WriteEndElement();
-
-                  // </li>
-                  xmlWriter.WriteEndElement();
-               }
-
-               // </ul>
-               xmlWriter.WriteEndElement();
-
-               // </body>
-               xmlWriter.WriteEndElement();
-
-               // </html>
-               xmlWriter.WriteEndElement();
-            }
-
-            context.WriteHtml(stringWriter.ToString());
-         }
+         IndexDocument indexDocument = new IndexDocument(relativeFileNames);
+         context.WriteHtml(indexDocument.ToString());
       }
 
 

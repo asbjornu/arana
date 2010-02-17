@@ -1,50 +1,47 @@
-﻿using System;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Arana.Web.Server.Test
 {
-   [TestFixture]
-   public class WebServerTest
+   public class WebServerTest : WebServerTestBase
    {
-      private const string Prefix = "badabada";
-      private const string UriString = "http://localhost:8080/";
-      private static readonly Uri Uri = new Uri(UriString);
+      private AranaEngine engine;
+      private WebServer webServer;
 
 
-      [Test]
-      public void UriStringTypeConstructor()
+      [TestFixtureSetUp]
+      public void FixtureSetUp()
       {
-         using (new WebServer(UriString, typeof(WebServerTest)))
-         {
-         }
+         this.webServer = new WebServer(Uri, typeof(WebServerTest), "Data");
+         this.engine = new AranaEngine(Uri);
+      }
+
+
+      [TestFixtureTearDown]
+      public void FixtureTearDown()
+      {
+         this.engine.Dispose();
+         this.webServer.Dispose();
       }
 
 
       [Test]
-      public void UriStringTypePrefixConstructor()
+      public void Test01_IndexPage_ContainsCorrectData()
       {
-         using (new WebServer(UriString, typeof(WebServerTest), Prefix))
-         {
-         }
+         string title = this.engine.Select("title").InnerText;
+         Selection listItems = this.engine.Select("ul li");
+
+         Assert.That(title, Is.EqualTo("Index"));
+         Assert.That(listItems, Has.Count.EqualTo(1));
       }
 
 
       [Test]
-      public void UriTypeConstructor()
+      public void Test02_CanNavigateToTest()
       {
-         using (new WebServer(Uri, typeof(WebServerTest)))
-         {
-         }
-      }
+         this.engine.Select("ul li a[href='test.html']").Follow();
 
-
-      [Test]
-      public void UriTypePrefixConstructor()
-      {
-         using (new WebServer(Uri, typeof(WebServerTest), Prefix))
-         {
-         }
+         string title = this.engine.Select("title").InnerText;
+         Assert.That(title, Is.EqualTo("Test"));
       }
    }
 }
