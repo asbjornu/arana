@@ -67,19 +67,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Arana.Core.snk" />
-    <Compile Include="..\CommonAssemblyInfo.cs">
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlDocumentExtensions.cs">
+    <Compile Include="..\..\lib\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlDocumentExtensions.cs">
       <Link>Fizzler.Systems.HtmlAgilityPack\HtmlDocumentExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs">
+    <Compile Include="..\..\lib\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs">
       <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs">
+    <Compile Include="..\..\lib\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs">
       <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeOps.cs</Link>
     </Compile>
-    <Compile Include="..\ThirdParty\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs">
+    <Compile Include="..\..\lib\Fizzler\Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs">
       <Link>Fizzler.Systems.HtmlAgilityPack\HtmlNodeSelection.cs</Link>
     </Compile>
     <Compile Include="AcceptDictionary.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Selection\Selection.Traversal.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\Fizzler\Fizzler\Fizzler.csproj">
+    <ProjectReference Include="..\..\lib\Fizzler\Fizzler\Fizzler.csproj">
       <Project>{939036D6-29FD-46E4-B6CD-52618F51081B}</Project>
       <Name>Fizzler</Name>
     </ProjectReference>
