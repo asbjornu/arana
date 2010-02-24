@@ -4,11 +4,22 @@ using NUnit.Framework;
 
 namespace Arana.Test.Web
 {
-   public class TestBase
+   public abstract class TestBase
    {
-      protected AranaEngine Engine { get; set; }
+      protected TestBase()
+         : this("http://test.aranalib.net/")
+      {
+      }
 
-      protected const string Uri = "http://test.aranalib.net/";
+
+      protected TestBase(string uri)
+      {
+         Uri = uri;
+      }
+
+
+      protected AranaEngine Engine { get; set; }
+      protected string Uri { get; private set; }
 
 
       [SetUp]

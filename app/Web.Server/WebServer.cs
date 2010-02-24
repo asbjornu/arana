@@ -10,7 +10,9 @@ namespace Arana.Web.Server
    public class WebServer : IDisposable
    {
       private readonly Assembly assembly;
+      private readonly DateTime? assemblyLastModified;
       private readonly HttpListener listener;
+      private readonly string name;
       private readonly string resourcePrefix;
       private bool disposed;
 
@@ -26,39 +28,6 @@ namespace Arana.Web.Server
       public WebServer(string listeningAuthority, Type type)
          : this(listeningAuthority, type, null)
       {
-      }
-
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="WebServer"/> class.
-      /// </summary>
-      /// <param name="listeningAuthority">The Domain Name System (DNS) host name or IP
-      /// address and the port number the <see cref="WebServer"/> should
-      /// be listening on.</param>
-      /// <param name="type">The <see cref="T:System.Type"/> whose namespace
-      /// is used to scope the manifest resource name.</param>
-      /// <param name="resourcePrefix">The prefix (typically represented by the folder(s)
-      /// the resource files are placed within) of the resource files, excluding the
-      /// namespace of <paramref name="type"/>.</param>
-      public WebServer(string listeningAuthority, Type type, string resourcePrefix)
-      {
-         if (listeningAuthority == null)
-         {
-            throw new ArgumentNullException("listeningAuthority");
-         }
-
-         if (type == null)
-         {
-            throw new ArgumentNullException("type");
-         }
-
-         this.resourcePrefix = String.Join(".", new[] { type.Namespace, resourcePrefix });
-         this.assembly = type.Assembly;
-
-         this.listener = new HttpListener();
-         this.listener.Prefixes.Add(listeningAuthority);
-         this.listener.Start();
-         this.listener.BeginGetContext(WebRequestCallback, this.listener);
       }
 
 
@@ -94,11 +63,54 @@ namespace Arana.Web.Server
 
 
       /// <summary>
+      /// Initializes a new instance of the <see cref="WebServer"/> class.
+      /// </summary>
+      /// <param name="listeningAuthority">The Domain Name System (DNS) host name or IP
+      /// address and the port number the <see cref="WebServer"/> should
+      /// be listening on.</param>
+      /// <param name="type">The <see cref="T:System.Type"/> whose namespace
+      /// is used to scope the manifest resource name.</param>
+      /// <param name="resourcePrefix">The prefix (typically represented by the folder(s)
+      /// the resource files are placed within) of the resource files, excluding the
+      /// namespace of <paramref name="type"/>.</param>
+      public WebServer(string listeningAuthority, Type type, string resourcePrefix)
+      {
+         if (listeningAuthority == null)
+         {
+            throw new ArgumentNullException("listeningAuthority");
+         }
+
+         if (type == null)
+         {
+            throw new ArgumentNullException("type");
+         }
+
+         this.resourcePrefix = String.Join(".", new[] { type.Namespace, resourcePrefix });
+         this.assembly = type.Assembly;
+         this.name = GetName();
+         this.assemblyLastModified = this.assembly.GetLastModified();
+
+         this.listener = new HttpListener();
+         this.listener.Prefixes.Add(listeningAuthority);
+         this.listener.Start();
+         this.listener.BeginGetContext(WebRequestCallback, this.listener);
+      }
+
+
+      /// <summary>
       /// Processes the request.
       /// </summary>
       /// <param name="context">The context.</param>
       private void ProcessRequest(HttpListenerContext context)
       {
+         context.Response.AddHeader("Server", this.name);
+
+         if (this.assemblyLastModified.HasValue)
+         {
+            context.Response.AddHeader("Last-Modified",
+                                       this.assemblyLastModified.Value.ToString("r"));
+         }
+
          Uri uri = context.Request.Url;
          string path = uri.LocalPath;
 
@@ -120,7 +132,7 @@ namespace Arana.Web.Server
       private void WebRequestCallback(IAsyncResult result)
       {
          // Lock to prevent race conditions between Dispose() and the callback
-         lock (this)
+         lock (this.listener)
          {
             if ((this.listener == null) || this.disposed)
             {
@@ -151,7 +163,7 @@ namespace Arana.Web.Server
       public void Dispose()
       {
          // Lock to prevent race conditions between Dispose() and the callback
-         lock (this)
+         lock (this.listener)
          {
             if (this.listener != null)
             {
@@ -160,6 +172,17 @@ namespace Arana.Web.Server
 
             this.disposed = true;
          }
+      }
+
+
+      /// <summary>
+      /// Gets the name of the <see cref="WebServer"/> as defined in the assembly information.
+      /// </summary>
+      /// <returns>The name of the <see cref="WebServer"/> as defined in the assembly information.</returns>
+      private static string GetName()
+      {
+         return String.Format("Arana-Web-Server/{0}",
+                              typeof(WebServer).Assembly.GetName().Version.ToString(4));
       }
    }
 }

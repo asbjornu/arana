@@ -38,10 +38,14 @@ namespace Arana.Extensions
       /// </returns>
       public static string Get(this HtmlAttributeCollection @attributes, string name)
       {
-         if ((attributes == null) || (attributes.Count == 0))
+         if (attributes == null)
+         {
             throw new ArgumentNullException("attributes");
+         }
 
-         HtmlAttribute attribute = attributes[name];
+         HtmlAttribute attribute = (attributes.Count != 0)
+                                      ? attributes[name]
+                                      : null;
 
          return (attribute != null) ? attribute.Value : null;
       }

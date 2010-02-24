@@ -62,8 +62,10 @@ namespace Arana.Extensions
             selectorBuilder.Append(node.Name);
          }
 
-         // If we're to carry on, prepend the selector of the parent element
-         if (carryOn)
+         // If we're to carry on, prepend the selector of the parent non-null element
+         if (carryOn &&
+            (node.ParentNode != null) &&
+            (node.ParentNode.NodeType == HtmlNodeType.Element))
          {
             selectorBuilder.Insert(0, node.ParentNode.GetCssSelector());
          }

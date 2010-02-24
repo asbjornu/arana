@@ -196,9 +196,9 @@ namespace Arana
       /// </summary>
       /// <param name="steps">The number of steps steps to navigate. A positive
       /// number navigates forward; negative backward.</param>
-      public void Navigate(int steps)
+      public AranaEngine Navigate(int steps)
       {
-         Requests.Navigate(steps);
+         return Requests.Navigate(steps);
       }
 
 
@@ -206,9 +206,9 @@ namespace Arana
       /// Navigates to the specified uri. If 
       /// </summary>
       /// <param name="uri">The URI.</param>
-      public void Navigate(string uri)
+      public AranaEngine Navigate(string uri)
       {
-         Navigate(uri, true, null, null, null, null);
+         return Navigate(uri, true, null, null, null, null);
       }
 
 
@@ -231,9 +231,9 @@ namespace Arana
       /// <param name="uri">The URI.</param>
       /// <param name="followRedirect"><c>true</c> if the request should automatically follow redirection responses from the
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
-      internal void Navigate(string uri, bool followRedirect)
+      internal AranaEngine Navigate(string uri, bool followRedirect)
       {
-         Navigate(uri, followRedirect, null, null, null, null);
+         return Navigate(uri, followRedirect, null, null, null, null);
       }
 
 
@@ -245,12 +245,12 @@ namespace Arana
       /// Internet resource; otherwise, <c>false</c>. The default value is true.</param>
       /// <param name="httpMethod">The HTTP method.</param>
       /// <param name="requestValues">The request values.</param>
-      internal void Navigate(string uri,
-                             bool followRedirect,
-                             string httpMethod,
-                             RequestDictionary requestValues)
+      internal AranaEngine Navigate(string uri,
+                                    bool followRedirect,
+                                    string httpMethod,
+                                    RequestDictionary requestValues)
       {
-         Navigate(uri, followRedirect, httpMethod, null, null, requestValues);
+         return Navigate(uri, followRedirect, httpMethod, null, null, requestValues);
       }
 
 
@@ -387,12 +387,12 @@ namespace Arana
       /// <exception cref="InvalidUriException">
       /// If <paramref name="uri"/> doesn't yield a valid <see cref="Arana.Response"/>.
       /// </exception>
-      private void Navigate(string uri,
-                            bool followRedirect,
-                            string httpMethod,
-                            ICredentials credentials,
-                            IWebProxy proxy,
-                            RequestDictionary requestValues)
+      private AranaEngine Navigate(string uri,
+                                   bool followRedirect,
+                                   string httpMethod,
+                                   ICredentials credentials,
+                                   IWebProxy proxy,
+                                   RequestDictionary requestValues)
       {
          this.document = GetDocument(uri,
                                      followRedirect,
@@ -400,6 +400,7 @@ namespace Arana
                                      credentials,
                                      proxy,
                                      requestValues);
+         return this;
       }
 
 

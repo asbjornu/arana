@@ -48,8 +48,10 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AranaEngineTest.cs" />
+    <Compile Include="Web\SelectionTest.cs" />
+    <Compile Include="Web\WebServingTestBase.cs" />
     <Compile Include="Web\EncodingTest.cs" />
-    <Compile Include="Web\InternalLinkTest.cs" />
+    <Compile Include="Web\LinkTest.cs" />
     <Compile Include="Web\SessionTest.cs" />
     <Compile Include="Web\NavigationTest.cs" />
     <Compile Include="Web\PostTest.cs" />
@@ -71,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Web\Data\internal-link.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Data\newline-link.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
