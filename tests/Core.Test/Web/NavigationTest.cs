@@ -7,7 +7,7 @@ namespace Arana.Test.Web
 {
    [TestFixture]
    [Category("Web")]
-   public class NavigationTest : TestBase
+   public class NavigationTest : WebServingTestBase
    {
       [Test]
       public void IndexThenAbsoluteUri()
@@ -37,7 +37,7 @@ namespace Arana.Test.Web
                      Is.EqualTo("/"),
                      "The URI is incorrect.");
 
-         const string path = "/login_test/";
+         const string path = "/internal-link.html";
 
          Engine.Navigate(path);
 
@@ -58,7 +58,7 @@ namespace Arana.Test.Web
                      Is.EqualTo("/"),
                      "The URI is incorrect.");
 
-         const string pathAndQuery = "/querystring_test/?foo=bar&baz=zux";
+         const string pathAndQuery = "/internal-link.html?foo=bar&baz=zux";
 
          Engine.Navigate(pathAndQuery);
 
@@ -93,20 +93,22 @@ namespace Arana.Test.Web
 
 
       [Test]
-      public void ToLoginAndBackAndForwardAgain()
+      public void ForwardAndBackAndForwardAgain()
       {
+         const string file = "/internal-link.html";
+
          Assert.That(Engine.Uri.PathAndQuery,
                      Is.EqualTo("/"),
                      "The URI is incorrect.");
 
-         Engine.Select("li#login-test a").Follow();
+         Engine.Select("li:first-child a").Follow();
 
          Assert.That(Engine.Response.Status,
                      Is.EqualTo(HttpStatusCode.OK),
                      "The HTTP status code is invalid.");
 
          Assert.That(Engine.Uri.PathAndQuery,
-                     Is.EqualTo("/login_test/"),
+                     Is.EqualTo(file),
                      "The URI is incorrect.");
 
          // Navigate back
@@ -128,7 +130,7 @@ namespace Arana.Test.Web
                      "The HTTP status code is invalid.");
 
          Assert.That(Engine.Uri.PathAndQuery,
-                     Is.EqualTo("/login_test/"),
+                     Is.EqualTo(file),
                      "The URI is incorrect.");
       }
    }

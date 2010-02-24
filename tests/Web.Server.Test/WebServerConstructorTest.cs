@@ -7,6 +7,24 @@ namespace Arana.Web.Server.Test
    [TestFixture]
    public class WebServerConstructorTest : WebServerTestBase
    {
+      public override void SetUp()
+      {
+         // No setup
+      }
+
+
+      public override void FixtureSetUp()
+      {
+         // No setup
+      }
+
+
+      public override void FixtureTearDown()
+      {
+         // No tear down
+      }
+
+
       [Test]
       public void NullUriStringType_ThrowsArgumentNullException()
       {

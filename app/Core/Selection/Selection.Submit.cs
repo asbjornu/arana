@@ -219,9 +219,7 @@ namespace Arana
             requestDictionary = formElements.MergeRequestDictionary(formElementsSelection);
          }
 
-         this.engine.Navigate(action, followRedirect, method, requestDictionary);
-
-         return this.engine;
+         return this.engine.Navigate(action, followRedirect, method, requestDictionary);
       }
    }
 }

@@ -4,44 +4,32 @@ namespace Arana.Web.Server.Test
 {
    public class WebServerTest : WebServerTestBase
    {
-      private AranaEngine engine;
-      private WebServer webServer;
-
-
-      [TestFixtureSetUp]
-      public void FixtureSetUp()
+      [Test]
+      public void CanNavigateToTest()
       {
-         this.webServer = new WebServer(Uri, typeof(WebServerTest), "Data");
-         this.engine = new AranaEngine(Uri);
-      }
+         Engine.Select("ul li a[href='test.html']").Follow();
 
-
-      [TestFixtureTearDown]
-      public void FixtureTearDown()
-      {
-         this.engine.Dispose();
-         this.webServer.Dispose();
+         string title = Engine.Select("title").InnerText;
+         Assert.That(title, Is.EqualTo("Test"));
       }
 
 
       [Test]
-      public void Test01_IndexPage_ContainsCorrectData()
+      public void HeadersAreCorrect()
       {
-         string title = this.engine.Select("title").InnerText;
-         Selection listItems = this.engine.Select("ul li");
+         string server = Engine.Response.Headers["Server"];
+         Assert.That(server, Is.StringStarting("Arana-Web-Server"));
+      }
+
+
+      [Test]
+      public void IndexPageContainsCorrectData()
+      {
+         string title = Engine.Select("title").InnerText;
+         Selection listItems = Engine.Select("ul li");
 
          Assert.That(title, Is.EqualTo("Index"));
          Assert.That(listItems, Has.Count.EqualTo(1));
-      }
-
-
-      [Test]
-      public void Test02_CanNavigateToTest()
-      {
-         this.engine.Select("ul li a[href='test.html']").Follow();
-
-         string title = this.engine.Select("title").InnerText;
-         Assert.That(title, Is.EqualTo("Test"));
       }
    }
 }

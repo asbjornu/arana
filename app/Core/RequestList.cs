@@ -56,7 +56,7 @@ namespace Arana
       /// <param name="steps">The relative number of steps to navigate from the
       /// current <see cref="Index"/>. A positive number navigates forward,
       /// a negative number navigates backward.</param>
-      public void Navigate(int steps)
+      public AranaEngine Navigate(int steps)
       {
          int resultingRequestIndex = ValidateSteps(steps);
 
@@ -70,6 +70,8 @@ namespace Arana
          this.engine.WriteToOutput(message, "Navigate");
 
          Index = resultingRequestIndex;
+
+         return this.engine;
       }
 
 

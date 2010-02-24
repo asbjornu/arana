@@ -6,6 +6,8 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 
+using Arana.Web.Server.Html;
+
 namespace Arana.Web.Server
 {
    /// <summary>
@@ -13,6 +15,19 @@ namespace Arana.Web.Server
    /// </summary>
    internal static class Extensions
    {
+      internal static DateTime? GetLastModified(this Assembly @assembly)
+      {
+         if (assembly == null)
+         {
+            throw new ArgumentNullException("assembly");
+         }
+
+         return (assembly.Location != null)
+                   ? new FileInfo(assembly.Location).LastWriteTime
+                   : null as DateTime?;
+      }
+
+
       /// <summary>
       /// Returns a <see cref="System.String"/> that represents the <paramref name="uri"/>.
       /// </summary>
@@ -37,10 +52,15 @@ namespace Arana.Web.Server
       /// <param name="context">The context.</param>
       /// <param name="assembly">The assembly.</param>
       /// <param name="resourcePrefix">The resource prefix.</param>
-      internal static void WriteIndex(this HttpListenerContext context,
+      internal static void WriteIndex(this HttpListenerContext @context,
                                       Assembly assembly,
                                       string resourcePrefix)
       {
+         if (context == null)
+         {
+            throw new ArgumentNullException("context");
+         }
+
          IEnumerable<string> relativeFileNames =
             assembly.GetManifestResourceNames().Select(
                n => n.Substring(resourcePrefix.Length + 1));
@@ -56,28 +76,41 @@ namespace Arana.Web.Server
       /// <param name="context">The context.</param>
       /// <param name="assembly">The assembly.</param>
       /// <param name="resourcePrefix">The resource prefix.</param>
-      internal static void WriteResource(this HttpListenerContext context,
+      internal static void WriteResource(this HttpListenerContext @context,
                                          Assembly assembly,
                                          string resourcePrefix)
       {
+         if (context == null)
+         {
+            throw new ArgumentNullException("context");
+         }
+
          Uri uri = context.Request.Url;
          string path = uri.LocalPath.Substring(1);
          string resourceName = String.Concat(resourcePrefix, ".", path);
 
          using (Stream dataStream = assembly.GetManifestResourceStream(resourceName))
          {
-            if (dataStream == null)
-            {
-               context.Write("Error: file " + path + " was not found",
-                             HttpStatusCode.NotFound);
-               return;
-            }
-
-            context.Response.ContentType = "text/html";
-            context.Response.ContentLength64 = dataStream.Length;
-
             using (Stream outputStream = context.Response.OutputStream)
             {
+               if (dataStream == null)
+               {
+                  context.Response.StatusCode = (int) HttpStatusCode.NotFound;
+
+                  ErrorDocument errorDocument = new ErrorDocument(
+                     "Not found",
+                     String.Format("'{0}' was not found.", uri.LocalPath),
+                     outputStream);
+
+                  errorDocument.Flush();
+                  return;
+               }
+
+               // TODO: Add support for more media types
+               context.Response.ContentType = "text/html; charset=utf-8";
+               context.Response.ContentEncoding = Encoding.UTF8;
+               context.Response.ContentLength64 = dataStream.Length;
+
                dataStream.CopyTo(outputStream);
             }
          }
@@ -89,8 +122,13 @@ namespace Arana.Web.Server
       /// </summary>
       /// <param name="from">The <see cref="Stream"/> to copy from.</param>
       /// <param name="to">The <see cref="Stream"/> to copy to.</param>
-      private static void CopyTo(this Stream from, Stream to)
+      private static void CopyTo(this Stream @from, Stream to)
       {
+         if (from == null)
+         {
+            throw new ArgumentNullException("from");
+         }
+
          byte[] buffer = new byte[32768];
 
          while (true)
@@ -113,10 +151,15 @@ namespace Arana.Web.Server
       /// <param name="context">The context.</param>
       /// <param name="message">The message.</param>
       /// <param name="statusCode">The status code.</param>
-      private static void Write(this HttpListenerContext context,
+      private static void Write(this HttpListenerContext @context,
                                 string message,
                                 HttpStatusCode statusCode)
       {
+         if (context == null)
+         {
+            throw new ArgumentNullException("context");
+         }
+
          context.Response.StatusCode = (int) statusCode;
          context.Response.ContentEncoding = Encoding.UTF8;
          context.WriteHtml(message);
@@ -128,9 +171,14 @@ namespace Arana.Web.Server
       /// </summary>
       /// <param name="result">The result.</param>
       /// <param name="context">The context.</param>
-      private static void WriteHtml(this HttpListenerContext context, string result)
+      private static void WriteHtml(this HttpListenerContext @context, string result)
       {
-         context.Response.ContentType = "text/html";
+         if (context == null)
+         {
+            throw new ArgumentNullException("context");
+         }
+
+         context.Response.ContentType = "text/html; charset=utf-8";
          context.Response.ContentEncoding = Encoding.UTF8;
 
          using (context.Response.OutputStream)

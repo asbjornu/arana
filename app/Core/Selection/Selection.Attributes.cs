@@ -143,7 +143,7 @@ namespace Arana
       /// <returns>
       /// The value of the attribute(s) with the given <paramref name="name"/>.
       /// </returns>
-      private string Attribute(string name)
+      public string Attribute(string name)
       {
          StringBuilder sb = new StringBuilder();
 
