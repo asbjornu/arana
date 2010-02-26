@@ -95,7 +95,7 @@ namespace Arana.Test.Web
       [Test]
       public void ForwardAndBackAndForwardAgain()
       {
-         const string file = "/internal-link.html";
+         const string file = "/newline-link.html";
 
          Assert.That(Engine.Uri.PathAndQuery,
                      Is.EqualTo("/"),
@@ -106,7 +106,7 @@ namespace Arana.Test.Web
          Assert.That(Engine.Response.Status,
                      Is.EqualTo(HttpStatusCode.OK),
                      "The HTTP status code is invalid.");
-
+          
          Assert.That(Engine.Uri.PathAndQuery,
                      Is.EqualTo(file),
                      "The URI is incorrect.");
