@@ -56,4 +56,4 @@ Assert.AreEqual("/success", engine.Response.Location);
 
 ## More examples
 
-You can find more examples on the [Examples](wiki/Examples) page.
+You can find more examples on the [Examples](https://github.com/asbjornu/arana/wiki/Examples) page.
